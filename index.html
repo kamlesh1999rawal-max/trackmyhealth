@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Track My Health</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-dot">T</div>
+    Track My Health
+  </a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#checkin">Daily Log</a></li>
+    <li><a href="#community">Community</a></li>
+    <li><a href="#">Pricing</a></li>
+  </ul>
+  <button class="nav-cta">Start free →</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow"><span></span> Your wellness companion</div>
+    <h1 class="hero-h1">Track health,<br>feel <em>alive.</em></h1>
+    <p class="hero-sub">Combine mindful check-ins with real data. Steps, sleep, stress, hydration — all in one calm, beautiful space.</p>
+    <div class="hero-actions">
+      <button class="btn-primary">Get started free <span>→</span></button>
+      <button class="btn-ghost">See how it works</button>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-num">48k+</div>
+        <div class="hero-stat-label">Active users</div>
+      </div>
+      <div style="width:1px; background:rgba(127,119,221,0.2);"></div>
+      <div>
+        <div class="hero-stat-num">4.9★</div>
+        <div class="hero-stat-label">App Store rating</div>
+      </div>
+      <div style="width:1px; background:rgba(127,119,221,0.2);"></div>
+      <div>
+        <div class="hero-stat-num">2.1M</div>
+        <div class="hero-stat-label">Habits logged</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="dashboard-card">
+      <div class="float-badge">12-day streak!</div>
+      <div class="dash-header">
+        <div>
+          <div class="dash-greeting">Good morning,</div>
+          <div class="dash-name">Ji-yeon ✨</div>
+        </div>
+        <div class="dash-avatar">JY</div>
+      </div>
+
+      <div class="ring-section">
+        <div class="ring-wrap">
+          <svg width="110" height="110" viewBox="0 0 110 110">
+            <circle cx="55" cy="55" r="46" fill="none" stroke="#E1F5EE" stroke-width="9"/>
+            <circle cx="55" cy="55" r="46" fill="none" stroke="#1D9E75" stroke-width="9"
+              stroke-dasharray="230 290" stroke-linecap="round"/>
+          </svg>
+          <div class="ring-center">
+            <div class="ring-center-num">8,240</div>
+            <div class="ring-center-label">steps today</div>
+          </div>
+        </div>
+        <div class="ring-stats">
+          <div class="ring-stat-row">
+            <div class="ring-stat-dot" style="background:#1D9E75;"></div>
+            <span class="ring-stat-label">Steps</span>
+            <span class="ring-stat-val">8,240</span>
+          </div>
+          <div class="ring-stat-row">
+            <div class="ring-stat-dot" style="background:#7F77DD;"></div>
+            <span class="ring-stat-label">Sleep</span>
+            <span class="ring-stat-val">7.5 hrs</span>
+          </div>
+          <div class="ring-stat-row">
+            <div class="ring-stat-dot" style="background:#378ADD;"></div>
+            <span class="ring-stat-label">Water</span>
+            <span class="ring-stat-val">2.1 L</span>
+          </div>
+          <div class="ring-stat-row">
+            <div class="ring-stat-dot" style="background:#D85A30;"></div>
+            <span class="ring-stat-label">Calories</span>
+            <span class="ring-stat-val">1,840</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="border-top:1px solid rgba(127,119,221,0.1); padding-top:1rem;">
+        <div class="checkin-title">Today's check-in</div>
+        <div class="checkin-rows">
+          <div class="checkin-row">
+            <div class="checkin-icon">😴</div>
+            <div class="checkin-name">Sleep quality</div>
+            <div class="checkin-bar-wrap"><div class="checkin-bar" style="width:72%; background:#7F77DD;"></div></div>
+            <div class="checkin-pct">72%</div>
+          </div>
+          <div class="checkin-row">
+            <div class="checkin-icon">🏃</div>
+            <div class="checkin-name">Activity</div>
+            <div class="checkin-bar-wrap"><div class="checkin-bar" style="width:84%; background:#1D9E75;"></div></div>
+            <div class="checkin-pct">84%</div>
+          </div>
+          <div class="checkin-row">
+            <div class="checkin-icon">💧</div>
+            <div class="checkin-name">Hydration</div>
+            <div class="checkin-bar-wrap"><div class="checkin-bar" style="width:57%; background:#378ADD;"></div></div>
+            <div class="checkin-pct">57%</div>
+          </div>
+          <div class="checkin-row">
+            <div class="checkin-icon">🧘</div>
+            <div class="checkin-name">Mindfulness</div>
+            <div class="checkin-bar-wrap"><div class="checkin-bar" style="width:90%; background:#D85A30;"></div></div>
+            <div class="checkin-pct">90%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="section-eyebrow">Everything you need</div>
+  <h2 class="section-title">Built for your whole self</h2>
+  <p class="section-sub">Not just steps. Track the metrics that actually matter for your wellbeing.</p>
+  <div class="features-grid">
+    <div class="feat-card"><div class="feat-icon-wrap">🌿</div><div class="feat-title">Progress rings</div><div class="feat-desc">Beautiful circular progress visualizations for your daily goals — steps, sleep, calories, water.</div></div>
+    <div class="feat-card"><div class="feat-icon-wrap">🧘</div><div class="feat-title">Daily check-in</div><div class="feat-desc">A mindful moment each day to rate your sleep quality, stress, energy and mood.</div></div>
+    <div class="feat-card"><div class="feat-icon-wrap">📊</div><div class="feat-title">Smart insights</div><div class="feat-desc">Patterns and trends that help you understand what actually impacts your health.</div></div>
+    <div class="feat-card"><div class="feat-icon-wrap">🔥</div><div class="feat-title">Habit streaks</div><div class="feat-desc">Stay motivated with gentle streak tracking. Celebrate consistency, not perfection.</div></div>
+    <div class="feat-card"><div class="feat-icon-wrap">💤</div><div class="feat-title">Sleep tracking</div><div class="feat-desc">Log your sleep schedule and quality. Correlate rest with energy levels the next day.</div></div>
+    <div class="feat-card"><div class="feat-icon-wrap">🤝</div><div class="feat-title">Community goals</div><div class="feat-desc">Join weekly challenges with friends. Friendly accountability, zero pressure.</div></div>
+  </div>
+</section>
+
+<!-- DARK CHECK-IN SECTION -->
+<section class="checkin-section" id="checkin">
+  <div class="checkin-inner">
+    <div class="checkin-left">
+      <div class="section-eyebrow">Daily habits</div>
+      <h2 class="section-title">Small actions,<br>big results.</h2>
+      <p class="section-sub">Track your habits every day and watch patterns emerge.</p>
+      <div class="habit-list">
+        <div class="habit-item">
+          <div class="habit-check done">✓</div>
+          <div class="habit-info"><div class="habit-name">Morning meditation</div><div class="habit-time">Completed · 7:12 AM</div></div>
+          <div class="habit-streak">🔥 12 days</div>
+        </div>
+        <div class="habit-item">
+          <div class="habit-check done">✓</div>
+          <div class="habit-info"><div class="habit-name">Drink 2L water</div><div class="habit-time">Completed · 2:40 PM</div></div>
+          <div class="habit-streak">🔥 8 days</div>
+        </div>
+        <div class="habit-item">
+          <div class="habit-check pending">○</div>
+          <div class="habit-info"><div class="habit-name">Evening walk · 30 min</div><div class="habit-time">Scheduled · 7:00 PM</div></div>
+          <div class="habit-streak" style="color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.06);">5 days</div>
+        </div>
+        <div class="habit-item">
+          <div class="habit-check pending">○</div>
+          <div class="habit-info"><div class="habit-name">Gratitude journal</div><div class="habit-time">Scheduled · 9:30 PM</div></div>
+          <div class="habit-streak" style="color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.06);">3 days</div>
+        </div>
+      </div>
+    </div>
+    <div class="checkin-right">
+      <div class="big-metric">
+        <div class="big-metric-label">Today's wellness score</div>
+        <div class="big-metric-num">82 / 100</div>
+        <div class="big-metric-sub">↑ Up 7 points from yesterday</div>
+      </div>
+      <div class="metrics-row">
+        <div class="sm-metric"><div class="sm-metric-label">Active minutes</div><div class="sm-metric-num">47 min</div><div class="sm-metric-bar-wrap"><div class="sm-metric-bar" style="width:78%;background:#1D9E75;"></div></div></div>
+        <div class="sm-metric"><div class="sm-metric-label">Heart rate</div><div class="sm-metric-num">62 bpm</div><div class="sm-metric-bar-wrap"><div class="sm-metric-bar" style="width:55%;background:#7F77DD;"></div></div></div>
+        <div class="sm-metric"><div class="sm-metric-label">Sleep debt</div><div class="sm-metric-num">0.5 hrs</div><div class="sm-metric-bar-wrap"><div class="sm-metric-bar" style="width:20%;background:#9FE1CB;"></div></div></div>
+        <div class="sm-metric"><div class="sm-metric-label">Stress level</div><div class="sm-metric-num">Low</div><div class="sm-metric-bar-wrap"><div class="sm-metric-bar" style="width:30%;background:#CECBF6;"></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="community">
+  <div class="section-eyebrow">Loved by users</div>
+  <h2 class="section-title">Real people, real results</h2>
+  <p class="section-sub">From busy professionals to wellness beginners — Track My Health adapts to you.</p>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote">"The daily check-in makes me feel like the app actually cares about how I feel, not just my steps."</p>
+      <div class="testi-author"><div class="testi-avatar" style="background:#E1F5EE;color:#0F6E56;">SM</div><div><div class="testi-name">Soo-min Park</div><div class="testi-role">Designer · Seoul</div></div></div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote">"The progress rings are so motivating. My sleep improved a lot once I started seeing the data."</p>
+      <div class="testi-author"><div class="testi-avatar" style="background:#EEEDFE;color:#534AB7;">JW</div><div><div class="testi-name">James Wu</div><div class="testi-role">Engineer · San Francisco</div></div></div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote">"It doesn't shame you for bad days. The kindest health app I've ever used."</p>
+      <div class="testi-author"><div class="testi-avatar" style="background:#FAECE7;color:#993C1D;">AK</div><div><div class="testi-name">Aisha Kimura</div><div class="testi-role">Therapist · Tokyo</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-footer">
+  <h2 class="section-title">Ready to feel your best?</h2>
+  <p class="section-sub">Join 48,000+ people tracking their health the mindful way.</p>
+  <div class="cta-footer-actions">
+    <button class="btn-primary" style="font-size:1rem;padding:1rem 2.25rem;">Start for free →</button>
+    <button class="btn-ghost" style="font-size:1rem;padding:1rem 1.75rem;">View demo</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <div class="nav-logo-dot" style="width:24px;height:24px;font-size:11px;">T</div>
+    <span>Track My Health · 2025</span>
+  </div>
+  <div style="display:flex;gap:1.5rem;">
+    <a href="#" style="color:var(--text-soft);text-decoration:none;">Privacy</a>
+    <a href="#" style="color:var(--text-soft);text-decoration:none;">Terms</a>
+    <a href="#" style="color:var(--text-soft);text-decoration:none;">Contact</a>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
