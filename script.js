@@ -71,3 +71,50 @@ window.addEventListener('scroll', () => {
     ? '0 2px 20px rgba(127,119,221,0.1)'
     : 'none';
 });
+
+// ── Onboarding Modal ──
+function openModal() {
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  setTimeout(() => {
+    document.getElementById('onboarding-form').style.display = '';
+    document.getElementById('modal-header').style.display = '';
+    document.getElementById('modal-success').classList.remove('show');
+    document.getElementById('onboarding-form').reset();
+    document.querySelectorAll('.goal-chip').forEach(c => c.classList.remove('selected'));
+  }, 300);
+}
+
+// Open on any primary CTA outside the modal
+document.querySelectorAll('.btn-primary, .nav-cta').forEach(btn => {
+  btn.addEventListener('click', function() {
+    if (!this.closest('.modal-card')) openModal();
+  });
+});
+
+// Close on backdrop click or close button
+document.getElementById('modal-overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('success-close').addEventListener('click', closeModal);
+
+// Goal chip toggle
+document.querySelectorAll('.goal-chip').forEach(chip => {
+  chip.addEventListener('click', () => chip.classList.toggle('selected'));
+});
+
+// Form submit → success screen
+document.getElementById('onboarding-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const name = this.querySelector('input[name="name"]').value.trim();
+  document.getElementById('success-name').textContent = name || 'there';
+  this.style.display = 'none';
+  document.getElementById('modal-header').style.display = 'none';
+  document.getElementById('modal-success').classList.add('show');
+});

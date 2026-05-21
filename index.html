@@ -116,6 +116,66 @@
   </div>
 </footer>
 
+<!-- ONBOARDING MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal-card">
+    <button class="modal-close" id="modal-close">✕</button>
+    <div class="modal-header" id="modal-header">
+      <div class="nav-logo-dot" style="width:44px;height:44px;font-size:20px;margin:0 auto;">T</div>
+      <h2 class="modal-title">Let's get started</h2>
+      <p class="modal-sub">Tell us a little about yourself</p>
+    </div>
+    <form class="modal-form" id="onboarding-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Your name</label>
+          <input type="text" name="name" placeholder="e.g. Alex" required/>
+        </div>
+        <div class="form-group">
+          <label>Age</label>
+          <input type="number" name="age" placeholder="e.g. 28" min="10" max="120" required/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Height</label>
+          <div class="input-unit-wrap">
+            <input type="number" name="height" placeholder="e.g. 175" min="50" max="300" required/>
+            <span class="input-unit">cm</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Weight</label>
+          <div class="input-unit-wrap">
+            <input type="number" name="weight" placeholder="e.g. 70" min="20" max="500" required/>
+            <span class="input-unit">kg</span>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Your goals <span style="color:var(--text-soft);font-weight:300;">(pick all that apply)</span></label>
+        <div class="goals-grid">
+          <label class="goal-chip"><input type="checkbox" name="goals" value="lose-weight"/> 🏃 Lose weight</label>
+          <label class="goal-chip"><input type="checkbox" name="goals" value="build-muscle"/> 💪 Build muscle</label>
+          <label class="goal-chip"><input type="checkbox" name="goals" value="sleep-better"/> 💤 Sleep better</label>
+          <label class="goal-chip"><input type="checkbox" name="goals" value="reduce-stress"/> 🧘 Reduce stress</label>
+          <label class="goal-chip"><input type="checkbox" name="goals" value="improve-fitness"/> ⚡ Improve fitness</label>
+          <label class="goal-chip"><input type="checkbox" name="goals" value="track-nutrition"/> 🥗 Track nutrition</label>
+        </div>
+      </div>
+      <button type="submit" class="btn-primary" style="width:100%;justify-content:center;font-size:1rem;padding:1rem;">
+        Start my journey →
+      </button>
+    </form>
+    <div class="modal-success" id="modal-success">
+      <div class="success-icon">🎉</div>
+      <h3 class="success-title">You're all set!</h3>
+      <p class="success-sub">Welcome, <strong id="success-name"></strong>! Your health journey starts now.</p>
+      <button class="btn-primary" style="margin-top:1.5rem;width:100%;justify-content:center;" id="success-close">Let's go →</button>
+    </div>
+  </div>
+</div>
+
 <script src="script.js"></script>
 </body>
 </html>
