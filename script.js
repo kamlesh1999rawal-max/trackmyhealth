@@ -72,6 +72,67 @@ window.addEventListener('scroll', () => {
     : 'none';
 });
 
+// ── BMI Calculator ──
+function calculateBMI() {
+  const height = parseFloat(document.getElementById('bmi-height').value);
+  const weight = parseFloat(document.getElementById('bmi-weight').value);
+  if (!height || !weight || height < 50 || weight < 10) return;
+
+  const bmi = weight / Math.pow(height / 100, 2);
+  const rounded = Math.round(bmi * 10) / 10;
+
+  let category, color, tip;
+  if (bmi < 18.5) {
+    category = 'Underweight'; color = '#378ADD';
+    tip = 'You are below a healthy weight range. Focus on nutrient-rich foods and strength training to build a healthy body.';
+  } else if (bmi < 25) {
+    category = 'Normal weight'; color = '#1D9E75';
+    tip = 'Great! You are in a healthy weight range. Keep maintaining your balanced diet and active lifestyle.';
+  } else if (bmi < 30) {
+    category = 'Overweight'; color = '#F5A623';
+    tip = 'You are slightly above the healthy range. A modest calorie deficit and regular cardio can help you reach a healthy weight.';
+  } else {
+    category = 'Obese'; color = '#D85A30';
+    tip = 'Your BMI indicates obesity. We recommend consulting a healthcare provider for a safe, personalized weight loss plan.';
+  }
+
+  document.getElementById('bmi-score').textContent = rounded;
+  document.getElementById('bmi-score').style.color = color;
+  document.getElementById('bmi-category').textContent = category;
+  document.getElementById('bmi-category').style.color = color;
+  document.getElementById('bmi-tip').textContent = tip;
+  document.getElementById('bmi-indicator').style.left = Math.min(Math.max(((bmi - 10) / 30) * 100, 2), 98) + '%';
+  document.getElementById('bmi-indicator').style.background = color;
+
+  document.getElementById('bmi-placeholder').style.display = 'none';
+  document.getElementById('bmi-result').style.display = 'block';
+}
+
+// ── Calorie Calculator (Harris-Benedict) ──
+function calculateCalories() {
+  const gender = document.getElementById('cal-gender').value;
+  const age = parseFloat(document.getElementById('cal-age').value);
+  const height = parseFloat(document.getElementById('cal-height').value);
+  const weight = parseFloat(document.getElementById('cal-weight').value);
+  const activity = parseFloat(document.getElementById('cal-activity').value);
+  if (!age || !height || !weight) return;
+
+  const bmr = gender === 'male'
+    ? 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age)
+    : 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
+
+  const maintain = Math.round(bmr * activity);
+  const loseWeight = Math.round(maintain - 500);
+
+  document.getElementById('cal-bmr').textContent = Math.round(bmr).toLocaleString() + ' kcal';
+  document.getElementById('cal-maintain').textContent = maintain.toLocaleString() + ' kcal';
+  document.getElementById('cal-loss').textContent = loseWeight.toLocaleString() + ' kcal';
+  document.getElementById('cal-tip').textContent = `To lose ~0.5 kg per week, eat ${loseWeight.toLocaleString()} calories/day. Combine with 30+ minutes of daily movement for best results.`;
+
+  document.getElementById('cal-placeholder').style.display = 'none';
+  document.getElementById('cal-result').style.display = 'block';
+}
+
 // ── Onboarding Modal ──
 function openModal() {
   document.getElementById('modal-overlay').classList.add('open');
