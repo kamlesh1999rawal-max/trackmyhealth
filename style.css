@@ -352,6 +352,86 @@ footer {
   50%       { transform: translateY(-6px); }
 }
 
+/* ── Heart Section ── */
+.heart-section {
+  padding: 6rem 2.5rem 5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.heart-visual {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  margin-top: 3rem;
+}
+.heart-inner-wrap {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  height: 300px;
+}
+.heart-svg {
+  width: 260px;
+  height: 247px;
+  position: relative;
+  z-index: 2;
+  animation: heartBeat 1s ease-in-out infinite;
+  filter: drop-shadow(0 16px 40px rgba(233,30,99,0.35));
+}
+.pulse-ring {
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  border: 2px solid rgba(233,30,99,0.45);
+  animation: pulseRing 1s ease-out infinite;
+  z-index: 1;
+}
+.pulse-ring-2 { animation-delay: 0.5s; }
+.bpm-display {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  background: #fff;
+  border: 1px solid rgba(233,30,99,0.15);
+  border-radius: 50px;
+  padding: 0.55rem 1.6rem;
+  box-shadow: 0 4px 24px rgba(233,30,99,0.1);
+}
+.bpm-number {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2rem;
+  color: #e91e63;
+  line-height: 1;
+}
+.bpm-unit {
+  font-size: 0.78rem;
+  color: var(--text-soft);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+}
+#ecg-line { animation: ecgScroll 1s linear infinite; }
+
+@keyframes ecgScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-200px); }
+}
+@keyframes heartBeat {
+  0%, 100% { transform: scale(1); }
+  15%       { transform: scale(1.1); }
+  30%       { transform: scale(1.02); }
+  45%       { transform: scale(1.07); }
+  65%       { transform: scale(1); }
+}
+@keyframes pulseRing {
+  0%   { transform: scale(0.85); opacity: 0.8; }
+  100% { transform: scale(1.7); opacity: 0; }
+}
+
 @media (max-width: 768px) {
   .hero { grid-template-columns: 1fr; padding: 90px 1.25rem 2rem; }
   .features-grid { grid-template-columns: 1fr; }
@@ -361,4 +441,7 @@ footer {
   .nav-links { display: none; }
   .hero-right { display: none; }
   .features, .checkin-section, .testimonials, .cta-footer { padding: 4rem 1.25rem; }
+  .heart-inner-wrap { width: 240px; height: 240px; }
+  .heart-svg { width: 210px; height: 200px; }
+  .pulse-ring { width: 210px; height: 210px; }
 }
