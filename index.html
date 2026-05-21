@@ -132,58 +132,6 @@
   </div>
 </section>
 
-<!-- HEART VISUALIZATION -->
-<section class="heart-section">
-  <div class="section-eyebrow">Heart monitoring</div>
-  <h2 class="section-title">Your heart, <em style="font-style:italic;color:#e91e63;">visualized.</em></h2>
-  <p class="section-sub">Real-time heart rate visualization to keep you in tune with your body.</p>
-  <div class="heart-visual">
-    <div class="heart-inner-wrap">
-      <div class="pulse-ring"></div>
-      <div class="pulse-ring pulse-ring-2"></div>
-      <svg class="heart-svg" viewBox="0 0 200 190" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="heartGrad" x1="20%" y1="0%" x2="80%" y2="100%">
-            <stop offset="0%" stop-color="#ff8fab"/>
-            <stop offset="45%" stop-color="#e91e63"/>
-            <stop offset="100%" stop-color="#7b0032"/>
-          </linearGradient>
-          <linearGradient id="heartShine" x1="10%" y1="5%" x2="50%" y2="60%">
-            <stop offset="0%" stop-color="rgba(255,255,255,0.4)"/>
-            <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
-          </linearGradient>
-          <clipPath id="heartClip">
-            <path d="M100,175 C60,145 10,115 10,65 C10,35 32,15 58,15 C76,15 92,24 100,37 C108,24 124,15 142,15 C168,15 190,35 190,65 C190,115 140,145 100,175 Z"/>
-          </clipPath>
-        </defs>
-        <!-- 3D shadow layer -->
-        <path d="M100,175 C60,145 10,115 10,65 C10,35 32,15 58,15 C76,15 92,24 100,37 C108,24 124,15 142,15 C168,15 190,35 190,65 C190,115 140,145 100,175 Z"
-          fill="#8b0032" transform="translate(5,9)" opacity="0.3"/>
-        <!-- Main heart body -->
-        <path d="M100,175 C60,145 10,115 10,65 C10,35 32,15 58,15 C76,15 92,24 100,37 C108,24 124,15 142,15 C168,15 190,35 190,65 C190,115 140,145 100,175 Z"
-          fill="url(#heartGrad)"/>
-        <!-- Animated ECG line clipped inside heart -->
-        <g clip-path="url(#heartClip)">
-          <path id="ecg-line"
-            d="M-200,97 L-140,97 L-130,90 L-120,97 L-112,104 L-105,35 L-98,150 L-88,97 L-74,80 L-60,97 L0,97 L60,97 L70,90 L80,97 L88,104 L95,35 L102,150 L112,97 L126,80 L140,97 L200,97 L260,97 L270,90 L280,97 L288,104 L295,35 L302,150 L312,97 L326,80 L340,97 L400,97"
-            fill="none" stroke="rgba(255,255,255,0.88)" stroke-width="2.5"
-            stroke-linecap="round" stroke-linejoin="round"/>
-        </g>
-        <!-- Shine overlay for 3D depth -->
-        <path d="M100,175 C60,145 10,115 10,65 C10,35 32,15 58,15 C76,15 92,24 100,37 C108,24 124,15 142,15 C168,15 190,35 190,65 C190,115 140,145 100,175 Z"
-          fill="url(#heartShine)"/>
-        <!-- Specular highlight streak -->
-        <path d="M67,29 C55,40 48,57 51,72"
-          stroke="rgba(255,255,255,0.5)" stroke-width="5.5" stroke-linecap="round" fill="none"/>
-      </svg>
-    </div>
-    <div class="bpm-display">
-      <span class="bpm-number">72</span>
-      <span class="bpm-unit">BPM</span>
-    </div>
-  </div>
-</section>
-
 <!-- FEATURES -->
 <section class="features" id="features">
   <div class="section-eyebrow">Everything you need</div>
