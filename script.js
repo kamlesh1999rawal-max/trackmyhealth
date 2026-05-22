@@ -251,6 +251,48 @@ document.getElementById('onboarding-form').addEventListener('submit', function(e
   document.getElementById('db-bmr').textContent      = Math.round(bmr).toLocaleString() + ' kcal';
   document.getElementById('db-maintain').textContent = maintenance.toLocaleString() + ' kcal';
   document.getElementById('db-lose-cal').textContent = loseCal.toLocaleString() + ' kcal';
+
+  // ── Calorie intake & macros based on primary goal ──
+  let targetCal, goalLabel, proteinPerKg;
+  if (goals.includes('lose-weight')) {
+    targetCal    = maintenance - 500;
+    goalLabel    = 'Weight loss — 500 kcal deficit from maintenance';
+    proteinPerKg = 2.0;
+  } else if (goals.includes('build-muscle')) {
+    targetCal    = maintenance + 300;
+    goalLabel    = 'Muscle building — 300 kcal surplus above maintenance';
+    proteinPerKg = 2.2;
+  } else {
+    targetCal    = maintenance;
+    goalLabel    = 'Maintenance — sustain your current weight';
+    proteinPerKg = 1.6;
+  }
+
+  const proteinG   = Math.round(weight * proteinPerKg);
+  const proteinCal = proteinG * 4;
+  const fatG       = Math.round((targetCal * 0.25) / 9);
+  const fatCal     = fatG * 9;
+  const carbsCal   = Math.max(targetCal - proteinCal - fatCal, 0);
+  const carbsG     = Math.round(carbsCal / 4);
+
+  const totalCal   = proteinCal + fatCal + carbsCal;
+  const proteinPct = Math.round((proteinCal / totalCal) * 100);
+  const fatPct     = Math.round((fatCal / totalCal) * 100);
+  const carbsPct   = 100 - proteinPct - fatPct;
+
+  document.getElementById('db-target-cal').textContent        = targetCal.toLocaleString() + ' kcal/day';
+  document.getElementById('db-macro-goal-label').textContent  = goalLabel;
+  document.getElementById('db-protein').textContent           = proteinG + 'g';
+  document.getElementById('db-carbs').textContent             = carbsG + 'g';
+  document.getElementById('db-fat').textContent               = fatG + 'g';
+  document.getElementById('db-protein-pct').textContent       = proteinPct + '%';
+  document.getElementById('db-carbs-pct').textContent         = carbsPct + '%';
+  document.getElementById('db-fat-pct').textContent           = fatPct + '%';
+  setTimeout(() => {
+    document.getElementById('db-protein-bar').style.width = proteinPct + '%';
+    document.getElementById('db-carbs-bar').style.width   = carbsPct + '%';
+    document.getElementById('db-fat-bar').style.width     = fatPct + '%';
+  }, 300);
   document.getElementById('db-height').textContent   = height + ' cm';
   document.getElementById('db-weight').textContent   = weight + ' kg';
   document.getElementById('db-bmi').textContent      = bmi;

@@ -479,6 +479,50 @@ footer {
   font-size: 1.6rem; color: var(--text-dark); line-height: 1;
 }
 .db-cal-sub { font-size: 0.7rem; color: var(--text-soft); margin-top: 3px; }
+.db-macro-card {
+  max-width: 780px;
+  margin-top: 1.25rem;
+  background: #fff;
+  border-radius: var(--radius);
+  border: 1px solid rgba(127,119,221,0.12);
+  padding: 1.5rem 2rem;
+  box-shadow: 0 4px 20px rgba(127,119,221,0.07);
+}
+.db-macro-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+.db-macro-title {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-dark);
+}
+.db-macro-goal-label {
+  font-size: 0.78rem;
+  color: var(--text-soft);
+  margin-top: 3px;
+}
+.db-macro-target {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2rem;
+  color: var(--green-600);
+  line-height: 1;
+  text-align: right;
+}
+.db-macros { display: flex; flex-direction: column; gap: 14px; }
+.db-macro-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.db-macro-icon { font-size: 1.1rem; width: 24px; text-align: center; flex-shrink: 0; }
+.db-macro-name { font-size: 0.85rem; font-weight: 500; color: var(--text-mid); width: 60px; flex-shrink: 0; }
+.db-macro-bar-wrap { flex: 1; height: 10px; background: #f0eef8; border-radius: 5px; overflow: hidden; }
+.db-macro-bar { height: 10px; border-radius: 5px; transition: width 0.8s ease; width: 0%; }
+.db-macro-val { font-size: 0.875rem; font-weight: 600; color: var(--text-dark); width: 45px; text-align: right; flex-shrink: 0; }
+.db-macro-pct { font-size: 0.75rem; color: var(--text-soft); width: 35px; text-align: right; flex-shrink: 0; }
 .db-health-note {
   max-width: 780px;
   margin-top: 1.5rem;
