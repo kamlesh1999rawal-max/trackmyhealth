@@ -396,6 +396,40 @@ footer {
 }
 .goals-grid-lg { margin-top: 0.25rem; }
 .goals-grid-lg .goal-chip { padding: 0.75rem 1rem; font-size: 0.9rem; }
+.activity-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-top: 4px;
+}
+.activity-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 0.75rem 0.5rem;
+  border: 1.5px solid rgba(127,119,221,0.2);
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  color: var(--text-mid);
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.18s;
+  background: var(--warm);
+  user-select: none;
+  line-height: 1.3;
+}
+.activity-chip input[type="radio"] { display: none; }
+.activity-chip span { font-size: 0.67rem; color: var(--text-soft); }
+.activity-chip:hover { border-color: var(--green-400); color: var(--green-600); }
+.activity-chip.selected {
+  border-color: #1b5e20;
+  background: #2e7d32;
+  color: #ffffff;
+  font-weight: 600;
+}
+.activity-chip.selected span { color: rgba(255,255,255,0.8); }
 .step-nav {
   display: flex;
   gap: 12px;

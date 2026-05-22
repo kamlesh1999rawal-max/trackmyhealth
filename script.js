@@ -147,6 +147,7 @@ function closeModal() {
     goToStep1();
     document.getElementById('onboarding-form').reset();
     document.querySelectorAll('.goal-chip').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('.activity-chip').forEach(c => c.classList.remove('selected'));
     document.getElementById('goal-error').style.display = 'none';
   }, 300);
 }
@@ -196,6 +197,14 @@ document.querySelectorAll('.goal-chip').forEach(chip => {
   });
 });
 
+// Activity chip — single select (radio)
+document.querySelectorAll('.activity-chip').forEach(chip => {
+  chip.querySelector('input[type="radio"]').addEventListener('change', function() {
+    document.querySelectorAll('.activity-chip').forEach(c => c.classList.remove('selected'));
+    chip.classList.add('selected');
+  });
+});
+
 // Form submit → open personalized dashboard
 document.getElementById('onboarding-form').addEventListener('submit', function(e) {
   e.preventDefault();
@@ -205,7 +214,8 @@ document.getElementById('onboarding-form').addEventListener('submit', function(e
   const age      = parseFloat(this.querySelector('input[name="age"]').value);
   const height   = parseFloat(this.querySelector('input[name="height"]').value);
   const weight   = parseFloat(this.querySelector('input[name="weight"]').value);
-  const activity = parseFloat(this.querySelector('select[name="activity"]').value);
+  const activityInput = this.querySelector('input[name="activity"]:checked');
+  const activity = activityInput ? parseFloat(activityInput.value) : 1.2;
 
   // Harris-Benedict BMR
   let bmr;
