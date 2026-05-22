@@ -191,7 +191,9 @@ document.getElementById('modal-close').addEventListener('click', closeModal);
 
 // Goal chip toggle
 document.querySelectorAll('.goal-chip').forEach(chip => {
-  chip.addEventListener('click', () => chip.classList.toggle('selected'));
+  chip.querySelector('input[type="checkbox"]').addEventListener('change', function() {
+    chip.classList.toggle('selected', this.checked);
+  });
 });
 
 // Form submit → open personalized dashboard
