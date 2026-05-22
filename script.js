@@ -201,6 +201,7 @@ document.getElementById('onboarding-form').addEventListener('submit', function(e
   e.preventDefault();
 
   const name    = this.querySelector('input[name="name"]').value.trim();
+  const gender  = this.querySelector('select[name="gender"]').value;
   const age     = this.querySelector('input[name="age"]').value;
   const height  = parseFloat(this.querySelector('input[name="height"]').value);
   const weight  = parseFloat(this.querySelector('input[name="weight"]').value);
@@ -220,6 +221,7 @@ document.getElementById('onboarding-form').addEventListener('submit', function(e
 
   // Populate dashboard fields
   document.getElementById('db-name').textContent     = name;
+  document.getElementById('db-gender').textContent   = gender;
   document.getElementById('db-nav-name').textContent = name;
   document.getElementById('db-avatar').textContent   = initials;
   document.getElementById('db-age').textContent      = age + ' yrs';

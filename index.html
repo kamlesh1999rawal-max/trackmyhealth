@@ -144,7 +144,12 @@
     <div class="hero-eyebrow"><span></span> Your health dashboard</div>
     <h1 class="hero-h1">Welcome, <em id="db-name"></em>!</h1>
     <p class="hero-sub">Here's your personal health profile. Let's start building healthy habits today.</p>
-    <div class="db-stats-grid">
+    <div class="db-stats-grid" style="grid-template-columns:repeat(5,1fr);">
+      <div class="db-stat-card">
+        <div class="db-stat-icon">🧬</div>
+        <div class="db-stat-val" id="db-gender"></div>
+        <div class="db-stat-label">Gender</div>
+      </div>
       <div class="db-stat-card">
         <div class="db-stat-icon">🎂</div>
         <div class="db-stat-val" id="db-age"></div>
@@ -255,6 +260,18 @@
             <label>Your name</label>
             <input type="text" name="name" placeholder="e.g. Alex" required/>
           </div>
+          <div class="form-group">
+            <label>Gender</label>
+            <select name="gender" required>
+              <option value="" disabled selected>Select gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Non-binary">Non-binary</option>
+              <option value="Prefer not to say">Prefer not to say</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
           <div class="form-group">
             <label>Age</label>
             <input type="number" name="age" placeholder="e.g. 28" min="10" max="120" required/>
