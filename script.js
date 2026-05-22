@@ -214,8 +214,7 @@ document.getElementById('onboarding-form').addEventListener('submit', function(e
   const age      = parseFloat(this.querySelector('input[name="age"]').value);
   const height   = parseFloat(this.querySelector('input[name="height"]').value);
   const weight   = parseFloat(this.querySelector('input[name="weight"]').value);
-  const activityInput = this.querySelector('input[name="activity"]:checked');
-  const activity = activityInput ? parseFloat(activityInput.value) : 1.2;
+  const activity = parseFloat(this.querySelector('select[name="activity"]').value);
 
   // Harris-Benedict BMR
   let bmr;
