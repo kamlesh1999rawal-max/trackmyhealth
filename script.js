@@ -143,12 +143,37 @@ function closeModal() {
   document.getElementById('modal-overlay').classList.remove('open');
   document.body.style.overflow = '';
   setTimeout(() => {
-    document.getElementById('onboarding-form').style.display = '';
-    document.getElementById('modal-header').style.display = '';
-    document.getElementById('modal-success').classList.remove('show');
+    // Reset steps
+    goToStep1();
     document.getElementById('onboarding-form').reset();
     document.querySelectorAll('.goal-chip').forEach(c => c.classList.remove('selected'));
+    document.getElementById('goal-error').style.display = 'none';
   }, 300);
+}
+
+function goToStep2() {
+  const selected = document.querySelectorAll('.goal-chip.selected');
+  if (selected.length === 0) {
+    document.getElementById('goal-error').style.display = 'block';
+    return;
+  }
+  document.getElementById('goal-error').style.display = 'none';
+  document.getElementById('step-1').style.display = 'none';
+  document.getElementById('step-2').style.display = 'block';
+  document.getElementById('dot-1').classList.replace('active', 'done');
+  document.getElementById('dot-1').textContent = '✓';
+  document.getElementById('dot-2').classList.add('active');
+  document.getElementById('step-line').classList.add('done');
+}
+
+function goToStep1() {
+  document.getElementById('step-2').style.display = 'none';
+  document.getElementById('step-1').style.display = 'block';
+  document.getElementById('dot-1').classList.remove('done');
+  document.getElementById('dot-1').classList.add('active');
+  document.getElementById('dot-1').textContent = '1';
+  document.getElementById('dot-2').classList.remove('active');
+  document.getElementById('step-line').classList.remove('done');
 }
 
 // Open on any primary CTA outside the modal
@@ -177,7 +202,8 @@ document.getElementById('onboarding-form').addEventListener('submit', function(e
   const age     = this.querySelector('input[name="age"]').value;
   const height  = parseFloat(this.querySelector('input[name="height"]').value);
   const weight  = parseFloat(this.querySelector('input[name="weight"]').value);
-  const goals   = [...this.querySelectorAll('input[name="goals"]:checked')].map(i => i.value);
+  const goals   = [...document.querySelectorAll('.goal-chip.selected input[type="checkbox"]')].map(i => i.value);
+  const health  = this.querySelector('textarea[name="health"]').value.trim();
 
   // BMI
   const bmi = (weight / Math.pow(height / 100, 2)).toFixed(1);
@@ -238,6 +264,14 @@ document.getElementById('onboarding-form').addEventListener('submit', function(e
        <div class="feat-desc">${t.desc}</div>
      </div>`
   ).join('');
+
+  // Health conditions
+  if (health) {
+    document.getElementById('db-health').textContent = health;
+    document.getElementById('db-health-wrap').style.display = 'block';
+  } else {
+    document.getElementById('db-health-wrap').style.display = 'none';
+  }
 
   // Switch views
   closeModal();

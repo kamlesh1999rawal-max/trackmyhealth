@@ -353,6 +353,90 @@ footer {
 }
 
 
+/* ── Step Indicator ── */
+.modal-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 6px;
+}
+.step-dot {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--purple-50);
+  border: 2px solid var(--purple-100);
+  color: var(--text-soft);
+  font-size: 0.82rem; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.3s;
+  flex-shrink: 0;
+}
+.step-dot.active { background: var(--purple-400); border-color: var(--purple-400); color: #fff; }
+.step-dot.done   { background: var(--green-400);  border-color: var(--green-400);  color: #fff; }
+.step-line {
+  width: 64px; height: 2px;
+  background: var(--purple-100);
+  transition: background 0.3s;
+}
+.step-line.done { background: var(--green-400); }
+.step-labels {
+  display: flex;
+  justify-content: space-between;
+  width: 130px;
+  margin: 0 auto 1.5rem;
+  font-size: 0.7rem;
+  color: var(--text-soft);
+}
+.step-error {
+  font-size: 0.82rem;
+  color: #e91e63;
+  margin-top: 0.75rem;
+  display: none;
+}
+.goals-grid-lg { margin-top: 0.25rem; }
+.goals-grid-lg .goal-chip { padding: 0.75rem 1rem; font-size: 0.9rem; }
+.step-nav {
+  display: flex;
+  gap: 12px;
+  margin-top: 0.5rem;
+}
+.form-group textarea {
+  border: 1.5px solid rgba(127,119,221,0.2);
+  border-radius: var(--radius-sm);
+  padding: 0.7rem 1rem;
+  font-size: 0.9rem;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text-dark);
+  background: var(--warm);
+  outline: none;
+  width: 100%;
+  resize: vertical;
+  min-height: 88px;
+  line-height: 1.55;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-group textarea:focus {
+  border-color: var(--purple-400);
+  box-shadow: 0 0 0 3px rgba(127,119,221,0.12);
+}
+.db-health-note {
+  max-width: 780px;
+  margin-top: 1.5rem;
+  background: rgba(255,255,255,0.8);
+  border: 1px solid rgba(233,30,99,0.15);
+  border-left: 3px solid #e91e63;
+  border-radius: var(--radius-sm);
+  padding: 0.9rem 1.25rem;
+}
+.db-health-label {
+  font-size: 0.72rem; font-weight: 600;
+  color: #e91e63;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  margin-bottom: 5px;
+}
+.db-health-text { font-size: 0.9rem; color: var(--text-mid); line-height: 1.6; }
+
 /* ── Dashboard ── */
 .db-nav-right {
   display: flex;
