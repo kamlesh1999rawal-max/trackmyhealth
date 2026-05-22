@@ -201,10 +201,24 @@ document.getElementById('onboarding-form').addEventListener('submit', function(e
   e.preventDefault();
 
   const name    = this.querySelector('input[name="name"]').value.trim();
-  const gender  = this.querySelector('select[name="gender"]').value;
-  const age     = this.querySelector('input[name="age"]').value;
-  const height  = parseFloat(this.querySelector('input[name="height"]').value);
-  const weight  = parseFloat(this.querySelector('input[name="weight"]').value);
+  const gender   = this.querySelector('select[name="gender"]').value;
+  const age      = parseFloat(this.querySelector('input[name="age"]').value);
+  const height   = parseFloat(this.querySelector('input[name="height"]').value);
+  const weight   = parseFloat(this.querySelector('input[name="weight"]').value);
+  const activity = parseFloat(this.querySelector('select[name="activity"]').value);
+
+  // Harris-Benedict BMR
+  let bmr;
+  if (gender === 'Male') {
+    bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
+  } else if (gender === 'Female') {
+    bmr = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
+  } else {
+    bmr = ((88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age)) +
+           (447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age))) / 2;
+  }
+  const maintenance = Math.round(bmr * activity);
+  const loseCal     = Math.round(maintenance - 500);
   const goals   = [...document.querySelectorAll('.goal-chip.selected input[type="checkbox"]')].map(i => i.value);
   const health  = this.querySelector('textarea[name="health"]').value.trim();
 
@@ -225,6 +239,9 @@ document.getElementById('onboarding-form').addEventListener('submit', function(e
   document.getElementById('db-nav-name').textContent = name;
   document.getElementById('db-avatar').textContent   = initials;
   document.getElementById('db-age').textContent      = age + ' yrs';
+  document.getElementById('db-bmr').textContent      = Math.round(bmr).toLocaleString() + ' kcal';
+  document.getElementById('db-maintain').textContent = maintenance.toLocaleString() + ' kcal';
+  document.getElementById('db-lose-cal').textContent = loseCal.toLocaleString() + ' kcal';
   document.getElementById('db-height').textContent   = height + ' cm';
   document.getElementById('db-weight').textContent   = weight + ' kg';
   document.getElementById('db-bmi').textContent      = bmi;
