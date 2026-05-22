@@ -747,10 +747,10 @@ footer {
 .goal-chip input[type="checkbox"] { display: none; }
 .goal-chip:hover { border-color: var(--purple-400); color: var(--purple-600); }
 .goal-chip.selected {
-  border-color: var(--purple-400);
-  background: var(--purple-50);
-  color: var(--purple-600);
-  font-weight: 500;
+  border-color: #1565c0;
+  background: #1976d2;
+  color: #ffffff;
+  font-weight: 600;
 }
 .modal-success { display: none; text-align: center; padding: 1rem 0; }
 .modal-success.show { display: block; }
