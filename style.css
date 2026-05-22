@@ -747,8 +747,8 @@ footer {
 .goal-chip input[type="checkbox"] { display: none; }
 .goal-chip:hover { border-color: var(--purple-400); color: var(--purple-600); }
 .goal-chip.selected {
-  border-color: #1565c0;
-  background: #1976d2;
+  border-color: #1b5e20;
+  background: #2e7d32;
   color: #ffffff;
   font-weight: 600;
 }
