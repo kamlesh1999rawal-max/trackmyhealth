@@ -9,6 +9,9 @@
 </head>
 <body>
 
+<!-- ── MAIN LANDING PAGE ── -->
+<div id="main-page">
+
 <!-- NAV -->
 <nav>
   <a href="#" class="nav-logo">
@@ -51,7 +54,7 @@
       </div>
     </div>
   </div>
-
+</section>
 
 <!-- FEATURES -->
 <section class="features" id="features">
@@ -115,6 +118,91 @@
   </div>
 </footer>
 
+</div><!-- /#main-page -->
+
+
+<!-- ── PERSONALIZED DASHBOARD ── -->
+<div id="dashboard-page" style="display:none;">
+
+  <nav>
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-dot">T</div>
+      Track My Health
+    </a>
+    <div class="db-nav-right">
+      <span class="db-date-pill" id="db-date"></span>
+      <div class="db-user-pill">
+        <div class="dash-avatar" id="db-avatar"></div>
+        <span class="db-nav-name" id="db-nav-name"></span>
+      </div>
+      <button class="btn-ghost" onclick="goBack()" style="font-size:0.82rem;padding:0.45rem 1rem;">← Home</button>
+    </div>
+  </nav>
+
+  <!-- Welcome Hero -->
+  <section class="db-hero">
+    <div class="hero-eyebrow"><span></span> Your health dashboard</div>
+    <h1 class="hero-h1">Welcome, <em id="db-name"></em>!</h1>
+    <p class="hero-sub">Here's your personal health profile. Let's start building healthy habits today.</p>
+    <div class="db-stats-grid">
+      <div class="db-stat-card">
+        <div class="db-stat-icon">🎂</div>
+        <div class="db-stat-val" id="db-age"></div>
+        <div class="db-stat-label">Age</div>
+      </div>
+      <div class="db-stat-card">
+        <div class="db-stat-icon">📏</div>
+        <div class="db-stat-val" id="db-height"></div>
+        <div class="db-stat-label">Height</div>
+      </div>
+      <div class="db-stat-card">
+        <div class="db-stat-icon">⚖️</div>
+        <div class="db-stat-val" id="db-weight"></div>
+        <div class="db-stat-label">Weight</div>
+      </div>
+      <div class="db-stat-card">
+        <div class="db-stat-icon">❤️</div>
+        <div class="db-stat-val" id="db-bmi"></div>
+        <div class="db-stat-label">BMI · <span id="db-bmi-cat"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Goals -->
+  <section class="db-goals-section">
+    <div class="section-eyebrow">Your goals</div>
+    <h2 class="section-title">What you're working towards</h2>
+    <div class="db-goals-wrap" id="db-goals"></div>
+  </section>
+
+  <!-- Personalised Tips -->
+  <section class="features" style="padding-top:0;">
+    <div class="section-eyebrow">Recommendations</div>
+    <h2 class="section-title">Tips just for you</h2>
+    <p class="section-sub">Tailored advice based on your goals to help you get started.</p>
+    <div class="features-grid" id="db-tips"></div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-footer">
+    <h2 class="section-title">Start your first check-in</h2>
+    <p class="section-sub">Log how you feel today — sleep, energy, hydration, and mood.</p>
+    <div class="cta-footer-actions">
+      <button class="btn-primary" style="font-size:1rem;padding:1rem 2.25rem;">Log today →</button>
+      <button class="btn-ghost" onclick="goBack()" style="font-size:1rem;padding:1rem 1.75rem;">← Back to home</button>
+    </div>
+  </section>
+
+  <footer>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div class="nav-logo-dot" style="width:24px;height:24px;font-size:11px;">T</div>
+      <span>Track My Health · 2025</span>
+    </div>
+  </footer>
+
+</div><!-- /#dashboard-page -->
+
+
 <!-- ONBOARDING MODAL -->
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal-card">
@@ -166,12 +254,6 @@
         Start my journey →
       </button>
     </form>
-    <div class="modal-success" id="modal-success">
-      <div class="success-icon">🎉</div>
-      <h3 class="success-title">You're all set!</h3>
-      <p class="success-sub">Welcome, <strong id="success-name"></strong>! Your health journey starts now.</p>
-      <button class="btn-primary" style="margin-top:1.5rem;width:100%;justify-content:center;" id="success-close">Let's go →</button>
-    </div>
   </div>
 </div>
 

@@ -163,19 +163,91 @@ document.getElementById('modal-overlay').addEventListener('click', function(e) {
   if (e.target === this) closeModal();
 });
 document.getElementById('modal-close').addEventListener('click', closeModal);
-document.getElementById('success-close').addEventListener('click', closeModal);
 
 // Goal chip toggle
 document.querySelectorAll('.goal-chip').forEach(chip => {
   chip.addEventListener('click', () => chip.classList.toggle('selected'));
 });
 
-// Form submit → success screen
+// Form submit → open personalized dashboard
 document.getElementById('onboarding-form').addEventListener('submit', function(e) {
   e.preventDefault();
-  const name = this.querySelector('input[name="name"]').value.trim();
-  document.getElementById('success-name').textContent = name || 'there';
-  this.style.display = 'none';
-  document.getElementById('modal-header').style.display = 'none';
-  document.getElementById('modal-success').classList.add('show');
+
+  const name    = this.querySelector('input[name="name"]').value.trim();
+  const age     = this.querySelector('input[name="age"]').value;
+  const height  = parseFloat(this.querySelector('input[name="height"]').value);
+  const weight  = parseFloat(this.querySelector('input[name="weight"]').value);
+  const goals   = [...this.querySelectorAll('input[name="goals"]:checked')].map(i => i.value);
+
+  // BMI
+  const bmi = (weight / Math.pow(height / 100, 2)).toFixed(1);
+  let bmiCat, bmiColor;
+  if      (bmi < 18.5) { bmiCat = 'Underweight'; bmiColor = '#378ADD'; }
+  else if (bmi < 25)   { bmiCat = 'Normal';       bmiColor = '#1D9E75'; }
+  else if (bmi < 30)   { bmiCat = 'Overweight';   bmiColor = '#F5A623'; }
+  else                 { bmiCat = 'Obese';         bmiColor = '#D85A30'; }
+
+  // Avatar initials
+  const initials = name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || '?';
+
+  // Populate dashboard fields
+  document.getElementById('db-name').textContent     = name;
+  document.getElementById('db-nav-name').textContent = name;
+  document.getElementById('db-avatar').textContent   = initials;
+  document.getElementById('db-age').textContent      = age + ' yrs';
+  document.getElementById('db-height').textContent   = height + ' cm';
+  document.getElementById('db-weight').textContent   = weight + ' kg';
+  document.getElementById('db-bmi').textContent      = bmi;
+  document.getElementById('db-bmi').style.color      = bmiColor;
+  document.getElementById('db-bmi-cat').textContent  = bmiCat;
+  document.getElementById('db-bmi-cat').style.color  = bmiColor;
+  document.getElementById('db-date').textContent     = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+
+  // Goals chips
+  const goalLabels = {
+    'lose-weight':    '🏃 Lose weight',
+    'build-muscle':   '💪 Build muscle',
+    'sleep-better':   '💤 Sleep better',
+    'reduce-stress':  '🧘 Reduce stress',
+    'improve-fitness':'⚡ Improve fitness',
+    'track-nutrition':'🥗 Track nutrition'
+  };
+  document.getElementById('db-goals').innerHTML = goals.length
+    ? goals.map(g => `<span class="db-goal-chip">${goalLabels[g]}</span>`).join('')
+    : '<span class="db-goal-chip">🌟 General wellness</span>';
+
+  // Personalised tips
+  const tipMap = {
+    'lose-weight':    { icon:'🏃', title:'Calorie deficit',    desc:'Eat 300–500 fewer calories than you burn each day. Combine with cardio 3–5× a week for steady, sustainable weight loss.' },
+    'build-muscle':   { icon:'💪', title:'Strength training',  desc:'Lift weights 3–4× a week targeting each muscle group. Aim for 1.6–2.2 g of protein per kg of body weight.' },
+    'sleep-better':   { icon:'😴', title:'Sleep hygiene',      desc:'Keep a consistent sleep schedule and avoid screens 1 hour before bed. Aim for 7–9 hours of quality rest.' },
+    'reduce-stress':  { icon:'🧘', title:'Mindful moments',    desc:'Practice 10 minutes of meditation or deep breathing daily. Even short sessions significantly lower cortisol.' },
+    'improve-fitness':{ icon:'⚡', title:'Cardio routine',     desc:'Aim for 150 minutes of moderate aerobic activity per week — mix running, cycling, or swimming for best results.' },
+    'track-nutrition':{ icon:'🥗', title:'Balanced meals',     desc:'Build every meal with protein, complex carbs, and healthy fats. Tracking meals helps you spot nutritional gaps.' }
+  };
+  const defaults = [
+    { icon:'💧', title:'Stay hydrated',   desc:'Drink at least 8 glasses of water daily. Hydration boosts energy, focus, and metabolism.' },
+    { icon:'🚶', title:'10,000 steps/day',desc:'Walking is one of the most effective habits for overall health and sustainable calorie burn.' },
+    { icon:'🌙', title:'Rest well',       desc:'Quality sleep regulates hunger hormones, speeds recovery, and sharpens your focus the next day.' }
+  ];
+  const tips = goals.length ? goals.slice(0, 6).map(g => tipMap[g]) : defaults;
+  document.getElementById('db-tips').innerHTML = tips.map(t =>
+    `<div class="feat-card">
+       <div class="feat-icon-wrap">${t.icon}</div>
+       <div class="feat-title">${t.title}</div>
+       <div class="feat-desc">${t.desc}</div>
+     </div>`
+  ).join('');
+
+  // Switch views
+  closeModal();
+  document.getElementById('main-page').style.display = 'none';
+  document.getElementById('dashboard-page').style.display = 'block';
+  window.scrollTo(0, 0);
 });
+
+function goBack() {
+  document.getElementById('dashboard-page').style.display = 'none';
+  document.getElementById('main-page').style.display = 'block';
+  window.scrollTo(0, 0);
+}
