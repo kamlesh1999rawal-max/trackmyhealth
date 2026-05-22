@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MuscleTrack Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0d0d1a;--sidebar:#12121f;--card:#1a1a2e;--border:rgba(255,255,255,0.07);
+  --purple:#7c3aed;--purple-l:#a78bfa;--green:#10b981;--green-l:#34d399;
+  --orange:#f59e0b;--blue:#3b82f6;--red:#ef4444;
+  --t1:#f1f5f9;--t2:#94a3b8;--t3:#64748b;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;overflow-x:hidden;}
+.app{display:flex;min-height:100vh;}
+
+/* ── Sidebar ── */
+.sidebar{width:230px;background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;overflow-y:auto;z-index:100;}
+.sb-logo{display:flex;align-items:center;gap:10px;padding:1.25rem;font-size:1.05rem;font-weight:600;border-bottom:1px solid var(--border);}
+.logo-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--purple),var(--blue));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.sb-user{display:flex;align-items:center;gap:10px;padding:1rem 1.25rem;border-bottom:1px solid var(--border);}
+.sb-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--blue));display:flex;align-items:center;justify-content:center;font-size:0.82rem;font-weight:600;flex-shrink:0;}
+.sb-name{font-size:0.85rem;font-weight:500;}
+.sb-badge{font-size:0.68rem;color:var(--orange);margin-top:2px;}
+.sb-nav{flex:1;padding:0.5rem 0;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:0.6rem 1.25rem;font-size:0.85rem;color:var(--t2);cursor:pointer;transition:all 0.15s;text-decoration:none;}
+.nav-item:hover{color:var(--t1);background:rgba(255,255,255,0.04);}
+.nav-item.active{color:var(--purple-l);background:rgba(124,58,237,0.12);border-right:2px solid var(--purple);}
+.nav-icon{width:18px;text-align:center;font-size:0.95rem;flex-shrink:0;}
+.sb-streak{margin:1rem;background:linear-gradient(135deg,rgba(124,58,237,0.2),rgba(16,185,129,0.1));border:1px solid rgba(124,58,237,0.25);border-radius:14px;padding:1rem;}
+.streak-lbl{font-size:0.7rem;color:var(--t2);text-transform:uppercase;letter-spacing:.06em;}
+.streak-num{font-size:1.4rem;font-weight:700;color:var(--orange);display:flex;align-items:center;gap:5px;margin:4px 0;}
+.streak-sub{font-size:0.73rem;color:var(--t2);}
+
+/* ── Main ── */
+.main{margin-left:230px;flex:1;padding:1.5rem;overflow-y:auto;}
+.topbar{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.5rem;}
+.topbar-title{font-size:1.65rem;font-weight:700;}
+.topbar-sub{font-size:0.85rem;color:var(--t2);margin-top:3px;}
+.topbar-right{display:flex;align-items:center;gap:10px;}
+.date-pill{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--border);border-radius:9px;padding:.45rem .9rem;font-size:0.8rem;color:var(--t2);}
+.back-btn{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:.45rem 1rem;font-size:0.8rem;color:var(--t2);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.back-btn:hover{color:var(--t1);border-color:var(--purple);}
+.top-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--blue));display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:600;cursor:pointer;}
+
+/* ── Cards ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.25rem;}
+.card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;}
+.card-title{font-size:0.92rem;font-weight:600;}
+.card-link{font-size:0.75rem;color:var(--purple-l);cursor:pointer;}
+
+/* ── Stats Row ── */
+.stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:.9rem;margin-bottom:1rem;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.1rem;}
+.stat-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;}
+.stat-lbl{font-size:0.75rem;color:var(--t2);}
+.stat-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem;}
+.stat-val{font-size:1.5rem;font-weight:700;line-height:1;margin-bottom:4px;}
+.stat-val span{font-size:0.85rem;font-weight:400;color:var(--t2);}
+.stat-bar-wrap{height:4px;background:rgba(255,255,255,0.07);border-radius:2px;margin:6px 0 4px;overflow:hidden;}
+.stat-bar{height:4px;border-radius:2px;}
+.stat-goal{font-size:0.7rem;color:var(--t3);}
+.stat-change{font-size:0.7rem;margin-top:4px;}
+
+/* ── Grids ── */
+.mid-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:.9rem;margin-bottom:.9rem;}
+.bot-grid{display:grid;grid-template-columns:1fr .7fr 1fr;gap:.9rem;margin-bottom:.9rem;}
+.data-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:.9rem;}
+
+/* ── Chart ── */
+.chart-stats{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--border);padding-top:.75rem;margin-top:.75rem;}
+.chart-stat{text-align:center;padding:0 .5rem;}
+.chart-stat+.chart-stat{border-left:1px solid var(--border);}
+.cstat-lbl{font-size:0.7rem;color:var(--t3);}
+.cstat-val{font-size:1rem;font-weight:600;margin-top:2px;}
+.green{color:var(--green-l);}
+
+/* ── Donut ── */
+.donut-wrap{display:flex;align-items:center;gap:1.25rem;}
+.donut-ring{width:120px;height:120px;border-radius:50%;position:relative;flex-shrink:0;}
+.donut-hole{position:absolute;width:76px;height:76px;background:var(--card);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.donut-cal{font-size:1.15rem;font-weight:700;}
+.donut-lbl{font-size:0.62rem;color:var(--t2);}
+.legend{display:flex;flex-direction:column;gap:7px;}
+.leg-item{display:flex;align-items:center;gap:8px;font-size:0.78rem;color:var(--t2);}
+.leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+
+/* ── Measurements ── */
+.mrow{display:flex;align-items:center;justify-content:space-between;padding:.5rem 0;border-bottom:1px solid var(--border);font-size:0.82rem;}
+.mrow:last-child{border-bottom:none;}
+.mname{color:var(--t2);display:flex;align-items:center;gap:6px;}
+.mval{font-weight:500;}
+.mchg{font-size:0.7rem;font-weight:600;}
+.up{color:var(--green-l);}
+.dn{color:var(--red);}
+.dn-good{color:var(--green-l);}
+
+/* ── Workout schedule ── */
+.witem{display:flex;align-items:center;gap:10px;padding:.65rem 0;border-bottom:1px solid var(--border);}
+.witem:last-child{border-bottom:none;}
+.wicon{width:34px;height:34px;border-radius:9px;background:rgba(124,58,237,0.18);display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0;}
+.wname{font-size:0.85rem;font-weight:500;}
+.wdate{font-size:0.7rem;color:var(--t3);margin-top:1px;}
+.wstatus{font-size:1.1rem;margin-left:auto;}
+
+/* ── Recovery ── */
+.rec-wrap{display:flex;flex-direction:column;align-items:center;gap:.65rem;}
+.rec-ring{position:relative;display:flex;align-items:center;justify-content:center;}
+.rec-center{position:absolute;text-align:center;}
+.rec-score{font-size:1.9rem;font-weight:700;line-height:1;}
+.rec-total{font-size:0.72rem;color:var(--t3);}
+.rec-label{font-size:0.9rem;font-weight:600;color:var(--green-l);}
+.rec-sub{font-size:0.75rem;color:var(--t2);text-align:center;line-height:1.5;}
+
+/* ── Insights ── */
+.insight{display:flex;gap:10px;padding:.65rem 0;border-bottom:1px solid var(--border);}
+.insight:last-child{border-bottom:none;}
+.iicon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0;}
+.ititle{font-size:0.82rem;font-weight:600;margin-bottom:2px;}
+.itext{font-size:0.73rem;color:var(--t2);line-height:1.5;}
+
+/* ── Table ── */
+table{width:100%;border-collapse:collapse;font-size:0.82rem;}
+th{text-align:left;font-size:0.7rem;font-weight:500;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;padding-bottom:.55rem;border-bottom:1px solid var(--border);}
+td{padding:.6rem 0;color:var(--t2);border-bottom:1px solid var(--border);}
+td:first-child{color:var(--t1);font-weight:500;}
+tr:last-child td{border-bottom:none;}
+.td-hl{color:var(--orange)!important;font-weight:600!important;}
+
+/* ── Records ── */
+.ritem{display:flex;align-items:center;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid var(--border);font-size:0.85rem;}
+.ritem:last-child{border-bottom:none;}
+.rname{color:var(--t2);}
+.rval{font-weight:600;}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <div class="logo-icon">🏋️</div>
+      MuscleTrack
+    </div>
+    <div class="sb-user">
+      <div class="sb-avatar" id="sb-avatar">?</div>
+      <div>
+        <div class="sb-name" id="sb-name">Loading…</div>
+        <div class="sb-badge">⭐ Muscle Builder</div>
+      </div>
+    </div>
+    <nav class="sb-nav">
+      <div class="nav-item active"><span class="nav-icon">📊</span> Dashboard</div>
+      <div class="nav-item"><span class="nav-icon">🏋️</span> Workout Tracker</div>
+      <div class="nav-item"><span class="nav-icon">🥗</span> Nutrition Tracker</div>
+      <div class="nav-item"><span class="nav-icon">📏</span> Body Measurements</div>
+      <div class="nav-item"><span class="nav-icon">📸</span> Progress Photos</div>
+      <div class="nav-item"><span class="nav-icon">📈</span> Strength Progress</div>
+      <div class="nav-item"><span class="nav-icon">🔄</span> Recovery Tracker</div>
+      <div class="nav-item"><span class="nav-icon">🎯</span> Goals</div>
+      <div class="nav-item"><span class="nav-icon">🤖</span> AI Coach</div>
+      <div class="nav-item"><span class="nav-icon">📅</span> Calendar</div>
+      <div class="nav-item"><span class="nav-icon">🤝</span> Community</div>
+      <div class="nav-item"><span class="nav-icon">⚙️</span> Settings</div>
+    </nav>
+    <div class="sb-streak">
+      <div class="streak-lbl">Workout Streak</div>
+      <div class="streak-num">🔥 <span>12 days</span></div>
+      <div class="streak-sub">Keep it up! You're crushing it.</div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <div>
+        <div class="topbar-title">Dashboard</div>
+        <div class="topbar-sub">Track your progress. Build your best physique.</div>
+      </div>
+      <div class="topbar-right">
+        <div class="date-pill">📅 <span id="top-date"></span></div>
+        <button class="back-btn" onclick="goHome()">← Home</button>
+        <div class="top-avatar" id="top-avatar">?</div>
+      </div>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-top"><div class="stat-lbl">Weight</div><div class="stat-icon" style="background:rgba(124,58,237,.15);">⚖️</div></div>
+        <div class="stat-val" id="s-weight">— <span>kg</span></div>
+        <div class="stat-change" style="color:var(--green-l);">↑ Building mass</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-top"><div class="stat-lbl">Calories</div><div class="stat-icon" style="background:rgba(245,158,11,.15);">🔥</div></div>
+        <div class="stat-val" id="s-cal">— <span>kcal</span></div>
+        <div class="stat-bar-wrap"><div class="stat-bar" id="s-cal-bar" style="background:var(--orange);width:72%;"></div></div>
+        <div class="stat-goal" id="s-cal-goal">Goal: — kcal</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-top"><div class="stat-lbl">Protein</div><div class="stat-icon" style="background:rgba(16,185,129,.15);">🥩</div></div>
+        <div class="stat-val" id="s-protein">— <span>g</span></div>
+        <div class="stat-bar-wrap"><div class="stat-bar" id="s-protein-bar" style="background:var(--green);width:65%;"></div></div>
+        <div class="stat-goal" id="s-protein-goal">Goal: — g</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-top"><div class="stat-lbl">Sleep</div><div class="stat-icon" style="background:rgba(59,130,246,.15);">🌙</div></div>
+        <div class="stat-val">7h <span>45m</span></div>
+        <div class="stat-goal">Goal: 7–9h</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-top"><div class="stat-lbl">Workout Streak</div><div class="stat-icon" style="background:rgba(245,158,11,.15);">🏆</div></div>
+        <div class="stat-val">12 <span>days</span></div>
+        <div class="stat-goal">Best: 18 days</div>
+      </div>
+    </div>
+
+    <!-- Mid Grid -->
+    <div class="mid-grid">
+
+      <!-- Strength Progress -->
+      <div class="card">
+        <div class="card-hdr">
+          <div class="card-title">Strength Progress</div>
+          <div style="background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;padding:.28rem .75rem;font-size:0.78rem;color:var(--t2);">Bench Press ▾</div>
+        </div>
+        <svg viewBox="0 0 360 148" style="width:100%;overflow:visible;">
+          <defs>
+            <linearGradient id="cg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <line x1="0" y1="118" x2="360" y2="118" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+          <line x1="0" y1="88" x2="360" y2="88" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+          <line x1="0" y1="58" x2="360" y2="58" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+          <line x1="0" y1="28" x2="360" y2="28" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+          <text x="2" y="122" fill="#64748b" font-size="9">40</text>
+          <text x="2" y="92" fill="#64748b" font-size="9">60</text>
+          <text x="2" y="62" fill="#64748b" font-size="9">80</text>
+          <text x="2" y="32" fill="#64748b" font-size="9">100</text>
+          <path d="M22,118 L82,106 L142,88 L202,70 L262,48 L322,30 L360,30 L360,132 L22,132 Z" fill="url(#cg)"/>
+          <polyline points="22,118 82,106 142,88 202,70 262,48 322,30" fill="none" stroke="#7c3aed" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="22"  cy="118" r="3.5" fill="#7c3aed"/>
+          <circle cx="82"  cy="106" r="3.5" fill="#7c3aed"/>
+          <circle cx="142" cy="88"  r="3.5" fill="#7c3aed"/>
+          <circle cx="202" cy="70"  r="3.5" fill="#7c3aed"/>
+          <circle cx="262" cy="48"  r="3.5" fill="#7c3aed"/>
+          <circle cx="322" cy="30"  r="5"   fill="#a78bfa" stroke="#7c3aed" stroke-width="2"/>
+          <rect x="296" y="10" width="56" height="18" rx="4" fill="rgba(124,58,237,0.3)" stroke="#7c3aed" stroke-width="1"/>
+          <text x="324" y="22" fill="#a78bfa" font-size="9.5" text-anchor="middle">80 kg</text>
+          <text x="22"  y="142" fill="#64748b" font-size="8.5" text-anchor="middle">Apr 21</text>
+          <text x="82"  y="142" fill="#64748b" font-size="8.5" text-anchor="middle">Apr 28</text>
+          <text x="142" y="142" fill="#64748b" font-size="8.5" text-anchor="middle">May 5</text>
+          <text x="202" y="142" fill="#64748b" font-size="8.5" text-anchor="middle">May 12</text>
+          <text x="262" y="142" fill="#64748b" font-size="8.5" text-anchor="middle">May 19</text>
+          <text x="322" y="142" fill="#64748b" font-size="8.5" text-anchor="middle">May 26</text>
+        </svg>
+        <div class="chart-stats">
+          <div class="chart-stat"><div class="cstat-lbl">Total Progress</div><div class="cstat-val green">+20 kg</div></div>
+          <div class="chart-stat"><div class="cstat-lbl">Starting Point</div><div class="cstat-val">60 kg</div></div>
+          <div class="chart-stat"><div class="cstat-lbl">Current Best</div><div class="cstat-val">80 kg</div></div>
+        </div>
+      </div>
+
+      <!-- Nutrition Overview -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-title">Nutrition Overview</div></div>
+        <div class="donut-wrap">
+          <div class="donut-ring" id="donut-ring">
+            <div class="donut-hole">
+              <div class="donut-cal" id="donut-cal">—</div>
+              <div class="donut-lbl">kcal</div>
+            </div>
+          </div>
+          <div class="legend">
+            <div class="leg-item"><div class="leg-dot" style="background:var(--green);"></div><span id="leg-p">Protein: —</span></div>
+            <div class="leg-item"><div class="leg-dot" style="background:var(--purple-l);"></div><span id="leg-c">Carbs: —</span></div>
+            <div class="leg-item"><div class="leg-dot" style="background:var(--orange);"></div><span id="leg-f">Fat: —</span></div>
+          </div>
+        </div>
+        <div style="margin-top:1rem;padding-top:.75rem;border-top:1px solid var(--border);font-size:0.78rem;color:var(--purple-l);text-align:center;cursor:pointer;">View Nutrition Tracker →</div>
+      </div>
+
+      <!-- Body Measurements -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-title">Body Measurements</div><div class="card-link">View All ›</div></div>
+        <div class="mrow"><span class="mname">👕 Chest</span><span class="mval">105 cm</span><span class="mchg up">↑ 2 cm</span></div>
+        <div class="mrow"><span class="mname">💪 Arms</span><span class="mval">38 cm</span><span class="mchg up">↑ 1.5 cm</span></div>
+        <div class="mrow"><span class="mname">⬛ Waist</span><span class="mval">78 cm</span><span class="mchg dn-good">↓ 1 cm</span></div>
+        <div class="mrow"><span class="mname">🦵 Thighs</span><span class="mval">58 cm</span><span class="mchg up">↑ 2 cm</span></div>
+        <div class="mrow"><span class="mname">🏔️ Shoulders</span><span class="mval">125 cm</span><span class="mchg up">↑ 1 cm</span></div>
+        <div class="mrow"><span class="mname">📊 Body Fat</span><span class="mval">14.2 %</span><span class="mchg dn-good">↓ 0.8 %</span></div>
+      </div>
+    </div>
+
+    <!-- Bottom Grid -->
+    <div class="bot-grid">
+
+      <!-- Workout Schedule -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-title">Workout Schedule</div><div class="card-link">View Calendar ›</div></div>
+        <div class="witem"><div class="wicon">💪</div><div><div class="wname">Push Day</div><div class="wdate">Monday</div></div><div class="wstatus">✅</div></div>
+        <div class="witem"><div class="wicon">🔙</div><div><div class="wname">Pull Day</div><div class="wdate">Wednesday</div></div><div class="wstatus">✅</div></div>
+        <div class="witem"><div class="wicon">🦵</div><div><div class="wname">Leg Day</div><div class="wdate">Friday</div></div><div class="wstatus" style="opacity:.35;">⏳</div></div>
+      </div>
+
+      <!-- Recovery Score -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-title">Recovery Score</div></div>
+        <div class="rec-wrap">
+          <div class="rec-ring">
+            <svg viewBox="0 0 120 120" width="115" height="115" style="transform:rotate(-90deg)">
+              <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="10"/>
+              <circle cx="60" cy="60" r="50" fill="none" stroke="var(--green)" stroke-width="10" stroke-dasharray="258 314" stroke-linecap="round"/>
+            </svg>
+            <div class="rec-center">
+              <div class="rec-score">82</div>
+              <div class="rec-total">/100</div>
+            </div>
+          </div>
+          <div class="rec-label">Great Recovery! 🤌</div>
+          <div class="rec-sub">You're ready to crush your next workout.</div>
+        </div>
+      </div>
+
+      <!-- AI Coach Insights -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-title">AI Coach Insights</div></div>
+        <div class="insight">
+          <div class="iicon" style="background:rgba(16,185,129,.15);">📈</div>
+          <div><div class="ititle" style="color:var(--green-l);">Great Progress!</div><div class="itext">Your bench press improved 20 kg in the last 4 weeks. Keep it up!</div></div>
+        </div>
+        <div class="insight">
+          <div class="iicon" style="background:rgba(16,185,129,.15);">🥩</div>
+          <div><div class="ititle" id="ai-p-title" style="color:var(--green-l);">Hit Your Protein Goal</div><div class="itext" id="ai-p-text">Try to hit your daily protein target for better muscle growth.</div></div>
+        </div>
+        <div class="insight">
+          <div class="iicon" style="background:rgba(245,158,11,.15);">😴</div>
+          <div><div class="ititle" style="color:var(--orange);">Sleep is Good</div><div class="itext">Keep 7–9 hours nightly for optimal recovery and muscle repair.</div></div>
+        </div>
+        <div style="margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border);font-size:0.78rem;color:var(--purple-l);text-align:center;cursor:pointer;">View All Insights →</div>
+      </div>
+    </div>
+
+    <!-- Data Grid -->
+    <div class="data-grid">
+
+      <!-- Recent Workouts -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-title">Recent Workouts</div></div>
+        <table>
+          <thead><tr><th>Exercise</th><th>Sets</th><th>Reps</th><th>Weight</th><th>1RM</th><th>Date</th></tr></thead>
+          <tbody>
+            <tr><td>Bench Press</td><td>4</td><td>8</td><td>80 kg</td><td class="td-hl">100 kg</td><td>Today</td></tr>
+            <tr><td>Squat</td><td>4</td><td>5</td><td>100 kg</td><td class="td-hl">130 kg</td><td>Yesterday</td></tr>
+            <tr><td>Deadlift</td><td>3</td><td>5</td><td>120 kg</td><td class="td-hl">155 kg</td><td>2 days ago</td></tr>
+            <tr><td>Overhead Press</td><td>3</td><td>8</td><td>55 kg</td><td class="td-hl">70 kg</td><td>3 days ago</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Personal Records -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-title">Personal Records</div><div class="card-link">View All ›</div></div>
+        <div class="ritem"><span class="rname">🏋️ Bench Press</span><span class="rval">100 kg</span></div>
+        <div class="ritem"><span class="rname">🏋️ Squat</span><span class="rval">140 kg</span></div>
+        <div class="ritem"><span class="rname">🏋️ Deadlift</span><span class="rval">160 kg</span></div>
+        <div class="ritem"><span class="rname">🏋️ Overhead Press</span><span class="rval">75 kg</span></div>
+        <div class="ritem"><span class="rname">🏋️ Barbell Row</span><span class="rval">90 kg</span></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+function goHome() { window.location.href = 'index.html'; }
+
+const user = JSON.parse(localStorage.getItem('tmh_user') || '{}');
+const name = user.name || 'User';
+const initials = name.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase() || name[0].toUpperCase();
+
+document.getElementById('sb-avatar').textContent  = initials;
+document.getElementById('top-avatar').textContent = initials;
+document.getElementById('sb-name').textContent    = name;
+document.getElementById('top-date').textContent   = new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+
+const weight    = user.weight    || 70;
+const targetCal = user.targetCal || 2500;
+const proteinG  = user.proteinG  || 154;
+const carbsG    = user.carbsG    || 250;
+const fatG      = user.fatG      || 70;
+const proteinPct = user.proteinPct || 25;
+const carbsPct   = user.carbsPct   || 50;
+const fatPct     = user.fatPct     || 25;
+
+document.getElementById('s-weight').innerHTML    = `${weight} <span>kg</span>`;
+document.getElementById('s-cal').innerHTML       = `${targetCal.toLocaleString()} <span>kcal</span>`;
+document.getElementById('s-cal-goal').textContent   = `Goal: ${targetCal.toLocaleString()} kcal`;
+document.getElementById('s-protein').innerHTML   = `${proteinG} <span>g</span>`;
+document.getElementById('s-protein-goal').textContent = `Goal: ${proteinG} g`;
+document.getElementById('donut-cal').textContent = targetCal.toLocaleString();
+document.getElementById('leg-p').textContent = `Protein: ${proteinG}g (${proteinPct}%)`;
+document.getElementById('leg-c').textContent = `Carbs: ${carbsG}g (${carbsPct}%)`;
+document.getElementById('leg-f').textContent = `Fat: ${fatG}g (${fatPct}%)`;
+document.getElementById('ai-p-title').textContent = `Hit ${proteinG}g Protein Daily`;
+document.getElementById('ai-p-text').textContent  = `Try to hit ${proteinG}g of protein daily for optimal muscle growth and recovery.`;
+
+// Donut chart via conic-gradient
+const ring = document.getElementById('donut-ring');
+const p2 = proteinPct, c2 = proteinPct + carbsPct;
+ring.style.background = `conic-gradient(#10b981 0% ${p2}%, #a78bfa ${p2}% ${c2}%, #f59e0b ${c2}% 100%)`;
+</script>
+</body>
+</html>

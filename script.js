@@ -345,7 +345,19 @@ document.getElementById('onboarding-form').addEventListener('submit', function(e
     document.getElementById('db-health-wrap').style.display = 'none';
   }
 
-  // Switch views
+  // If build-muscle selected → redirect to dedicated muscle dashboard
+  if (goals.includes('build-muscle')) {
+    localStorage.setItem('tmh_user', JSON.stringify({
+      name, gender, age, height, weight, goals, health,
+      bmr: Math.round(bmr), maintenance, targetCal,
+      proteinG, carbsG, fatG, proteinPct, carbsPct, fatPct
+    }));
+    closeModal();
+    window.location.href = 'muscle-dashboard.html';
+    return;
+  }
+
+  // Otherwise show general dashboard
   closeModal();
   document.getElementById('main-page').style.display = 'none';
   document.getElementById('dashboard-page').style.display = 'block';
