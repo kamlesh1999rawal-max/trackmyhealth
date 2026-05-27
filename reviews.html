@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reviews · Track My Health</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.rv-hero {
+  padding: 110px 2.5rem 4rem;
+  text-align: center;
+  background: linear-gradient(135deg, var(--purple-50) 0%, var(--green-50) 100%);
+}
+.rv-overall {
+  display: inline-flex;
+  align-items: center;
+  gap: 3rem;
+  background: #fff;
+  border-radius: var(--radius);
+  border: 1px solid rgba(127,119,221,0.12);
+  padding: 2rem 2.75rem;
+  box-shadow: 0 4px 24px rgba(127,119,221,0.09);
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+.rv-big-score {
+  font-family: 'DM Serif Display', serif;
+  font-size: 5rem;
+  line-height: 1;
+  color: var(--text-dark);
+}
+.rv-stars-display { color: #F5C96A; font-size: 1.5rem; letter-spacing: 4px; margin-top: 6px; }
+.rv-total-label { font-size: 0.82rem; color: var(--text-soft); margin-top: 5px; }
+.rv-bars { display: flex; flex-direction: column; gap: 9px; min-width: 200px; }
+.rv-bar-row { display: flex; align-items: center; gap: 10px; }
+.rv-bar-label { font-size: 0.78rem; color: var(--text-soft); width: 22px; text-align: right; flex-shrink: 0; }
+.rv-bar-wrap { flex: 1; height: 8px; background: #f0eef8; border-radius: 4px; overflow: hidden; }
+.rv-bar-fill { height: 8px; border-radius: 4px; background: #F5C96A; transition: width 0.7s ease; width: 0%; }
+.rv-bar-pct { font-size: 0.72rem; color: var(--text-soft); width: 32px; text-align: right; flex-shrink: 0; }
+
+.rv-main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 4rem 2.5rem;
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+.rv-feed-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+.rv-feed-title { font-size: 1rem; font-weight: 500; color: var(--text-dark); }
+.rv-sort-btns { display: flex; gap: 6px; }
+.rv-sort-btn {
+  font-size: 0.78rem;
+  color: var(--text-soft);
+  background: #fff;
+  border: 1px solid rgba(127,119,221,0.15);
+  border-radius: 50px;
+  padding: 0.3rem 0.9rem;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+}
+.rv-sort-btn.active { background: var(--purple-50); color: var(--purple-600); border-color: var(--purple-100); font-weight: 500; }
+.rv-sort-btn:hover:not(.active) { border-color: var(--purple-100); color: var(--text-dark); }
+
+@media (max-width: 768px) {
+  .rv-hero { padding: 100px 1.25rem 3rem; }
+  .rv-main { grid-template-columns: 1fr; padding: 3rem 1.25rem; }
+  .rv-overall { gap: 1.75rem; padding: 1.5rem 1.75rem; }
+  .rv-big-score { font-size: 4rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-dot">T</div>
+    Track My Health
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html#features">Features</a></li>
+    <li><a href="index.html#community">Community</a></li>
+    <li><a href="reviews.html" style="color:var(--purple-400);font-weight:500;">Reviews</a></li>
+    <li><a href="#">Pricing</a></li>
+  </ul>
+  <a href="index.html" style="text-decoration:none;">
+    <button class="btn-ghost" style="font-size:0.875rem;padding:0.5rem 1.25rem;">← Home</button>
+  </a>
+</nav>
+
+<!-- HERO -->
+<section class="rv-hero">
+  <div class="section-eyebrow">Community Reviews</div>
+  <h1 class="section-title">What our users say</h1>
+  <p class="section-sub" style="margin-bottom:2rem;">Real experiences from people on their health journey.</p>
+
+  <div class="rv-overall">
+    <div style="text-align:center;">
+      <div class="rv-big-score" id="rv-avg">—</div>
+      <div class="rv-stars-display" id="rv-stars-row">☆☆☆☆☆</div>
+      <div class="rv-total-label" id="rv-total-label">No reviews yet</div>
+    </div>
+    <div class="rv-bars">
+      <div class="rv-bar-row"><span class="rv-bar-label">5★</span><div class="rv-bar-wrap"><div class="rv-bar-fill" id="bar5"></div></div><span class="rv-bar-pct" id="pct5">0%</span></div>
+      <div class="rv-bar-row"><span class="rv-bar-label">4★</span><div class="rv-bar-wrap"><div class="rv-bar-fill" id="bar4"></div></div><span class="rv-bar-pct" id="pct4">0%</span></div>
+      <div class="rv-bar-row"><span class="rv-bar-label">3★</span><div class="rv-bar-wrap"><div class="rv-bar-fill" id="bar3"></div></div><span class="rv-bar-pct" id="pct3">0%</span></div>
+      <div class="rv-bar-row"><span class="rv-bar-label">2★</span><div class="rv-bar-wrap"><div class="rv-bar-fill" id="bar2"></div></div><span class="rv-bar-pct" id="pct2">0%</span></div>
+      <div class="rv-bar-row"><span class="rv-bar-label">1★</span><div class="rv-bar-wrap"><div class="rv-bar-fill" id="bar1"></div></div><span class="rv-bar-pct" id="pct1">0%</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- MAIN CONTENT -->
+<div class="rv-main">
+
+  <!-- Write a Review -->
+  <div>
+    <div class="review-form-card">
+      <div class="review-form-heading">✍️ Write a review</div>
+      <form id="review-form" autocomplete="off">
+        <div class="form-group">
+          <label>Your name</label>
+          <input type="text" id="review-name" placeholder="e.g. Alex" maxlength="40" required/>
+        </div>
+        <div class="form-group" style="margin-top:1.25rem;">
+          <label>Rate this website</label>
+          <div class="star-picker" id="star-picker" style="margin-top:8px;">
+            <span class="star" data-val="1">★</span>
+            <span class="star" data-val="2">★</span>
+            <span class="star" data-val="3">★</span>
+            <span class="star" data-val="4">★</span>
+            <span class="star" data-val="5">★</span>
+          </div>
+          <input type="hidden" id="review-rating" value="0"/>
+        </div>
+        <div class="form-group" style="margin-top:1.25rem;">
+          <label>Your review</label>
+          <textarea id="review-text" placeholder="Share your experience — what helped, what you loved, any suggestions..." maxlength="500" required style="min-height:120px;"></textarea>
+        </div>
+        <p class="review-error" id="review-error">Please select a star rating before posting.</p>
+        <button type="submit" class="btn-primary" style="width:100%;justify-content:center;font-size:1rem;padding:1rem;margin-top:0.5rem;">
+          Post review →
+        </button>
+      </form>
+      <div class="review-success" id="review-success">
+        ✅ Thank you! Your review has been posted.
+      </div>
+    </div>
+  </div>
+
+  <!-- Reviews Feed -->
+  <div>
+    <div class="rv-feed-header">
+      <div class="rv-feed-title" id="rv-feed-count">All reviews</div>
+      <div class="rv-sort-btns">
+        <button class="rv-sort-btn active" id="sort-new" onclick="setSort('new')">Newest</button>
+        <button class="rv-sort-btn" id="sort-top" onclick="setSort('top')">Top rated</button>
+      </div>
+    </div>
+    <div id="user-reviews-grid" class="user-reviews-grid" style="max-height:none;overflow:visible;">
+      <!-- populated by JS -->
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <div class="nav-logo-dot" style="width:24px;height:24px;font-size:11px;">T</div>
+    <span>Track My Health · 2025</span>
+  </div>
+  <div style="display:flex;gap:1.5rem;">
+    <a href="index.html" style="color:var(--text-soft);text-decoration:none;">Home</a>
+    <a href="#" style="color:var(--text-soft);text-decoration:none;">Privacy</a>
+    <a href="#" style="color:var(--text-soft);text-decoration:none;">Contact</a>
+  </div>
+</footer>
+
+<script>
+const REVIEWS_KEY = 'tmh_reviews';
+let sortMode = 'new';
+
+function getReviews() {
+  return JSON.parse(localStorage.getItem(REVIEWS_KEY) || '[]');
+}
+
+function updateSummary() {
+  const reviews = getReviews();
+  const total = reviews.length;
+
+  if (total === 0) {
+    document.getElementById('rv-avg').textContent = '—';
+    document.getElementById('rv-stars-row').textContent = '☆☆☆☆☆';
+    document.getElementById('rv-total-label').textContent = 'No reviews yet';
+    document.getElementById('rv-feed-count').textContent = 'All reviews';
+    [1,2,3,4,5].forEach(n => {
+      document.getElementById('bar'+n).style.width = '0%';
+      document.getElementById('pct'+n).textContent = '0%';
+    });
+    return;
+  }
+
+  const avg = reviews.reduce((s, r) => s + r.rating, 0) / total;
+  document.getElementById('rv-avg').textContent = avg.toFixed(1);
+  document.getElementById('rv-stars-row').textContent = starsFromAvg(avg);
+  document.getElementById('rv-total-label').textContent = total + ' review' + (total !== 1 ? 's' : '');
+  document.getElementById('rv-feed-count').textContent = total + ' review' + (total !== 1 ? 's' : '');
+
+  [1,2,3,4,5].forEach(n => {
+    const count = reviews.filter(r => r.rating === n).length;
+    const pct = Math.round((count / total) * 100);
+    document.getElementById('bar'+n).style.width = pct + '%';
+    document.getElementById('pct'+n).textContent = pct + '%';
+  });
+}
+
+function starsFromAvg(avg) {
+  let s = '';
+  for (let i = 1; i <= 5; i++) {
+    s += avg >= i - 0.25 ? '★' : (avg >= i - 0.75 ? '✦' : '☆');
+  }
+  return s;
+}
+
+function renderReviews() {
+  const grid = document.getElementById('user-reviews-grid');
+  let reviews = getReviews();
+
+  if (reviews.length === 0) {
+    grid.innerHTML = '<div class="no-reviews-msg"><div class="no-reviews-icon">💬</div>No reviews yet — be the first to share your experience!</div>';
+    return;
+  }
+
+  if (sortMode === 'new') {
+    reviews = reviews.slice().reverse();
+  } else {
+    reviews = reviews.slice().sort((a, b) => b.rating - a.rating || new Date(b.date) - new Date(a.date));
+  }
+
+  grid.innerHTML = reviews.map(r => {
+    const filled = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+    const initials = r.name.trim().split(/\s+/).map(n => n[0]).join('').slice(0, 2).toUpperCase() || '?';
+    return `<div class="user-review-card">
+      <div class="user-review-stars">${filled}</div>
+      <p class="user-review-text">"${r.text}"</p>
+      <div class="user-review-author">
+        <div class="user-review-avatar">${initials}</div>
+        <div>
+          <div class="user-review-name">${r.name}</div>
+          <div class="user-review-date">${r.date}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function setSort(mode) {
+  sortMode = mode;
+  document.getElementById('sort-new').classList.toggle('active', mode === 'new');
+  document.getElementById('sort-top').classList.toggle('active', mode === 'top');
+  renderReviews();
+}
+
+// Star picker
+let currentRating = 0;
+const starPickerEl = document.getElementById('star-picker');
+const reviewRatingInput = document.getElementById('review-rating');
+const starEls = starPickerEl.querySelectorAll('.star');
+
+starEls.forEach(star => {
+  star.addEventListener('mouseover', () => {
+    const val = parseInt(star.dataset.val);
+    starEls.forEach(s => s.classList.toggle('hovered', parseInt(s.dataset.val) <= val));
+  });
+  star.addEventListener('mouseout', () => {
+    starEls.forEach(s => s.classList.remove('hovered'));
+  });
+  star.addEventListener('click', () => {
+    currentRating = parseInt(star.dataset.val);
+    reviewRatingInput.value = currentRating;
+    starEls.forEach(s => s.classList.toggle('active', parseInt(s.dataset.val) <= currentRating));
+  });
+});
+
+// Form submit
+document.getElementById('review-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const name   = document.getElementById('review-name').value.trim();
+  const text   = document.getElementById('review-text').value.trim();
+  const rating = parseInt(document.getElementById('review-rating').value);
+  const errorEl = document.getElementById('review-error');
+
+  if (rating === 0) { errorEl.style.display = 'block'; return; }
+  errorEl.style.display = 'none';
+
+  const reviews = getReviews();
+  reviews.push({
+    name, rating, text,
+    date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+  });
+  localStorage.setItem(REVIEWS_KEY, JSON.stringify(reviews));
+
+  this.reset();
+  currentRating = 0;
+  reviewRatingInput.value = 0;
+  starEls.forEach(s => s.classList.remove('active', 'hovered'));
+
+  const successEl = document.getElementById('review-success');
+  successEl.classList.add('show');
+  setTimeout(() => successEl.classList.remove('show'), 3500);
+
+  updateSummary();
+  renderReviews();
+});
+
+// Init
+updateSummary();
+renderReviews();
+setTimeout(updateSummary, 150);
+</script>
+</body>
+</html>
