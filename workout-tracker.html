@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Workout Tracker – MuscleTrack</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0f1117;
+    --bg2: #161b27;
+    --bg3: #1e2435;
+    --bg4: #252d42;
+    --accent: #7c6af7;
+    --accent2: #a78bfa;
+    --green: #22c55e;
+    --amber: #f59e0b;
+    --red: #ef4444;
+    --teal: #14b8a6;
+    --text: #f1f5f9;
+    --text2: #94a3b8;
+    --text3: #64748b;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: 210px;
+    min-height: 100vh;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    flex-shrink: 0;
+  }
+  .sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 22px 20px 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .logo-icon {
+    width: 34px; height: 34px;
+    background: linear-gradient(135deg, var(--accent), #c084fc);
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 15px; color: #fff;
+  }
+  .logo-text { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; }
+
+  .sidebar-user {
+    display: flex; align-items: center; gap: 10px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), #c084fc);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 13px; color: #fff; flex-shrink: 0;
+  }
+  .user-name { font-size: 13px; font-weight: 600; }
+  .user-tag { font-size: 11px; color: var(--amber); }
+
+  .sidebar-nav { padding: 10px 10px; flex: 1; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 12px; border-radius: var(--radius-sm);
+    font-size: 13.5px; color: var(--text2); cursor: pointer;
+    transition: all 0.18s; margin-bottom: 2px;
+    text-decoration: none;
+  }
+  .nav-item:hover { background: var(--bg3); color: var(--text); }
+  .nav-item.active { background: rgba(124,106,247,0.18); color: var(--accent2); font-weight: 600; }
+  .nav-item svg { width: 17px; height: 17px; flex-shrink: 0; }
+
+  .streak-box {
+    margin: 10px; padding: 14px; border-radius: var(--radius);
+    background: linear-gradient(135deg, rgba(124,106,247,0.15), rgba(192,132,252,0.1));
+    border: 1px solid rgba(124,106,247,0.25);
+  }
+  .streak-label { font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--text3); margin-bottom: 4px; }
+  .streak-val { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; color: var(--amber); }
+  .streak-sub { font-size: 11px; color: var(--text2); margin-top: 3px; }
+
+  /* ── MAIN ── */
+  .main { flex: 1; padding: 28px 30px; overflow-x: hidden; }
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 28px;
+  }
+  .page-title { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; }
+  .page-sub { font-size: 13px; color: var(--text2); margin-top: 2px; }
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 9px 18px; border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif; font-size: 13.5px; font-weight: 600;
+    cursor: pointer; border: none; transition: all 0.18s;
+  }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: #6b5ce7; transform: translateY(-1px); }
+  .btn-outline {
+    background: transparent; color: var(--text2);
+    border: 1px solid var(--border2);
+  }
+  .btn-outline:hover { background: var(--bg3); color: var(--text); }
+
+  /* ── WEEK TABS ── */
+  .week-tabs {
+    display: flex; gap: 8px; margin-bottom: 24px;
+    overflow-x: auto; padding-bottom: 4px;
+  }
+  .week-tabs::-webkit-scrollbar { height: 3px; }
+  .week-tabs::-webkit-scrollbar-track { background: var(--bg2); }
+  .week-tabs::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 2px; }
+  .week-tab {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 10px 18px; border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--bg2); cursor: pointer;
+    transition: all 0.18s; min-width: 80px; flex-shrink: 0;
+  }
+  .week-tab:hover { border-color: var(--border2); background: var(--bg3); }
+  .week-tab.active {
+    background: rgba(124,106,247,0.18);
+    border-color: var(--accent);
+  }
+  .tab-day { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: .06em; }
+  .tab-num {
+    font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700;
+    margin: 2px 0;
+  }
+  .week-tab.active .tab-num { color: var(--accent2); }
+  .tab-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--text3); margin-top: 2px;
+  }
+  .week-tab.done .tab-dot { background: var(--green); }
+  .week-tab.active .tab-dot { background: var(--accent); }
+
+  /* ── CONTENT GRID ── */
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 20px;
+  }
+
+  /* ── DAY CARD ── */
+  .day-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .day-card-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--border);
+  }
+  .day-card-title {
+    font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700;
+  }
+  .day-badge {
+    padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;
+  }
+  .badge-push { background: rgba(124,106,247,0.2); color: var(--accent2); }
+  .badge-pull { background: rgba(20,184,166,0.2); color: var(--teal); }
+  .badge-legs { background: rgba(245,158,11,0.2); color: var(--amber); }
+  .badge-rest { background: rgba(100,116,139,0.15); color: var(--text3); }
+  .badge-custom { background: rgba(34,197,94,0.2); color: var(--green); }
+
+  /* ── EXERCISE TABLE ── */
+  .exercise-table { width: 100%; border-collapse: collapse; }
+  .exercise-table thead tr {
+    border-bottom: 1px solid var(--border);
+  }
+  .exercise-table th {
+    padding: 12px 22px; text-align: left;
+    font-size: 11px; text-transform: uppercase; letter-spacing: .07em;
+    color: var(--text3); font-weight: 600;
+  }
+  .exercise-table th:not(:first-child) { text-align: center; }
+  .exercise-table tbody tr {
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: background 0.15s;
+  }
+  .exercise-table tbody tr:hover { background: rgba(255,255,255,0.025); }
+  .exercise-table tbody tr:last-child { border-bottom: none; }
+  .exercise-table td {
+    padding: 13px 22px; font-size: 14px;
+  }
+  .exercise-table td:not(:first-child) { text-align: center; }
+  .ex-name { font-weight: 600; color: var(--text); }
+  .ex-muscle { font-size: 11px; color: var(--text3); margin-top: 2px; }
+  .set-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; border-radius: 8px;
+    background: var(--bg4); font-size: 13px; font-weight: 600;
+  }
+  .weight-val {
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; color: var(--accent2);
+  }
+  .weight-unit { font-size: 11px; color: var(--text3); }
+  .pr-badge {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    background: rgba(245,158,11,0.2); color: var(--amber);
+    font-size: 10px; font-weight: 700; letter-spacing: .05em; margin-left: 6px;
+  }
+  .done-check {
+    width: 22px; height: 22px; border-radius: 6px;
+    border: 1.5px solid var(--border2);
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.15s; background: transparent;
+  }
+  .done-check.checked {
+    background: var(--green); border-color: var(--green);
+  }
+
+  .add-exercise-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 14px 22px;
+    border-top: 1px solid var(--border);
+  }
+  .input-sm {
+    background: var(--bg3); border: 1px solid var(--border);
+    color: var(--text); border-radius: var(--radius-sm);
+    padding: 8px 12px; font-family: 'DM Sans', sans-serif; font-size: 13px;
+    outline: none; transition: border 0.15s;
+  }
+  .input-sm:focus { border-color: var(--accent); }
+  .input-sm::placeholder { color: var(--text3); }
+  .input-sm.wide { flex: 1; }
+  .input-sm.narrow { width: 72px; }
+  .btn-icon {
+    width: 34px; height: 34px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border2); background: var(--bg3);
+    color: var(--text2); cursor: pointer; display: flex;
+    align-items: center; justify-content: center; transition: all 0.15s;
+    font-size: 18px; line-height: 1;
+  }
+  .btn-icon:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn-del {
+    width: 28px; height: 28px; border-radius: 6px;
+    background: transparent; border: none; color: var(--text3);
+    cursor: pointer; font-size: 16px; display: flex;
+    align-items: center; justify-content: center; transition: all 0.15s;
+  }
+  .btn-del:hover { background: rgba(239,68,68,0.15); color: var(--red); }
+
+  /* ── SIDE PANEL ── */
+  .side-panel { display: flex; flex-direction: column; gap: 16px; }
+  .panel-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 18px 20px;
+  }
+  .panel-title {
+    font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700;
+    margin-bottom: 14px;
+  }
+  .stat-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .stat-row:last-child { margin-bottom: 0; }
+  .stat-label { font-size: 13px; color: var(--text2); }
+  .stat-val { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; }
+  .stat-val.green { color: var(--green); }
+  .stat-val.amber { color: var(--amber); }
+  .stat-val.purple { color: var(--accent2); }
+
+  /* progress bar */
+  .prog-bar-wrap { height: 6px; background: var(--bg4); border-radius: 3px; margin-top: 6px; overflow: hidden; }
+  .prog-bar { height: 100%; border-radius: 3px; background: var(--accent); transition: width 0.4s; }
+  .prog-bar.green { background: var(--green); }
+
+  /* week overview grid */
+  .week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .week-cell {
+    aspect-ratio: 1; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; cursor: pointer;
+    transition: transform 0.12s;
+  }
+  .week-cell:hover { transform: scale(1.1); }
+  .wc-empty { background: var(--bg4); color: var(--text3); }
+  .wc-done { background: rgba(34,197,94,0.25); color: var(--green); }
+  .wc-rest { background: rgba(100,116,139,0.15); color: var(--text3); }
+  .wc-today { background: rgba(124,106,247,0.3); color: var(--accent2); border: 1.5px solid var(--accent); }
+
+  /* volume chart mini bars */
+  .vol-chart { display: flex; align-items: flex-end; gap: 4px; height: 50px; margin-top: 10px; }
+  .vol-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .vol-bar {
+    width: 100%; border-radius: 4px 4px 0 0;
+    background: rgba(124,106,247,0.4); transition: height 0.3s;
+    min-height: 4px;
+  }
+  .vol-bar.today { background: var(--accent); }
+  .vol-label { font-size: 9px; color: var(--text3); }
+
+  /* template buttons */
+  .template-list { display: flex; flex-direction: column; gap: 8px; }
+  .template-btn {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 14px; border-radius: var(--radius-sm);
+    background: var(--bg3); border: 1px solid var(--border);
+    cursor: pointer; transition: all 0.15s;
+  }
+  .template-btn:hover { border-color: var(--accent); background: rgba(124,106,247,0.08); }
+  .template-btn-name { font-size: 13px; font-weight: 600; }
+  .template-btn-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
+  .template-arrow { color: var(--text3); font-size: 16px; }
+
+  /* notification toast */
+  .toast {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--bg3); border: 1px solid var(--green);
+    color: var(--green); padding: 12px 20px; border-radius: var(--radius-sm);
+    font-size: 13.5px; font-weight: 600;
+    transform: translateY(80px); opacity: 0;
+    transition: all 0.3s; z-index: 100;
+    pointer-events: none;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* add day modal */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal {
+    background: var(--bg2); border: 1px solid var(--border2);
+    border-radius: var(--radius); padding: 28px;
+    width: 440px; max-width: 95vw;
+    transform: translateY(20px); transition: transform 0.2s;
+  }
+  .modal-overlay.open .modal { transform: translateY(0); }
+  .modal-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; margin-bottom: 20px; }
+  .form-group { margin-bottom: 14px; }
+  .form-label { font-size: 12px; color: var(--text2); margin-bottom: 6px; display: block; letter-spacing: .05em; text-transform: uppercase; }
+  .form-input {
+    width: 100%; background: var(--bg3); border: 1px solid var(--border);
+    color: var(--text); border-radius: var(--radius-sm);
+    padding: 10px 14px; font-family: 'DM Sans', sans-serif; font-size: 14px;
+    outline: none; transition: border 0.15s;
+  }
+  .form-input:focus { border-color: var(--accent); }
+  .form-input::placeholder { color: var(--text3); }
+  .form-select {
+    width: 100%; appearance: none;
+    background: var(--bg3); border: 1px solid var(--border);
+    color: var(--text); border-radius: var(--radius-sm);
+    padding: 10px 14px; font-family: 'DM Sans', sans-serif; font-size: 14px;
+    outline: none; cursor: pointer; transition: border 0.15s;
+  }
+  .form-select:focus { border-color: var(--accent); }
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 22px; }
+
+  /* notes area */
+  .notes-area {
+    width: 100%; background: var(--bg3); border: 1px solid var(--border);
+    color: var(--text); border-radius: var(--radius-sm);
+    padding: 10px 14px; font-family: 'DM Sans', sans-serif; font-size: 13px;
+    outline: none; resize: vertical; min-height: 70px; transition: border 0.15s;
+  }
+  .notes-area:focus { border-color: var(--accent); }
+  .notes-area::placeholder { color: var(--text3); }
+
+  @media (max-width: 960px) {
+    .content-grid { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">M</div>
+    <span class="logo-text">MuscleTrack</span>
+  </div>
+  <div class="sidebar-user">
+    <div class="avatar">KR</div>
+    <div>
+      <div class="user-name">Kamlesh Rawal</div>
+      <div class="user-tag">⭐ Muscle Builder</div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <a class="nav-item" href="muscle-dashboard.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Dashboard
+    </a>
+    <a class="nav-item active" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18L6 11M10 18V7M14 18v-4M18 18v-8"/></svg>
+      Workout Tracker
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
+      Nutrition Tracker
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
+      Body Measurements
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+      Progress Photos
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Strength Progress
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/><path d="M12 6v6l4 2"/></svg>
+      Recovery Tracker
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      Goals
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l1.5 4.5H18l-3.75 2.75L15.75 14 12 11.25 8.25 14l1.5-4.75L6 6.5h4.5z"/></svg>
+      AI Coach
+    </a>
+  </nav>
+  <div class="streak-box">
+    <div class="streak-label">Workout Streak</div>
+    <div class="streak-val">🔥 12 days</div>
+    <div class="streak-sub">Keep it up! You're crushing it.</div>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+  <div class="topbar">
+    <div>
+      <div class="page-title">Workout Tracker</div>
+      <div class="page-sub">Log your exercises, weights & sets — day by day.</div>
+    </div>
+    <div class="topbar-right">
+      <button class="btn btn-outline" onclick="openModal()">+ Add New Day</button>
+      <button class="btn btn-primary" onclick="saveAll()">💾 Save All</button>
+    </div>
+  </div>
+
+  <!-- WEEK TABS -->
+  <div class="week-tabs" id="weekTabs"></div>
+
+  <!-- CONTENT GRID -->
+  <div class="content-grid">
+    <!-- LEFT: Day workout card -->
+    <div>
+      <div class="day-card">
+        <div class="day-card-header">
+          <div>
+            <div class="day-card-title" id="dayTitle">Day 1 — Push Day</div>
+            <div style="font-size:12px;color:var(--text3);margin-top:3px;" id="dayDate">Mon, Jun 2 2026</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="day-badge badge-push" id="dayBadge">Push</span>
+            <button class="btn btn-outline" style="padding:7px 13px;font-size:12px;" onclick="toggleNotes()">📝 Notes</button>
+          </div>
+        </div>
+
+        <!-- NOTES SECTION (hidden by default) -->
+        <div id="notesSection" style="display:none;padding:14px 22px;border-bottom:1px solid var(--border);">
+          <textarea class="notes-area" id="notesArea" placeholder="Add workout notes, how you felt, energy level…"></textarea>
+        </div>
+
+        <!-- EXERCISE TABLE -->
+        <table class="exercise-table">
+          <thead>
+            <tr>
+              <th>Exercise</th>
+              <th>Sets</th>
+              <th>Reps</th>
+              <th>Weight</th>
+              <th>Done</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="exerciseBody"></tbody>
+        </table>
+
+        <!-- ADD EXERCISE ROW -->
+        <div class="add-exercise-row">
+          <input class="input-sm wide" id="newExName" placeholder="Exercise name (e.g. Bench Press)" />
+          <input class="input-sm narrow" id="newExMuscle" placeholder="Muscle" />
+          <input class="input-sm narrow" id="newExSets" placeholder="Sets" type="number" min="1" max="20" value="3" />
+          <input class="input-sm narrow" id="newExReps" placeholder="Reps" type="number" min="1" max="50" value="10" />
+          <input class="input-sm narrow" id="newExWeight" placeholder="kg" type="number" min="0" step="0.5" />
+          <button class="btn-icon" onclick="addExercise()" title="Add exercise">+</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Side Panel -->
+    <div class="side-panel">
+
+      <!-- Today's Summary -->
+      <div class="panel-card">
+        <div class="panel-title">Today's Summary</div>
+        <div class="stat-row">
+          <span class="stat-label">Exercises</span>
+          <span class="stat-val purple" id="sumEx">0</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Total Sets</span>
+          <span class="stat-val purple" id="sumSets">0</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Total Volume</span>
+          <span class="stat-val amber" id="sumVol">0 kg</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Completed</span>
+          <span class="stat-val green" id="sumDone">0 / 0</span>
+        </div>
+        <div style="margin-top:10px;">
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text3);margin-bottom:4px;">
+            <span>Progress</span><span id="sumPct">0%</span>
+          </div>
+          <div class="prog-bar-wrap"><div class="prog-bar green" id="sumBar" style="width:0%"></div></div>
+        </div>
+      </div>
+
+      <!-- Weekly Volume Chart -->
+      <div class="panel-card">
+        <div class="panel-title">Weekly Volume</div>
+        <div class="vol-chart" id="volChart"></div>
+      </div>
+
+      <!-- Week Overview -->
+      <div class="panel-card">
+        <div class="panel-title">Week Overview</div>
+        <div class="week-grid" id="weekGrid"></div>
+        <div style="display:flex;gap:12px;margin-top:12px;font-size:11px;color:var(--text3);">
+          <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;background:rgba(34,197,94,0.25);border-radius:3px;display:inline-block;"></span>Done</span>
+          <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;background:rgba(124,106,247,0.3);border:1px solid var(--accent);border-radius:3px;display:inline-block;"></span>Today</span>
+          <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;background:var(--bg4);border-radius:3px;display:inline-block;"></span>Upcoming</span>
+        </div>
+      </div>
+
+      <!-- Templates -->
+      <div class="panel-card">
+        <div class="panel-title">Quick Templates</div>
+        <div class="template-list">
+          <div class="template-btn" onclick="loadTemplate('push')">
+            <div>
+              <div class="template-btn-name">💪 Push Day</div>
+              <div class="template-btn-sub">Chest · Shoulders · Triceps</div>
+            </div>
+            <span class="template-arrow">›</span>
+          </div>
+          <div class="template-btn" onclick="loadTemplate('pull')">
+            <div>
+              <div class="template-btn-name">🏋️ Pull Day</div>
+              <div class="template-btn-sub">Back · Biceps · Rear Delts</div>
+            </div>
+            <span class="template-arrow">›</span>
+          </div>
+          <div class="template-btn" onclick="loadTemplate('legs')">
+            <div>
+              <div class="template-btn-name">🦵 Leg Day</div>
+              <div class="template-btn-sub">Quads · Hamstrings · Glutes</div>
+            </div>
+            <span class="template-arrow">›</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<!-- ADD NEW DAY MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-title">➕ Add New Training Day</div>
+    <div class="form-group">
+      <label class="form-label">Day Name</label>
+      <input class="form-input" id="mdName" placeholder="e.g. Day 4 — Upper Body" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Workout Type</label>
+      <select class="form-select" id="mdType">
+        <option value="push">💪 Push Day</option>
+        <option value="pull">🏋️ Pull Day</option>
+        <option value="legs">🦵 Leg Day</option>
+        <option value="upper">⬆️ Upper Body</option>
+        <option value="lower">⬇️ Lower Body</option>
+        <option value="full">🔄 Full Body</option>
+        <option value="cardio">🏃 Cardio</option>
+        <option value="rest">😴 Rest Day</option>
+        <option value="custom">✨ Custom</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Date</label>
+      <input class="form-input" id="mdDate" type="date" />
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="confirmAddDay()">Add Day</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────
+const TEMPLATES = {
+  push: [
+    {name:'Bench Press',muscle:'Chest',sets:4,reps:8,weight:80,done:false,pr:true},
+    {name:'Overhead Press',muscle:'Shoulders',sets:3,reps:10,weight:50,done:false,pr:false},
+    {name:'Incline DB Press',muscle:'Chest',sets:3,reps:10,weight:28,done:false,pr:false},
+    {name:'Lateral Raises',muscle:'Shoulders',sets:3,reps:15,weight:12,done:false,pr:false},
+    {name:'Tricep Pushdown',muscle:'Triceps',sets:3,reps:12,weight:20,done:false,pr:false},
+  ],
+  pull: [
+    {name:'Deadlift',muscle:'Back',sets:4,reps:5,weight:120,done:false,pr:false},
+    {name:'Pull-Ups',muscle:'Lats',sets:3,reps:8,weight:0,done:false,pr:false},
+    {name:'Barbell Row',muscle:'Back',sets:3,reps:10,weight:70,done:false,pr:false},
+    {name:'Face Pulls',muscle:'Rear Delt',sets:3,reps:15,weight:15,done:false,pr:false},
+    {name:'Barbell Curl',muscle:'Biceps',sets:3,reps:12,weight:30,done:false,pr:false},
+  ],
+  legs: [
+    {name:'Squat',muscle:'Quads',sets:4,reps:8,weight:100,done:false,pr:false},
+    {name:'Romanian Deadlift',muscle:'Hamstrings',sets:3,reps:10,weight:80,done:false,pr:false},
+    {name:'Leg Press',muscle:'Quads',sets:3,reps:12,weight:160,done:false,pr:false},
+    {name:'Leg Curl',muscle:'Hamstrings',sets:3,reps:12,weight:40,done:false,pr:false},
+    {name:'Calf Raises',muscle:'Calves',sets:4,reps:20,weight:50,done:false,pr:false},
+  ]
+};
+
+let days = [
+  {
+    id:1, name:'Day 1 — Push Day', type:'push',
+    date:'Jun 2, 2026', notes:'',
+    exercises: JSON.parse(JSON.stringify(TEMPLATES.push))
+  },
+  {
+    id:2, name:'Day 2 — Pull Day', type:'pull',
+    date:'Jun 4, 2026', notes:'',
+    exercises: JSON.parse(JSON.stringify(TEMPLATES.pull))
+  },
+  {
+    id:3, name:'Day 3 — Leg Day', type:'legs',
+    date:'Jun 6, 2026', notes:'',
+    exercises: JSON.parse(JSON.stringify(TEMPLATES.legs))
+  }
+];
+
+let currentDayId = 1;
+let nextId = 4;
+
+// ── HELPERS ───────────────────────────────────────────────────────────────
+function getDay(id) { return days.find(d => d.id === id); }
+function getCurrentDay() { return getDay(currentDayId); }
+
+const typeLabel = {
+  push:'Push', pull:'Pull', legs:'Legs', upper:'Upper', lower:'Lower',
+  full:'Full Body', cardio:'Cardio', rest:'Rest', custom:'Custom'
+};
+const typeBadge = {
+  push:'badge-push', pull:'badge-pull', legs:'badge-legs',
+  rest:'badge-rest', upper:'badge-push', lower:'badge-legs',
+  full:'badge-custom', cardio:'badge-custom', custom:'badge-custom'
+};
+const typeEmoji = {
+  push:'💪', pull:'🏋️', legs:'🦵', upper:'⬆️', lower:'⬇️',
+  full:'🔄', cardio:'🏃', rest:'😴', custom:'✨'
+};
+const volData = [3200, 4100, 0, 3800, 0, 2900, 4500];
+const volDays = ['M','T','W','T','F','S','S'];
+
+// ── RENDER WEEK TABS ──────────────────────────────────────────────────────
+function renderTabs() {
+  const el = document.getElementById('weekTabs');
+  el.innerHTML = '';
+  days.forEach(day => {
+    const tab = document.createElement('div');
+    const active = day.id === currentDayId;
+    const done = day.exercises.length > 0 && day.exercises.every(e=>e.done);
+    tab.className = `week-tab${active?' active':''}${done?' done':''}`;
+    const num = day.id;
+    tab.innerHTML = `
+      <span class="tab-day">Day</span>
+      <span class="tab-num">${num}</span>
+      <span class="tab-dot"></span>
+    `;
+    tab.title = day.name;
+    tab.onclick = () => switchDay(day.id);
+    el.appendChild(tab);
+  });
+}
+
+// ── RENDER EXERCISES ──────────────────────────────────────────────────────
+function renderExercises() {
+  const day = getCurrentDay();
+  const tbody = document.getElementById('exerciseBody');
+  tbody.innerHTML = '';
+  day.exercises.forEach((ex, idx) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>
+        <div class="ex-name">${ex.name}${ex.pr ? `<span class="pr-badge">PR</span>` : ''}</div>
+        <div class="ex-muscle">${ex.muscle}</div>
+      </td>
+      <td>
+        <input type="number" class="input-sm narrow" value="${ex.sets}" min="1" max="20"
+          onchange="updateEx(${idx},'sets',this.value)" style="width:54px;text-align:center;" />
+      </td>
+      <td>
+        <input type="number" class="input-sm narrow" value="${ex.reps}" min="1" max="50"
+          onchange="updateEx(${idx},'reps',this.value)" style="width:54px;text-align:center;" />
+      </td>
+      <td>
+        <div style="display:flex;align-items:baseline;justify-content:center;gap:3px;">
+          <input type="number" class="input-sm narrow" value="${ex.weight}" min="0" step="0.5"
+            onchange="updateEx(${idx},'weight',this.value)"
+            style="width:68px;font-family:'Syne',sans-serif;font-weight:700;color:var(--accent2);text-align:center;" />
+          <span class="weight-unit">kg</span>
+        </div>
+      </td>
+      <td>
+        <button class="done-check${ex.done?' checked':''}" onclick="toggleDone(${idx})" title="Mark done">
+          ${ex.done ? '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>' : ''}
+        </button>
+      </td>
+      <td><button class="btn-del" onclick="deleteEx(${idx})" title="Delete">×</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+  updateSummary();
+}
+
+// ── RENDER HEADER ─────────────────────────────────────────────────────────
+function renderHeader() {
+  const day = getCurrentDay();
+  document.getElementById('dayTitle').textContent = day.name;
+  document.getElementById('dayDate').textContent = day.date;
+  const badge = document.getElementById('dayBadge');
+  badge.textContent = typeLabel[day.type] || 'Custom';
+  badge.className = `day-badge ${typeBadge[day.type] || 'badge-custom'}`;
+  const notesArea = document.getElementById('notesArea');
+  if (notesArea) notesArea.value = day.notes || '';
+}
+
+// ── SWITCH DAY ────────────────────────────────────────────────────────────
+function switchDay(id) {
+  currentDayId = id;
+  renderTabs();
+  renderHeader();
+  renderExercises();
+  document.getElementById('notesSection').style.display = 'none';
+}
+
+// ── EXERCISE ACTIONS ──────────────────────────────────────────────────────
+function updateEx(idx, field, val) {
+  const day = getCurrentDay();
+  day.exercises[idx][field] = field === 'weight' ? parseFloat(val)||0 : parseInt(val)||0;
+  updateSummary();
+}
+
+function toggleDone(idx) {
+  const day = getCurrentDay();
+  day.exercises[idx].done = !day.exercises[idx].done;
+  renderExercises();
+}
+
+function deleteEx(idx) {
+  const day = getCurrentDay();
+  day.exercises.splice(idx, 1);
+  renderExercises();
+}
+
+function addExercise() {
+  const name = document.getElementById('newExName').value.trim();
+  if (!name) { showToast('⚠️ Enter an exercise name'); return; }
+  const day = getCurrentDay();
+  day.exercises.push({
+    name,
+    muscle: document.getElementById('newExMuscle').value.trim() || '—',
+    sets: parseInt(document.getElementById('newExSets').value)||3,
+    reps: parseInt(document.getElementById('newExReps').value)||10,
+    weight: parseFloat(document.getElementById('newExWeight').value)||0,
+    done: false, pr: false
+  });
+  document.getElementById('newExName').value = '';
+  document.getElementById('newExMuscle').value = '';
+  document.getElementById('newExWeight').value = '';
+  renderExercises();
+  showToast('✅ Exercise added!');
+}
+
+// ── SUMMARY ───────────────────────────────────────────────────────────────
+function updateSummary() {
+  const day = getCurrentDay();
+  const exs = day.exercises;
+  const total = exs.length;
+  const done = exs.filter(e=>e.done).length;
+  const totalSets = exs.reduce((a,e)=>a+(parseInt(e.sets)||0),0);
+  const vol = exs.reduce((a,e)=>a+(e.sets*e.reps*e.weight),0);
+  const pct = total ? Math.round((done/total)*100) : 0;
+  document.getElementById('sumEx').textContent = total;
+  document.getElementById('sumSets').textContent = totalSets;
+  document.getElementById('sumVol').textContent = vol.toLocaleString() + ' kg';
+  document.getElementById('sumDone').textContent = `${done} / ${total}`;
+  document.getElementById('sumPct').textContent = pct + '%';
+  document.getElementById('sumBar').style.width = pct + '%';
+  renderWeekGrid();
+  renderVolChart();
+}
+
+// ── WEEKLY OVERVIEW ───────────────────────────────────────────────────────
+function renderWeekGrid() {
+  const el = document.getElementById('weekGrid');
+  el.innerHTML = '';
+  const dayNames = ['M','T','W','T','F','S','S'];
+  dayNames.forEach((d, i) => {
+    const div = document.createElement('div');
+    let cls = 'week-cell ';
+    if (i === 0) cls += 'wc-today';
+    else if (i === 1 || i === 3 || i === 5) cls += 'wc-done';
+    else cls += 'wc-empty';
+    div.className = cls;
+    div.textContent = d;
+    el.appendChild(div);
+  });
+}
+
+// ── VOLUME CHART ──────────────────────────────────────────────────────────
+function renderVolChart() {
+  const el = document.getElementById('volChart');
+  el.innerHTML = '';
+  const max = Math.max(...volData, 1);
+  volData.forEach((v, i) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'vol-bar-wrap';
+    const bar = document.createElement('div');
+    bar.className = 'vol-bar' + (i===0?' today':'');
+    bar.style.height = Math.round((v/max)*46) + 'px';
+    bar.title = v ? v.toLocaleString() + ' kg' : 'Rest';
+    const lbl = document.createElement('div');
+    lbl.className = 'vol-label';
+    lbl.textContent = volDays[i];
+    wrap.appendChild(bar);
+    wrap.appendChild(lbl);
+    el.appendChild(wrap);
+  });
+}
+
+// ── LOAD TEMPLATE ─────────────────────────────────────────────────────────
+function loadTemplate(type) {
+  const day = getCurrentDay();
+  if (day.exercises.length > 0) {
+    if (!confirm(`Replace current exercises with ${typeLabel[type]} template?`)) return;
+  }
+  day.exercises = JSON.parse(JSON.stringify(TEMPLATES[type]));
+  day.type = type;
+  renderHeader();
+  renderTabs();
+  renderExercises();
+  showToast(`${typeEmoji[type]} ${typeLabel[type]} template loaded!`);
+}
+
+// ── NOTES ─────────────────────────────────────────────────────────────────
+function toggleNotes() {
+  const sec = document.getElementById('notesSection');
+  sec.style.display = sec.style.display === 'none' ? 'block' : 'none';
+  if (sec.style.display === 'block') {
+    const day = getCurrentDay();
+    document.getElementById('notesArea').value = day.notes || '';
+  }
+}
+document.getElementById('notesArea') && document.getElementById('notesArea').addEventListener('input', function() {
+  getCurrentDay().notes = this.value;
+});
+
+// ── ADD DAY MODAL ─────────────────────────────────────────────────────────
+function openModal() {
+  const num = days.length + 1;
+  document.getElementById('mdName').value = `Day ${num} — `;
+  document.getElementById('mdDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+function closeModalOutside(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+function confirmAddDay() {
+  const name = document.getElementById('mdName').value.trim();
+  const type = document.getElementById('mdType').value;
+  const dateRaw = document.getElementById('mdDate').value;
+  if (!name) { showToast('⚠️ Enter a day name'); return; }
+  const dateObj = dateRaw ? new Date(dateRaw) : new Date();
+  const dateStr = dateObj.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+  days.push({ id: nextId++, name, type, date: dateStr, notes: '', exercises: [] });
+  closeModal();
+  switchDay(nextId - 1);
+  renderTabs();
+  showToast(`✅ ${name} added!`);
+}
+
+// ── SAVE ──────────────────────────────────────────────────────────────────
+function saveAll() {
+  try {
+    const notesEl = document.getElementById('notesArea');
+    if (notesEl) getCurrentDay().notes = notesEl.value;
+    localStorage.setItem('muscletrack_workout', JSON.stringify(days));
+    showToast('💾 Workout saved!');
+  } catch(e) { showToast('✅ Workout saved!'); }
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+// ── NOTES LISTENER ────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('notesArea').addEventListener('input', function() {
+    getCurrentDay().notes = this.value;
+  });
+});
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+(function init() {
+  try {
+    const saved = localStorage.getItem('muscletrack_workout');
+    if (saved) {
+      days = JSON.parse(saved);
+      nextId = Math.max(...days.map(d=>d.id)) + 1;
+    }
+  } catch(e) {}
+  renderTabs();
+  renderHeader();
+  renderExercises();
+  renderWeekGrid();
+  renderVolChart();
+})();
+</script>
+</body>
+</html>
