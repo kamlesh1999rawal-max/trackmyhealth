@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Dashboard Nutrition Widgets – MuscleTrack</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#0f1535;--card:#1a2250;--card2:#1e2860;
+  --accent:#6c63ff;--green:#10b981;--orange:#f59e0b;--red:#ef4444;--blue:#3b82f6;
+  --t1:#e8eeff;--t2:#7b8ab8;--border:rgba(255,255,255,0.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;padding:24px;}
+.note{color:var(--t2);font-size:13px;margin-bottom:20px;background:rgba(108,99,255,.1);border:1px solid rgba(108,99,255,.3);border-radius:8px;padding:10px 14px;}
+.widgets{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:18px;}
+.widget{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;}
+.widget h3{font-size:14px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;}
+.widget h3 a{font-size:12px;color:var(--accent);text-decoration:none;font-weight:500;}
+.bar-chart{display:flex;align-items:flex-end;gap:8px;height:80px;margin-bottom:8px;}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.bar{width:100%;border-radius:4px 4px 0 0;min-height:4px;transition:height .4s ease;}
+.bar-day{font-size:10px;color:var(--t2);}
+.bar-val{font-size:10px;color:var(--t2);}
+.avg-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+.avg-card{background:var(--card2);border-radius:8px;padding:10px 12px;}
+.avg-label{font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;}
+.avg-val{font-size:18px;font-weight:700;}
+.avg-sub{font-size:10px;color:var(--t2);}
+.macro-bars{display:flex;flex-direction:column;gap:8px;}
+.macro-bar-row{display:flex;align-items:center;gap:10px;}
+.macro-bar-label{width:60px;font-size:12px;color:var(--t2);}
+.macro-bar-track{flex:1;background:rgba(255,255,255,.06);border-radius:99px;height:8px;overflow:hidden;}
+.macro-bar-fill{height:100%;border-radius:99px;transition:width .5s ease;}
+.macro-bar-val{width:50px;font-size:12px;font-weight:600;text-align:right;}
+.streak-row{display:flex;gap:6px;flex-wrap:wrap;}
+.streak-day{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;}
+.streak-day.logged{background:rgba(16,185,129,.25);color:var(--green);}
+.streak-day.today{background:var(--green);color:#fff;}
+.streak-day.empty{background:rgba(255,255,255,.05);color:var(--t2);}
+</style>
+</head>
+<body>
+
+<p class="note">📋 Copy each widget div + the script below into your <code>muscle-dashboard.html</code>. They auto-read from the same localStorage as the Nutrition Tracker.</p>
+
+<div class="widgets">
+
+  <div class="widget">
+    <h3>Weekly Calories <a href="nutrition-tracker.html">View Log →</a></h3>
+    <div class="bar-chart" id="w-weekly-bars"></div>
+    <div class="avg-row">
+      <div class="avg-card">
+        <div class="avg-label">7-Day Avg</div>
+        <div class="avg-val" style="color:var(--orange)" id="w-7d-avg">—</div>
+        <div class="avg-sub">kcal / day</div>
+      </div>
+      <div class="avg-card">
+        <div class="avg-label">This Week Total</div>
+        <div class="avg-val" style="color:var(--accent)" id="w-7d-total">—</div>
+        <div class="avg-sub">kcal</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="widget">
+    <h3>30-Day Macro Averages <a href="nutrition-tracker.html">View Log →</a></h3>
+    <div class="macro-bars" id="w-macro-bars"></div>
+    <div class="avg-row">
+      <div class="avg-card">
+        <div class="avg-label">30-Day Avg Cal</div>
+        <div class="avg-val" style="color:var(--orange)" id="w-30d-cal">—</div>
+        <div class="avg-sub">kcal / day</div>
+      </div>
+      <div class="avg-card">
+        <div class="avg-label">Days Logged</div>
+        <div class="avg-val" style="color:var(--green)" id="w-30d-days">—</div>
+        <div class="avg-sub">of last 30</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="widget">
+    <h3>Today's Nutrition <a href="nutrition-tracker.html">Log Food →</a></h3>
+    <div class="macro-bars" id="w-today-macros"></div>
+  </div>
+
+  <div class="widget">
+    <h3>Logging Streak (last 28 days)</h3>
+    <div class="streak-row" id="w-streak"></div>
+    <div style="margin-top:12px;display:flex;gap:16px;">
+      <div>
+        <div style="font-size:11px;color:var(--t2);">Current Streak</div>
+        <div style="font-size:22px;font-weight:700;color:var(--green)" id="w-streak-count">0 days</div>
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--t2);">Best Streak</div>
+        <div style="font-size:22px;font-weight:700;color:var(--accent)" id="w-streak-best">0 days</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const NKEY='mt_nutrition_v2';
+const GOALS={calories:2200,protein:150,carbs:250,fat:70,fiber:30};
+const dayNames=['S','M','T','W','T','F','S'];
+
+function loadAll(){try{return JSON.parse(localStorage.getItem(NKEY)||'{}');}catch(e){return{};}}
+function offsetDate(base,n){const d=new Date(base+'T12:00:00');d.setDate(d.getDate()+n);return d.toISOString().slice(0,10);}
+function todayStr(){return new Date().toISOString().slice(0,10);}
+function calcTotals(entries){
+  if(!entries||!entries.length) return null;
+  return entries.reduce((a,e)=>({
+    calories:a.calories+(e.calories||0),protein:a.protein+(e.protein||0),
+    carbs:a.carbs+(e.carbs||0),fat:a.fat+(e.fat||0),fiber:a.fiber+(e.fiber||0),
+  }),{calories:0,protein:0,carbs:0,fat:0,fiber:0});
+}
+function avg(arr){return arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:0;}
+
+function renderWeeklyBars(){
+  const all=loadAll(),today=todayStr();
+  const days=[];
+  for(let i=6;i>=0;i--){
+    const d=offsetDate(today,-i);
+    const t=calcTotals((all[d]||{}).entries||[]);
+    days.push({date:d,cal:t?Math.round(t.calories):0,dayName:dayNames[new Date(d+'T12:00:00').getDay()]});
+  }
+  const maxCal=Math.max(...days.map(d=>d.cal),GOALS.calories);
+  document.getElementById('w-weekly-bars').innerHTML=days.map(d=>{
+    const h=d.cal?Math.max(6,Math.round((d.cal/maxCal)*70)):4;
+    const isToday=d.date===today;
+    const color=d.cal>=GOALS.calories?'var(--green)':isToday?'var(--accent)':'rgba(108,99,255,.5)';
+    return `<div class="bar-wrap">
+      <div class="bar-val">${d.cal||''}</div>
+      <div class="bar" style="height:${h}px;background:${color};"></div>
+      <div class="bar-day" style="${isToday?'color:var(--accent);font-weight:700;':''}">${d.dayName}</div>
+    </div>`;
+  }).join('');
+  const cals=days.filter(d=>d.cal>0).map(d=>d.cal);
+  document.getElementById('w-7d-avg').textContent=cals.length?Math.round(avg(cals)):'—';
+  document.getElementById('w-7d-total').textContent=cals.length?cals.reduce((a,b)=>a+b,0).toLocaleString():'—';
+}
+
+function renderMonthlyMacros(){
+  const all=loadAll(),today=todayStr();
+  const days30=[];
+  for(let i=29;i>=0;i--){
+    const d=offsetDate(today,-i);
+    const t=calcTotals((all[d]||{}).entries||[]);
+    if(t&&t.calories>0) days30.push(t);
+  }
+  if(!days30.length){
+    document.getElementById('w-macro-bars').innerHTML='<div style="color:var(--t2);font-size:13px;">No data yet.</div>';
+    document.getElementById('w-30d-cal').textContent='—';
+    document.getElementById('w-30d-days').textContent='0';
+    return;
+  }
+  const macros=[
+    {label:'Protein',val:Math.round(avg(days30.map(d=>d.protein))),goal:GOALS.protein,unit:'g',color:'var(--accent)'},
+    {label:'Carbs',  val:Math.round(avg(days30.map(d=>d.carbs))),  goal:GOALS.carbs,  unit:'g',color:'var(--blue)'},
+    {label:'Fat',    val:Math.round(avg(days30.map(d=>d.fat))),    goal:GOALS.fat,    unit:'g',color:'var(--red)'},
+    {label:'Fiber',  val:Math.round(avg(days30.map(d=>d.fiber))),  goal:GOALS.fiber,  unit:'g',color:'var(--green)'},
+  ];
+  document.getElementById('w-macro-bars').innerHTML=macros.map(m=>`
+    <div class="macro-bar-row">
+      <div class="macro-bar-label">${m.label}</div>
+      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:${Math.min(100,Math.round(m.val/m.goal*100))}%;background:${m.color};"></div></div>
+      <div class="macro-bar-val" style="color:${m.color}">${m.val}${m.unit}</div>
+    </div>`).join('');
+  document.getElementById('w-30d-cal').textContent=Math.round(avg(days30.map(d=>d.calories)));
+  document.getElementById('w-30d-days').textContent=days30.length;
+}
+
+function renderTodayMacros(){
+  const all=loadAll(),today=todayStr();
+  const t=calcTotals((all[today]||{}).entries||[]);
+  const el=document.getElementById('w-today-macros');
+  if(!t||t.calories===0){el.innerHTML='<div style="color:var(--t2);font-size:13px;text-align:center;padding:16px 0;">Nothing logged today yet.</div>';return;}
+  const macros=[
+    {label:'Calories',val:Math.round(t.calories),goal:GOALS.calories,unit:'kcal',color:'var(--orange)'},
+    {label:'Protein', val:Math.round(t.protein), goal:GOALS.protein, unit:'g',   color:'var(--accent)'},
+    {label:'Carbs',   val:Math.round(t.carbs),   goal:GOALS.carbs,   unit:'g',   color:'var(--blue)'},
+    {label:'Fat',     val:Math.round(t.fat),      goal:GOALS.fat,     unit:'g',   color:'var(--red)'},
+    {label:'Fiber',   val:Math.round(t.fiber),    goal:GOALS.fiber,   unit:'g',   color:'var(--green)'},
+  ];
+  el.innerHTML=macros.map(m=>`
+    <div class="macro-bar-row">
+      <div class="macro-bar-label">${m.label}</div>
+      <div class="macro-bar-track"><div class="macro-bar-fill" style="width:${Math.min(100,Math.round(m.val/m.goal*100))}%;background:${m.color};"></div></div>
+      <div class="macro-bar-val" style="color:${m.color}">${m.val}${m.unit}</div>
+    </div>`).join('');
+}
+
+function renderStreak(){
+  const all=loadAll(),today=todayStr();
+  const days28=[];
+  for(let i=27;i>=0;i--) days28.push(offsetDate(today,-i));
+  document.getElementById('w-streak').innerHTML=days28.map(d=>{
+    const logged=(all[d]?.entries||[]).length>0;
+    const isToday=d===today;
+    return `<div class="streak-day ${isToday?'today':logged?'logged':'empty'}" title="${d}">${new Date(d+'T12:00:00').getDate()}</div>`;
+  }).join('');
+  let cur=0,best=0,run=0;
+  for(let i=0;i<28;i++){if((all[offsetDate(today,-i)]?.entries||[]).length>0){if(i===0||cur>0)cur++;}else if(i>0)break;}
+  for(let i=27;i>=0;i--){if((all[offsetDate(today,-i)]?.entries||[]).length>0){run++;best=Math.max(best,run);}else run=0;}
+  document.getElementById('w-streak-count').textContent=cur+' day'+(cur!==1?'s':'');
+  document.getElementById('w-streak-best').textContent=best+' day'+(best!==1?'s':'');
+}
+
+renderWeeklyBars();
+renderMonthlyMacros();
+renderTodayMacros();
+renderStreak();
+</script>
+</body>
+</html>
