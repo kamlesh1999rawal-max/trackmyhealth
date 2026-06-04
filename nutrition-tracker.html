@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nutrition Tracker – MuscleTrack</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#0f1535;--sidebar:#0d1230;--card:#1a2250;--card2:#1e2860;
+  --accent:#6c63ff;--green:#10b981;--orange:#f59e0b;--red:#ef4444;--blue:#3b82f6;
+  --t1:#e8eeff;--t2:#7b8ab8;--border:rgba(255,255,255,0.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;min-height:100vh;display:flex;}
+.sidebar{width:220px;min-height:100vh;background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;}
+.sb-brand{display:flex;align-items:center;gap:10px;padding:20px 16px 16px;border-bottom:1px solid var(--border);}
+.sb-brand-icon{width:36px;height:36px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;font-weight:700;}
+.sb-brand-name{font-size:16px;font-weight:700;}
+.sb-user{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--border);}
+.sb-avatar{width:34px;height:34px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
+.sb-uname{font-size:13px;font-weight:600;}
+.sb-badge{font-size:11px;color:var(--orange);}
+.sb-nav{flex:1;padding:10px 0;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 16px;color:var(--t2);text-decoration:none;font-size:13px;font-weight:500;transition:all .2s;border-left:3px solid transparent;}
+.nav-item:hover,.nav-item.active{color:var(--t1);background:rgba(108,99,255,.12);border-left-color:var(--accent);}
+.nav-icon{font-size:15px;width:18px;text-align:center;}
+.main{flex:1;padding:28px;overflow-x:hidden;}
+.topbar{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
+.topbar-title{font-size:28px;font-weight:700;letter-spacing:-.5px;}
+.topbar-sub{color:var(--t2);font-size:13px;margin-top:4px;}
+.date-nav{display:flex;align-items:center;gap:10px;}
+.date-nav button{background:rgba(255,255,255,.07);border:1px solid var(--border);border-radius:8px;color:var(--t1);font-size:14px;padding:6px 12px;cursor:pointer;transition:all .2s;}
+.date-nav button:hover{border-color:var(--accent);color:var(--accent);}
+.date-nav .date-label{font-size:14px;font-weight:600;min-width:130px;text-align:center;}
+.goal-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin-bottom:24px;}
+.goal-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;flex-direction:column;align-items:center;gap:8px;}
+.ring-wrap{position:relative;width:70px;height:70px;}
+.ring-wrap svg{transform:rotate(-90deg);}
+.ring-bg{fill:none;stroke:rgba(255,255,255,.07);stroke-width:7;}
+.ring-fill{fill:none;stroke-width:7;stroke-linecap:round;}
+.ring-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.ring-val{font-size:13px;font-weight:700;}
+.ring-pct{font-size:10px;color:var(--t2);}
+.goal-name{font-size:12px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;}
+.goal-sub{font-size:11px;color:var(--t2);}
+.search-section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px;}
+.search-section h3{font-size:15px;font-weight:700;margin-bottom:14px;}
+.search-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.food-input{flex:1;min-width:220px;background:var(--card2);border:1px solid var(--border);border-radius:10px;color:var(--t1);font-size:14px;padding:12px 16px;outline:none;font-family:'Inter',sans-serif;transition:border-color .2s;}
+.food-input:focus{border-color:var(--accent);}
+.food-input::placeholder{color:var(--t2);}
+.meal-select{background:var(--card2);border:1px solid var(--border);border-radius:10px;color:var(--t1);font-size:13px;padding:12px 14px;outline:none;cursor:pointer;font-family:'Inter',sans-serif;}
+.meal-select option{background:#1a2250;}
+.btn-search{background:var(--accent);border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:600;padding:12px 22px;cursor:pointer;display:flex;align-items:center;gap:7px;transition:all .2s;white-space:nowrap;}
+.btn-search:hover{filter:brightness(1.1);}
+.btn-search:disabled{opacity:.5;cursor:not-allowed;}
+.search-hint{font-size:12px;color:var(--t2);margin-top:10px;}
+.search-hint span{color:var(--accent);}
+.api-notice{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:var(--orange);display:flex;align-items:flex-start;gap:8px;}
+.api-notice a{color:var(--orange);text-decoration:underline;}
+.preview-section{margin-bottom:20px;}
+.preview-section h4{font-size:13px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;}
+.food-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;}
+.food-card{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:14px;position:relative;animation:fadeUp .3s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.food-card-name{font-size:14px;font-weight:600;margin-bottom:2px;}
+.food-card-qty{font-size:12px;color:var(--t2);margin-bottom:10px;}
+.food-macros{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.macro-pill{background:rgba(255,255,255,.05);border-radius:7px;padding:6px 8px;}
+.macro-pill .mp-val{font-size:14px;font-weight:700;}
+.macro-pill .mp-label{font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;}
+.macro-pill.cal .mp-val{color:var(--orange);}
+.macro-pill.carb .mp-val{color:var(--blue);}
+.macro-pill.fat .mp-val{color:var(--red);}
+.macro-pill.fiber .mp-val{color:var(--green);}
+.macro-pill.prot .mp-val{color:var(--accent);}
+.btn-add-food{position:absolute;top:12px;right:12px;background:var(--green);border:none;border-radius:6px;color:#fff;font-size:11px;font-weight:600;padding:4px 10px;cursor:pointer;transition:all .2s;}
+.btn-add-food:hover{filter:brightness(1.1);}
+.btn-add-food.added{background:rgba(16,185,129,.2);color:var(--green);cursor:default;}
+.log-section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px;}
+.log-section h3{font-size:15px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;}
+.meal-group{margin-bottom:16px;}
+.meal-group-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--t2);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.meal-tag{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;}
+.meal-tag.breakfast{background:rgba(245,158,11,.15);color:var(--orange);}
+.meal-tag.lunch{background:rgba(59,130,246,.15);color:var(--blue);}
+.meal-tag.dinner{background:rgba(108,99,255,.15);color:var(--accent);}
+.meal-tag.snack{background:rgba(16,185,129,.15);color:var(--green);}
+.log-item{display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:9px;transition:background .2s;flex-wrap:wrap;}
+.log-item:hover{background:rgba(255,255,255,.03);}
+.log-item-name{flex:1;font-size:13px;font-weight:500;min-width:100px;}
+.log-item-qty{font-size:12px;color:var(--t2);}
+.log-macros{display:flex;gap:12px;flex-wrap:wrap;}
+.lm{font-size:12px;font-weight:600;}
+.lm.cal{color:var(--orange);}
+.lm.carb{color:var(--blue);}
+.lm.fat{color:var(--red);}
+.lm.fiber{color:var(--green);}
+.lm-unit{font-size:10px;color:var(--t2);margin-left:1px;}
+.btn-del-log{background:none;border:none;color:var(--t2);cursor:pointer;font-size:16px;padding:2px 5px;border-radius:4px;line-height:1;}
+.btn-del-log:hover{color:var(--red);}
+.log-empty{text-align:center;padding:28px;color:var(--t2);font-size:13px;border:1px dashed var(--border);border-radius:10px;}
+.totals-bar{display:flex;gap:16px;flex-wrap:wrap;padding:12px 16px;background:rgba(108,99,255,.08);border:1px solid rgba(108,99,255,.2);border-radius:10px;margin-top:12px;}
+.tot-item{display:flex;flex-direction:column;gap:1px;}
+.tot-label{font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.06em;}
+.tot-val{font-size:16px;font-weight:700;}
+.error-msg{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--red);margin-top:10px;}
+@media(max-width:700px){.sidebar{display:none;}.main{padding:16px;}.goal-row{grid-template-columns:repeat(2,1fr);}.food-cards{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-brand-icon">M</div>
+    <div class="sb-brand-name">MuscleTrack</div>
+  </div>
+  <div class="sb-user">
+    <div class="sb-avatar" id="sb-av">KR</div>
+    <div>
+      <div class="sb-uname" id="sb-name">Kamlesh Rawal</div>
+      <div class="sb-badge">⭐ Muscle Builder</div>
+    </div>
+  </div>
+  <nav class="sb-nav">
+    <a class="nav-item" href="muscle-dashboard.html"><span class="nav-icon">📊</span> Dashboard</a>
+    <a class="nav-item" href="workout-tracker.html"><span class="nav-icon">🏋️</span> Workout Tracker</a>
+    <a class="nav-item active" href="nutrition-tracker.html"><span class="nav-icon">🥗</span> Nutrition Tracker</a>
+    <a class="nav-item" href="#"><span class="nav-icon">📏</span> Body Measurements</a>
+    <a class="nav-item" href="#"><span class="nav-icon">📸</span> Progress Photos</a>
+    <a class="nav-item" href="#"><span class="nav-icon">📈</span> Strength Progress</a>
+    <a class="nav-item" href="#"><span class="nav-icon">🔄</span> Recovery Tracker</a>
+    <a class="nav-item" href="#"><span class="nav-icon">🎯</span> Goals</a>
+    <a class="nav-item" href="#"><span class="nav-icon">🤖</span> AI Coach</a>
+    <a class="nav-item" href="#"><span class="nav-icon">📅</span> Calendar</a>
+    <a class="nav-item" href="#"><span class="nav-icon">🤝</span> Community</a>
+    <a class="nav-item" href="#"><span class="nav-icon">⚙️</span> Settings</a>
+  </nav>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div>
+      <div class="topbar-title">Nutrition Tracker</div>
+      <div class="topbar-sub">Type any food in plain English — calories &amp; macros calculated automatically.</div>
+    </div>
+    <div class="date-nav">
+      <button onclick="changeDate(-1)">&#8592;</button>
+      <div class="date-label" id="date-label"></div>
+      <button onclick="changeDate(1)">&#8594;</button>
+    </div>
+  </div>
+
+  <div class="goal-row" id="goal-row"></div>
+
+  <div class="api-notice" id="api-notice">
+    ⚠️ <div>Add your free <strong>Nutritionix API keys</strong> to enable food search —
+    get them free at <a href="https://www.nutritionix.com/business/api" target="_blank">nutritionix.com/business/api</a>
+    <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+      <input id="inp-appid" placeholder="App ID" style="background:rgba(0,0,0,.3);border:1px solid rgba(245,158,11,.3);border-radius:6px;color:#fff;padding:6px 10px;font-size:12px;outline:none;width:130px;"/>
+      <input id="inp-appkey" placeholder="App Key" style="background:rgba(0,0,0,.3);border:1px solid rgba(245,158,11,.3);border-radius:6px;color:#fff;padding:6px 10px;font-size:12px;outline:none;width:200px;"/>
+      <button onclick="saveKeys()" style="background:var(--orange);border:none;border-radius:6px;color:#000;font-size:12px;font-weight:700;padding:6px 14px;cursor:pointer;">Save Keys</button>
+    </div>
+    </div>
+  </div>
+
+  <div class="search-section">
+    <h3>🔍 Log Food</h3>
+    <div class="search-row">
+      <input class="food-input" id="food-input"
+        placeholder="e.g. 2 eggs and toast, 1 cup oatmeal with banana, grilled chicken 200g…"
+        onkeydown="if(event.key==='Enter')searchFood()"/>
+      <select class="meal-select" id="meal-select">
+        <option value="breakfast">🌅 Breakfast</option>
+        <option value="lunch">☀️ Lunch</option>
+        <option value="dinner">🌙 Dinner</option>
+        <option value="snack">🍎 Snack</option>
+      </select>
+      <button class="btn-search" id="btn-search" onclick="searchFood()">
+        <span id="btn-icon">🔍</span> <span id="btn-text">Analyze</span>
+      </button>
+    </div>
+    <div class="search-hint">Try: <span>"3 scrambled eggs"</span> · <span>"100g brown rice"</span> · <span>"medium apple"</span> · <span>"protein shake 30g"</span></div>
+    <div id="search-error"></div>
+  </div>
+
+  <div class="preview-section" id="preview-section" style="display:none;">
+    <h4>Results — click + to add to log</h4>
+    <div class="food-cards" id="food-cards"></div>
+  </div>
+
+  <div class="log-section">
+    <h3>
+      Daily Log
+      <button onclick="clearDay()" style="background:rgba(239,68,68,.12);border:none;border-radius:7px;color:var(--red);font-size:12px;font-weight:600;padding:5px 12px;cursor:pointer;">Clear Day</button>
+    </h3>
+    <div id="log-container"></div>
+    <div class="totals-bar" id="totals-bar"></div>
+  </div>
+</main>
+
+<script>
+const NKEY='mt_nutrition_v2';
+const AKEY='mt_apikeys';
+const GOALS={calories:2200,carbs:250,fat:70,fiber:30,protein:150};
+
+let currentDate=todayStr();
+let previewFoods=[];
+
+function todayStr(){return new Date().toISOString().slice(0,10);}
+function fmtDateLabel(d){
+  const today=todayStr();
+  if(d===today) return 'Today';
+  if(d===offsetDate(today,-1)) return 'Yesterday';
+  return new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+}
+function offsetDate(base,n){const d=new Date(base+'T12:00:00');d.setDate(d.getDate()+n);return d.toISOString().slice(0,10);}
+function loadAll(){try{return JSON.parse(localStorage.getItem(NKEY)||'{}');}catch(e){return{};}}
+function saveAll(data){localStorage.setItem(NKEY,JSON.stringify(data));}
+function getDay(date){const all=loadAll();if(!all[date])all[date]={entries:[]};return all[date];}
+function saveDayEntry(date,day){const all=loadAll();all[date]=day;saveAll(all);}
+function loadKeys(){try{return JSON.parse(localStorage.getItem(AKEY)||'{}');}catch(e){return{};}}
+function saveKeys(){
+  const id=document.getElementById('inp-appid').value.trim();
+  const key=document.getElementById('inp-appkey').value.trim();
+  if(!id||!key){alert('Please enter both App ID and App Key.');return;}
+  localStorage.setItem(AKEY,JSON.stringify({id,key}));
+  document.getElementById('api-notice').style.display='none';
+  alert('✅ Keys saved! You can now search foods.');
+}
+function calcTotals(entries){
+  return entries.reduce((a,e)=>({
+    calories:a.calories+(e.calories||0),protein:a.protein+(e.protein||0),
+    carbs:a.carbs+(e.carbs||0),fat:a.fat+(e.fat||0),fiber:a.fiber+(e.fiber||0),
+  }),{calories:0,protein:0,carbs:0,fat:0,fiber:0});
+}
+function cap(s){return String(s).replace(/\b\w/g,c=>c.toUpperCase());}
+
+(function init(){
+  const keys=loadKeys();
+  if(keys.id&&keys.key) document.getElementById('api-notice').style.display='none';
+  else{document.getElementById('inp-appid').value=keys.id||'';document.getElementById('inp-appkey').value=keys.key||'';}
+  try{const u=JSON.parse(localStorage.getItem('muscletrack_user')||'{}');if(u.name){document.getElementById('sb-name').textContent=u.name;document.getElementById('sb-av').textContent=u.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();}}catch(e){}
+  renderDateLabel();renderGoalRings();renderLog();
+})();
+
+function changeDate(n){
+  currentDate=offsetDate(currentDate,n);
+  renderDateLabel();renderGoalRings();renderLog();
+  document.getElementById('preview-section').style.display='none';
+  previewFoods=[];
+}
+function renderDateLabel(){document.getElementById('date-label').textContent=fmtDateLabel(currentDate);}
+
+function renderGoalRings(){
+  const day=getDay(currentDate);
+  const t=calcTotals(day.entries);
+  const r=34,circ=2*Math.PI*r;
+  const metrics=[
+    {label:'Calories',val:Math.round(t.calories),goal:GOALS.calories,color:'#f59e0b',unit:'kcal'},
+    {label:'Protein', val:Math.round(t.protein), goal:GOALS.protein, color:'#6c63ff',unit:'g'},
+    {label:'Carbs',   val:Math.round(t.carbs),   goal:GOALS.carbs,   color:'#3b82f6',unit:'g'},
+    {label:'Fat',     val:Math.round(t.fat),      goal:GOALS.fat,     color:'#ef4444',unit:'g'},
+    {label:'Fiber',   val:Math.round(t.fiber),    goal:GOALS.fiber,   color:'#10b981',unit:'g'},
+  ];
+  document.getElementById('goal-row').innerHTML=metrics.map(m=>{
+    const pct=Math.min(1,m.goal?m.val/m.goal:0);
+    const offset=circ*(1-pct);
+    return `<div class="goal-card">
+      <div class="ring-wrap">
+        <svg width="70" height="70" viewBox="0 0 80 80">
+          <circle class="ring-bg" cx="40" cy="40" r="${r}"/>
+          <circle class="ring-fill" cx="40" cy="40" r="${r}" stroke="${m.color}"
+            stroke-dasharray="${circ}" stroke-dashoffset="${offset}"/>
+        </svg>
+        <div class="ring-label">
+          <div class="ring-val" style="color:${m.color}">${m.val}</div>
+          <div class="ring-pct">${Math.round(pct*100)}%</div>
+        </div>
+      </div>
+      <div class="goal-name">${m.label}</div>
+      <div class="goal-sub">${m.val}${m.unit} / ${m.goal}${m.unit}</div>
+    </div>`;
+  }).join('');
+}
+
+async function searchFood(){
+  const query=document.getElementById('food-input').value.trim();
+  if(!query) return;
+  const keys=loadKeys();
+  const errEl=document.getElementById('search-error');
+  errEl.innerHTML='';
+  if(!keys.id||!keys.key){
+    errEl.innerHTML='<div class="error-msg">⚠️ Please save your Nutritionix API keys above first.</div>';
+    return;
+  }
+  const btn=document.getElementById('btn-search');
+  document.getElementById('btn-icon').textContent='⏳';
+  document.getElementById('btn-text').textContent='Analyzing…';
+  btn.disabled=true;
+  try{
+    const res=await fetch('https://trackapi.nutritionix.com/v2/natural/nutrients',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-app-id':keys.id,'x-app-key':keys.key},
+      body:JSON.stringify({query})
+    });
+    if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.message||'API error '+res.status);}
+    const data=await res.json();
+    previewFoods=data.foods.map(f=>({
+      food_name:f.food_name,serving_qty:f.serving_qty,serving_unit:f.serving_unit,
+      serving_weight_grams:f.serving_weight_grams,
+      calories:Math.round(f.nf_calories||0),
+      protein:Math.round((f.nf_protein||0)*10)/10,
+      carbs:Math.round((f.nf_total_carbohydrate||0)*10)/10,
+      fat:Math.round((f.nf_total_fat||0)*10)/10,
+      fiber:Math.round((f.nf_dietary_fiber||0)*10)/10,
+      added:false,
+    }));
+    renderPreview();
+  }catch(err){
+    errEl.innerHTML=`<div class="error-msg">❌ ${err.message}</div>`;
+  }finally{
+    btn.disabled=false;
+    document.getElementById('btn-icon').textContent='🔍';
+    document.getElementById('btn-text').textContent='Analyze';
+  }
+}
+
+function renderPreview(){
+  const wrap=document.getElementById('preview-section');
+  const cards=document.getElementById('food-cards');
+  if(!previewFoods.length){wrap.style.display='none';return;}
+  wrap.style.display='block';
+  cards.innerHTML=previewFoods.map((f,i)=>`
+    <div class="food-card">
+      <div class="food-card-name">${cap(f.food_name)}</div>
+      <div class="food-card-qty">${f.serving_qty} ${f.serving_unit} (${f.serving_weight_grams}g)</div>
+      <div class="food-macros">
+        <div class="macro-pill cal"><div class="mp-val">${f.calories}</div><div class="mp-label">Calories</div></div>
+        <div class="macro-pill prot"><div class="mp-val">${f.protein}g</div><div class="mp-label">Protein</div></div>
+        <div class="macro-pill carb"><div class="mp-val">${f.carbs}g</div><div class="mp-label">Carbs</div></div>
+        <div class="macro-pill fat"><div class="mp-val">${f.fat}g</div><div class="mp-label">Fat</div></div>
+        <div class="macro-pill fiber"><div class="mp-val">${f.fiber}g</div><div class="mp-label">Fiber</div></div>
+      </div>
+      <button class="btn-add-food ${f.added?'added':''}" id="addbtn-${i}" onclick="addToLog(${i})">
+        ${f.added?'✓ Added':'+ Add'}
+      </button>
+    </div>
+  `).join('');
+}
+
+function addToLog(i){
+  const f=previewFoods[i];
+  if(f.added) return;
+  const meal=document.getElementById('meal-select').value;
+  const day=getDay(currentDate);
+  day.entries.push({
+    id:Date.now()+'_'+i,food_name:f.food_name,
+    serving:`${f.serving_qty} ${f.serving_unit}`,meal,
+    calories:f.calories,protein:f.protein,carbs:f.carbs,fat:f.fat,fiber:f.fiber,
+    time:new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}),
+  });
+  saveDayEntry(currentDate,day);
+  previewFoods[i].added=true;
+  renderPreview();renderGoalRings();renderLog();
+}
+
+function renderLog(){
+  const day=getDay(currentDate);
+  const container=document.getElementById('log-container');
+  const mealEmoji={breakfast:'🌅',lunch:'☀️',dinner:'🌙',snack:'🍎'};
+  if(!day.entries.length){
+    container.innerHTML='<div class="log-empty">No food logged yet. Search and add foods above 👆</div>';
+    document.getElementById('totals-bar').innerHTML='';
+    return;
+  }
+  let html='';
+  ['breakfast','lunch','dinner','snack'].forEach(meal=>{
+    const items=day.entries.filter(e=>e.meal===meal);
+    if(!items.length) return;
+    html+=`<div class="meal-group">
+      <div class="meal-group-title">
+        ${mealEmoji[meal]} <span class="meal-tag ${meal}">${meal.toUpperCase()}</span>
+        <span style="font-size:11px;color:var(--t2);margin-left:4px;">${items.reduce((a,e)=>a+e.calories,0)} kcal</span>
+      </div>`;
+    items.forEach(e=>{
+      html+=`<div class="log-item">
+        <div class="log-item-name">${cap(e.food_name)}</div>
+        <div class="log-item-qty">${e.serving}</div>
+        <div class="log-macros">
+          <span class="lm cal">${e.calories}<span class="lm-unit">kcal</span></span>
+          <span class="lm" style="color:var(--accent)">${e.protein}g<span class="lm-unit"> P</span></span>
+          <span class="lm carb">${e.carbs}g<span class="lm-unit"> C</span></span>
+          <span class="lm fat">${e.fat}g<span class="lm-unit"> F</span></span>
+          <span class="lm fiber">${e.fiber}g<span class="lm-unit"> Fi</span></span>
+        </div>
+        <button class="btn-del-log" onclick="deleteEntry('${e.id}')">×</button>
+      </div>`;
+    });
+    html+='</div>';
+  });
+  container.innerHTML=html;
+  const t=calcTotals(day.entries);
+  document.getElementById('totals-bar').innerHTML=`
+    <div class="tot-item"><div class="tot-label">Total Calories</div><div class="tot-val" style="color:var(--orange)">${Math.round(t.calories)} kcal</div></div>
+    <div class="tot-item"><div class="tot-label">Protein</div><div class="tot-val" style="color:var(--accent)">${Math.round(t.protein)}g</div></div>
+    <div class="tot-item"><div class="tot-label">Carbs</div><div class="tot-val" style="color:var(--blue)">${Math.round(t.carbs)}g</div></div>
+    <div class="tot-item"><div class="tot-label">Fat</div><div class="tot-val" style="color:var(--red)">${Math.round(t.fat)}g</div></div>
+    <div class="tot-item"><div class="tot-label">Fiber</div><div class="tot-val" style="color:var(--green)">${Math.round(t.fiber)}g</div></div>
+    <div class="tot-item"><div class="tot-label">Items</div><div class="tot-val">${day.entries.length}</div></div>
+  `;
+}
+
+function deleteEntry(id){
+  const day=getDay(currentDate);
+  day.entries=day.entries.filter(e=>e.id!==id);
+  saveDayEntry(currentDate,day);
+  renderGoalRings();renderLog();
+}
+function clearDay(){
+  if(!confirm('Clear all entries for this day?')) return;
+  saveDayEntry(currentDate,{entries:[]});
+  renderGoalRings();renderLog();
+}
+</script>
+</body>
+</html>
