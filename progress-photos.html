@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Progress Photos – MuscleTrack</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#0f1535;--sidebar:#0d1230;--card:#1a2250;--card2:#1e2860;
+  --accent:#6c63ff;--green:#10b981;--orange:#f59e0b;--red:#ef4444;--blue:#3b82f6;
+  --t1:#e8eeff;--t2:#7b8ab8;--border:rgba(255,255,255,0.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;min-height:100vh;display:flex;}
+.sidebar{width:220px;min-height:100vh;background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;}
+.sb-brand{display:flex;align-items:center;gap:10px;padding:20px 16px 16px;border-bottom:1px solid var(--border);}
+.sb-brand-icon{width:36px;height:36px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;font-weight:700;}
+.sb-brand-name{font-size:16px;font-weight:700;}
+.sb-user{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--border);}
+.sb-avatar{width:34px;height:34px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
+.sb-uname{font-size:13px;font-weight:600;}
+.sb-badge{font-size:11px;color:var(--orange);}
+.sb-nav{flex:1;padding:10px 0;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 16px;color:var(--t2);text-decoration:none;font-size:13px;font-weight:500;transition:all .2s;border-left:3px solid transparent;}
+.nav-item:hover,.nav-item.active{color:var(--t1);background:rgba(108,99,255,.12);border-left-color:var(--accent);}
+.nav-icon{font-size:15px;width:18px;text-align:center;}
+.main{flex:1;padding:28px;overflow-x:hidden;}
+.topbar{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
+.topbar-title{font-size:28px;font-weight:700;letter-spacing:-.5px;}
+.topbar-sub{color:var(--t2);font-size:13px;margin-top:4px;}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif;}
+.btn-accent{background:var(--accent);color:#fff;}
+.btn-accent:hover{filter:brightness(1.1);}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--t1);}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);}
+.upload-section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:22px;}
+.upload-section h3{font-size:15px;font-weight:700;margin-bottom:16px;}
+.upload-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.upload-form-fields{display:flex;flex-direction:column;gap:12px;}
+.form-field label{font-size:12px;color:var(--t2);display:block;margin-bottom:5px;}
+.form-field input,.form-field select,.form-field textarea{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:8px;color:var(--t1);font-size:13px;padding:9px 12px;outline:none;font-family:'Inter',sans-serif;transition:border-color .2s;}
+.form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:var(--accent);}
+.form-field input::placeholder,.form-field textarea::placeholder{color:var(--t2);}
+.form-field select option{background:#1a2250;}
+.form-field textarea{resize:none;height:70px;}
+.upload-drop{border:2px dashed rgba(108,99,255,.4);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-height:200px;cursor:pointer;transition:all .2s;background:rgba(108,99,255,.05);position:relative;}
+.upload-drop:hover{border-color:var(--accent);background:rgba(108,99,255,.12);}
+.upload-drop.dragover{border-color:var(--green);background:rgba(16,185,129,.1);}
+.upload-drop-icon{font-size:36px;}
+.upload-drop-text{font-size:14px;font-weight:600;color:var(--t2);}
+.upload-drop-sub{font-size:12px;color:var(--t2);}
+.upload-drop input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.preview-img{width:100%;height:200px;object-fit:cover;border-radius:10px;display:none;}
+.stats-bar{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;margin-bottom:22px;}
+.stats-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;}
+.stats-card .sv{font-size:24px;font-weight:700;color:var(--accent);}
+.stats-card .sl{font-size:11px;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-top:2px;}
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;align-items:center;}
+.filter-btn{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);color:var(--t2);background:transparent;font-family:'Inter',sans-serif;transition:all .2s;}
+.filter-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+.view-btns{margin-left:auto;display:flex;gap:6px;}
+.view-btn{padding:6px 12px;border-radius:8px;font-size:12px;cursor:pointer;border:1px solid var(--border);color:var(--t2);background:transparent;font-family:'Inter',sans-serif;}
+.view-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+.photos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;}
+.photos-grid.list-view{grid-template-columns:1fr;}
+.photo-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:all .2s;position:relative;}
+.photo-card:hover{border-color:rgba(108,99,255,.4);transform:translateY(-2px);}
+.photo-card img{width:100%;height:200px;object-fit:cover;display:block;}
+.photo-card.list-view-card{display:flex;align-items:center;}
+.photo-card.list-view-card img{width:120px;height:90px;flex-shrink:0;}
+.photo-info{padding:12px;}
+.photo-date{font-size:13px;font-weight:700;}
+.photo-week{font-size:11px;color:var(--accent);font-weight:600;margin-top:2px;}
+.photo-note{font-size:12px;color:var(--t2);margin-top:6px;line-height:1.4;}
+.photo-weight{display:inline-block;background:rgba(16,185,129,.12);color:var(--green);font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;margin-top:6px;}
+.photo-actions{position:absolute;top:8px;right:8px;display:flex;gap:6px;opacity:0;transition:opacity .2s;}
+.photo-card:hover .photo-actions{opacity:1;}
+.photo-action-btn{background:rgba(0,0,0,.6);border:none;border-radius:6px;color:#fff;font-size:12px;padding:4px 8px;cursor:pointer;}
+.photo-action-btn:hover{background:rgba(239,68,68,.8);}
+.photo-action-btn.view-btn-overlay{background:rgba(108,99,255,.8);}
+.photo-action-btn.view-btn-overlay:hover{background:rgba(108,99,255,1);}
+.badge-latest{position:absolute;top:8px;left:8px;background:var(--green);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;}
+.compare-section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:22px;}
+.compare-section h3{font-size:15px;font-weight:700;margin-bottom:16px;}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.compare-slot{border:2px dashed rgba(108,99,255,.3);border-radius:10px;min-height:250px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:all .2s;}
+.compare-slot:hover{border-color:var(--accent);}
+.compare-slot-label{font-size:12px;color:var(--t2);font-weight:600;}
+.compare-empty-icon{font-size:28px;}
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:500;align-items:center;justify-content:center;flex-direction:column;gap:12px;}
+.lightbox.open{display:flex;}
+.lightbox img{max-width:90vw;max-height:75vh;border-radius:12px;object-fit:contain;}
+.lightbox-info{color:#fff;text-align:center;}
+.lightbox-close{position:absolute;top:20px;right:20px;background:rgba(255,255,255,.15);border:none;border-radius:50%;width:36px;height:36px;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.lightbox-close:hover{background:rgba(255,255,255,.3);}
+.lightbox-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);border:none;border-radius:50%;width:44px;height:44px;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.lightbox-nav:hover{background:rgba(255,255,255,.3);}
+.lightbox-prev{left:20px;}
+.lightbox-next{right:20px;}
+.empty-state{text-align:center;padding:48px 20px;color:var(--t2);}
+.empty-state .ei{font-size:48px;margin-bottom:12px;}
+.empty-state p{font-size:14px;}
+.save-toast{position:fixed;bottom:24px;right:24px;background:var(--green);color:#fff;font-size:13px;font-weight:600;padding:10px 20px;border-radius:10px;display:none;z-index:999;}
+@media(max-width:700px){.sidebar{display:none;}.main{padding:16px;}.upload-grid{grid-template-columns:1fr;}.photos-grid{grid-template-columns:repeat(2,1fr);}.compare-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<aside class="sidebar">
+  <div class="sb-brand"><div class="sb-brand-icon">M</div><div class="sb-brand-name">MuscleTrack</div></div>
+  <div class="sb-user">
+    <div class="sb-avatar" id="sb-av">KR</div>
+    <div><div class="sb-uname" id="sb-name">Kamlesh Rawal</div><div class="sb-badge">⭐ Muscle Builder</div></div>
+  </div>
+  <nav class="sb-nav">
+    <a class="nav-item" href="muscle-dashboard.html"><span class="nav-icon">📊</span> Dashboard</a>
+    <a class="nav-item" href="workout-tracker.html"><span class="nav-icon">🏋️</span> Workout Tracker</a>
+    <a class="nav-item" href="nutrition-tracker.html"><span class="nav-icon">🥗</span> Nutrition Tracker</a>
+    <a class="nav-item" href="body-measurements.html"><span class="nav-icon">📏</span> Body Measurements</a>
+    <a class="nav-item active" href="progress-photos.html"><span class="nav-icon">📸</span> Progress Photos</a>
+    <a class="nav-item" href="#"><span class="nav-icon">📈</span> Strength Progress</a>
+    <a class="nav-item" href="#"><span class="nav-icon">🔄</span> Recovery Tracker</a>
+    <a class="nav-item" href="#"><span class="nav-icon">🎯</span> Goals</a>
+    <a class="nav-item" href="#"><span class="nav-icon">🤖</span> AI Coach</a>
+    <a class="nav-item" href="#"><span class="nav-icon">📅</span> Calendar</a>
+    <a class="nav-item" href="#"><span class="nav-icon">🤝</span> Community</a>
+    <a class="nav-item" href="#"><span class="nav-icon">⚙️</span> Settings</a>
+  </nav>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div>
+      <div class="topbar-title">Progress Photos</div>
+      <div class="topbar-sub">Add weekly photos — track your transformation over time.</div>
+    </div>
+    <button class="btn btn-accent" id="btn-scroll-upload">📸 Add Photo</button>
+  </div>
+
+  <div class="stats-bar" id="stats-bar"></div>
+
+  <div class="compare-section">
+    <h3>⚖️ Before & After Compare</h3>
+    <div class="compare-grid">
+      <div>
+        <div style="font-size:12px;color:var(--t2);margin-bottom:8px;font-weight:600;">BEFORE</div>
+        <div class="compare-slot" id="compare-before">
+          <div class="compare-empty-icon">📷</div>
+          <div class="compare-slot-label">Click to select photo</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12px;color:var(--t2);margin-bottom:8px;font-weight:600;">AFTER</div>
+        <div class="compare-slot" id="compare-after">
+          <div class="compare-empty-icon">📷</div>
+          <div class="compare-slot-label">Click to select photo</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:22px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
+      <h3 style="font-size:15px;font-weight:700;">📷 Photo Gallery</h3>
+      <div class="view-btns">
+        <button class="view-btn active" id="btn-grid-view">⊞ Grid</button>
+        <button class="view-btn" id="btn-list-view">☰ List</button>
+      </div>
+    </div>
+    <div class="filter-bar" id="filter-bar">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="front">Front</button>
+      <button class="filter-btn" data-filter="side">Side</button>
+      <button class="filter-btn" data-filter="back">Back</button>
+      <button class="filter-btn" data-filter="flexing">Flexing</button>
+    </div>
+    <div class="photos-grid" id="photos-grid"></div>
+  </div>
+
+  <div class="upload-section" id="upload-section">
+    <h3>📤 Upload New Photo</h3>
+    <div class="upload-grid">
+      <div>
+        <div class="upload-drop" id="upload-drop">
+          <input type="file" id="file-input" accept="image/*"/>
+          <div class="upload-drop-icon">📸</div>
+          <div class="upload-drop-text">Click or drag photo here</div>
+          <div class="upload-drop-sub">JPG, PNG, WEBP supported</div>
+        </div>
+        <img id="preview-img" class="preview-img" alt="preview"/>
+      </div>
+      <div class="upload-form-fields">
+        <div class="form-field"><label>Date</label><input type="date" id="up-date"/></div>
+        <div class="form-field"><label>Pose / View</label>
+          <select id="up-pose">
+            <option value="front">Front</option>
+            <option value="side">Side</option>
+            <option value="back">Back</option>
+            <option value="flexing">Flexing</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="form-field"><label>Weight at time (kg) — optional</label><input type="number" id="up-weight" placeholder="e.g. 75.5" step="0.1" min="0"/></div>
+        <div class="form-field"><label>Notes — optional</label><textarea id="up-notes" placeholder="How you feel, what changed…"></textarea></div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn btn-accent" id="btn-upload" style="flex:1;justify-content:center;">💾 Save Photo</button>
+          <button class="btn btn-outline" id="btn-clear-upload">Clear</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lb-close">✕</button>
+  <button class="lightbox-nav lightbox-prev" id="lb-prev">‹</button>
+  <button class="lightbox-nav lightbox-next" id="lb-next">›</button>
+  <img id="lb-img" src="" alt=""/>
+  <div class="lightbox-info" id="lb-info"></div>
+</div>
+
+<div id="compare-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:400;align-items:center;justify-content:center;">
+  <div style="background:#1a2250;border:1px solid rgba(108,99,255,.4);border-radius:16px;padding:24px;width:600px;max-width:95vw;max-height:80vh;overflow-y:auto;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <h3 style="font-size:16px;font-weight:700;">Select Photo</h3>
+      <button id="compare-modal-close" style="background:none;border:none;color:var(--t2);font-size:20px;cursor:pointer;">✕</button>
+    </div>
+    <div class="photos-grid" id="compare-picker-grid" style="grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;"></div>
+  </div>
+</div>
+
+<div class="save-toast" id="save-toast">✅ Photo saved!</div>
+
+<script>
+const PKEY='mt_photos_v1';
+let currentFilter='all';
+let isListView=false;
+let lightboxIdx=0;
+let compareSide=null;
+let compareData={before:null,after:null};
+
+function getPhotos(){try{return JSON.parse(localStorage.getItem(PKEY)||'[]');}catch(e){return[];}}
+function setPhotos(p){localStorage.setItem(PKEY,JSON.stringify(p));}
+function uid(){return Math.random().toString(36).slice(2,8);}
+function todayISO(){return new Date().toISOString().slice(0,10);}
+function fmtDate(d){return new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}
+function weekNum(d){
+  const photos=getPhotos().sort((a,b)=>a.date.localeCompare(b.date));
+  if(!photos.length) return 1;
+  const first=new Date(photos[0].date+'T12:00:00');
+  const cur=new Date(d+'T12:00:00');
+  return Math.floor((cur-first)/(7*24*3600*1000))+1;
+}
+function cap(s){return String(s).charAt(0).toUpperCase()+String(s).slice(1);}
+
+window.addEventListener('DOMContentLoaded',()=>{
+  try{const u=JSON.parse(localStorage.getItem('muscletrack_user')||'{}');if(u.name){document.getElementById('sb-name').textContent=u.name;document.getElementById('sb-av').textContent=u.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();}}catch(e){}
+  document.getElementById('up-date').value=todayISO();
+  document.getElementById('btn-scroll-upload').addEventListener('click',()=>document.getElementById('upload-section').scrollIntoView({behavior:'smooth'}));
+  document.getElementById('btn-upload').addEventListener('click',savePhoto);
+  document.getElementById('btn-clear-upload').addEventListener('click',clearUpload);
+  const fileInp=document.getElementById('file-input');
+  const drop=document.getElementById('upload-drop');
+  const previewImg=document.getElementById('preview-img');
+  fileInp.addEventListener('change',()=>{
+    const f=fileInp.files[0];if(!f)return;
+    const reader=new FileReader();
+    reader.onload=e=>{previewImg.src=e.target.result;previewImg.style.display='block';drop.style.display='none';};
+    reader.readAsDataURL(f);
+  });
+  drop.addEventListener('dragover',e=>{e.preventDefault();drop.classList.add('dragover');});
+  drop.addEventListener('dragleave',()=>drop.classList.remove('dragover'));
+  drop.addEventListener('drop',e=>{
+    e.preventDefault();drop.classList.remove('dragover');
+    const f=e.dataTransfer.files[0];
+    if(!f||!f.type.startsWith('image/'))return;
+    const reader=new FileReader();
+    reader.onload=ev=>{previewImg.src=ev.target.result;previewImg.style.display='block';drop.style.display='none';};
+    reader.readAsDataURL(f);
+  });
+  document.getElementById('filter-bar').addEventListener('click',e=>{
+    const btn=e.target.closest('.filter-btn');if(!btn)return;
+    currentFilter=btn.dataset.filter;
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');renderGallery();
+  });
+  document.getElementById('btn-grid-view').addEventListener('click',()=>{isListView=false;document.getElementById('btn-grid-view').classList.add('active');document.getElementById('btn-list-view').classList.remove('active');renderGallery();});
+  document.getElementById('btn-list-view').addEventListener('click',()=>{isListView=true;document.getElementById('btn-list-view').classList.add('active');document.getElementById('btn-grid-view').classList.remove('active');renderGallery();});
+  document.getElementById('lb-close').addEventListener('click',closeLightbox);
+  document.getElementById('lb-prev').addEventListener('click',()=>navigateLightbox(-1));
+  document.getElementById('lb-next').addEventListener('click',()=>navigateLightbox(1));
+  document.getElementById('lightbox').addEventListener('click',e=>{if(e.target===document.getElementById('lightbox'))closeLightbox();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox();if(e.key==='ArrowLeft')navigateLightbox(-1);if(e.key==='ArrowRight')navigateLightbox(1);});
+  document.getElementById('compare-before').addEventListener('click',()=>openComparePicker('before'));
+  document.getElementById('compare-after').addEventListener('click',()=>openComparePicker('after'));
+  document.getElementById('compare-modal-close').addEventListener('click',()=>document.getElementById('compare-modal').style.display='none');
+  document.getElementById('compare-modal').addEventListener('click',e=>{if(e.target===document.getElementById('compare-modal'))document.getElementById('compare-modal').style.display='none';});
+  render();
+});
+
+function savePhoto(){
+  const previewImg=document.getElementById('preview-img');
+  if(!previewImg.src||previewImg.style.display==='none'){alert('Please select a photo first.');return;}
+  const photo={id:uid(),date:document.getElementById('up-date').value||todayISO(),pose:document.getElementById('up-pose').value,weight:parseFloat(document.getElementById('up-weight').value)||null,notes:document.getElementById('up-notes').value.trim(),img:previewImg.src};
+  const photos=getPhotos();
+  photos.push(photo);
+  photos.sort((a,b)=>a.date.localeCompare(b.date));
+  setPhotos(photos);clearUpload();render();
+  const t=document.getElementById('save-toast');
+  t.style.display='block';setTimeout(()=>t.style.display='none',2000);
+}
+
+function clearUpload(){
+  document.getElementById('file-input').value='';
+  document.getElementById('preview-img').style.display='none';
+  document.getElementById('upload-drop').style.display='flex';
+  document.getElementById('preview-img').src='';
+  document.getElementById('up-weight').value='';
+  document.getElementById('up-notes').value='';
+  document.getElementById('up-date').value=todayISO();
+  document.getElementById('up-pose').value='front';
+}
+
+function render(){renderStats();renderGallery();renderCompare();}
+
+function renderStats(){
+  const photos=getPhotos();
+  const poses={front:0,side:0,back:0,flexing:0};
+  photos.forEach(p=>{if(poses[p.pose]!==undefined)poses[p.pose]++;});
+  const weeks=photos.length?Math.ceil((new Date(photos[photos.length-1].date)-new Date(photos[0].date))/(7*24*3600*1000))+1:0;
+  document.getElementById('stats-bar').innerHTML=`
+    <div class="stats-card"><div class="sv">${photos.length}</div><div class="sl">Total Photos</div></div>
+    <div class="stats-card"><div class="sv" style="color:var(--green)">${weeks}</div><div class="sl">Weeks Tracked</div></div>
+    <div class="stats-card"><div class="sv" style="color:var(--orange)">${poses.front}</div><div class="sl">Front Shots</div></div>
+    <div class="stats-card"><div class="sv" style="color:var(--blue)">${poses.side}</div><div class="sl">Side Shots</div></div>
+    <div class="stats-card"><div class="sv" style="color:var(--red)">${poses.back}</div><div class="sl">Back Shots</div></div>
+    <div class="stats-card"><div class="sv" style="color:var(--accent)">${poses.flexing}</div><div class="sl">Flexing</div></div>`;
+}
+
+function renderGallery(){
+  const photos=getPhotos();
+  const filtered=currentFilter==='all'?photos:photos.filter(p=>p.pose===currentFilter);
+  const grid=document.getElementById('photos-grid');
+  grid.className='photos-grid'+(isListView?' list-view':'');
+  if(!filtered.length){
+    grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><div class="ei">📸</div><p>No photos yet${currentFilter!=='all'?' for this pose':''}.<br>Upload your first progress photo above!</p></div>`;
+    return;
+  }
+  const latest=getPhotos()[getPhotos().length-1];
+  grid.innerHTML=filtered.slice().reverse().map(p=>{
+    const isLatest=p.id===latest?.id;
+    const wk=weekNum(p.date);
+    if(isListView){
+      return `<div class="photo-card list-view-card" data-id="${p.id}">
+        <img src="${p.img}" alt="${p.pose}"/>
+        <div class="photo-info" style="flex:1;">
+          <div class="photo-date">${fmtDate(p.date)} ${isLatest?'<span style="background:rgba(16,185,129,.15);color:var(--green);font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;">Latest</span>':''}</div>
+          <div class="photo-week">Week ${wk} · ${cap(p.pose)}</div>
+          ${p.weight?`<span class="photo-weight">⚖️ ${p.weight}kg</span>`:''}
+          ${p.notes?`<div class="photo-note">${p.notes}</div>`:''}
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;padding:12px;">
+          <button class="photo-action-btn view-btn-overlay" data-view="${p.id}">👁 View</button>
+          <button class="photo-action-btn" data-del="${p.id}" style="background:rgba(239,68,68,.7);">🗑</button>
+        </div>
+      </div>`;
+    }
+    return `<div class="photo-card" data-id="${p.id}">
+      ${isLatest?'<div class="badge-latest">Latest</div>':''}
+      <div class="photo-actions">
+        <button class="photo-action-btn view-btn-overlay" data-view="${p.id}">👁</button>
+        <button class="photo-action-btn" data-del="${p.id}">🗑</button>
+      </div>
+      <img src="${p.img}" alt="${p.pose}" style="cursor:pointer;" data-view="${p.id}"/>
+      <div class="photo-info">
+        <div class="photo-date">${fmtDate(p.date)}</div>
+        <div class="photo-week">Week ${wk} · ${cap(p.pose)}</div>
+        ${p.weight?`<span class="photo-weight">⚖️ ${p.weight}kg</span>`:''}
+        ${p.notes?`<div class="photo-note">${p.notes}</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+  grid.querySelectorAll('[data-view]').forEach(el=>{
+    el.addEventListener('click',()=>openLightbox(el.dataset.view,filtered.slice().reverse()));
+  });
+  grid.querySelectorAll('[data-del]').forEach(el=>{
+    el.addEventListener('click',e=>{
+      e.stopPropagation();
+      if(!confirm('Delete this photo?'))return;
+      setPhotos(getPhotos().filter(p=>p.id!==el.dataset.del));render();
+    });
+  });
+}
+
+function openLightbox(id,photos){
+  lightboxIdx=photos.findIndex(p=>p.id===id);
+  showLightboxPhoto(photos);
+  document.getElementById('lightbox').classList.add('open');
+}
+function showLightboxPhoto(photos){
+  if(!photos||!photos.length)return;
+  const p=photos[lightboxIdx];
+  document.getElementById('lb-img').src=p.img;
+  document.getElementById('lb-info').innerHTML=`<div style="font-size:16px;font-weight:700;">${fmtDate(p.date)} · ${cap(p.pose)}</div>${p.weight?`<div style="color:var(--green);font-size:13px;margin-top:4px;">⚖️ ${p.weight}kg</div>`:''}${p.notes?`<div style="color:var(--t2);font-size:13px;margin-top:4px;">${p.notes}</div>`:''}`;
+  document.getElementById('lb-prev').style.opacity=lightboxIdx>0?'1':'0.3';
+  document.getElementById('lb-next').style.opacity=lightboxIdx<photos.length-1?'1':'0.3';
+}
+function navigateLightbox(dir){
+  const photos=(currentFilter==='all'?getPhotos():getPhotos().filter(p=>p.pose===currentFilter)).slice().reverse();
+  lightboxIdx=Math.max(0,Math.min(photos.length-1,lightboxIdx+dir));
+  showLightboxPhoto(photos);
+}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
+
+function openComparePicker(side){
+  compareSide=side;
+  const photos=getPhotos().slice().reverse();
+  const grid=document.getElementById('compare-picker-grid');
+  grid.innerHTML=photos.map(p=>`
+    <div style="cursor:pointer;border-radius:8px;overflow:hidden;border:2px solid var(--border);transition:all .2s;" class="compare-pick-item" data-id="${p.id}">
+      <img src="${p.img}" style="width:100%;height:100px;object-fit:cover;display:block;"/>
+      <div style="padding:6px;font-size:11px;color:var(--t2);">${fmtDate(p.date)}<br>${cap(p.pose)}</div>
+    </div>`).join('');
+  grid.querySelectorAll('.compare-pick-item').forEach(el=>{
+    el.addEventListener('mouseenter',()=>el.style.borderColor='var(--accent)');
+    el.addEventListener('mouseleave',()=>el.style.borderColor='var(--border)');
+    el.addEventListener('click',()=>{
+      compareData[compareSide]=getPhotos().find(p=>p.id===el.dataset.id);
+      document.getElementById('compare-modal').style.display='none';
+      renderCompare();
+    });
+  });
+  document.getElementById('compare-modal').style.display='flex';
+}
+
+function renderCompare(){
+  ['before','after'].forEach(side=>{
+    const slot=document.getElementById('compare-'+side);
+    const p=compareData[side];
+    if(p){
+      slot.innerHTML=`<img src="${p.img}" style="width:100%;height:250px;object-fit:cover;border-radius:8px;cursor:pointer;"/>
+        <div style="padding:10px;font-size:13px;font-weight:600;">${fmtDate(p.date)} · ${cap(p.pose)}</div>
+        ${p.weight?`<div style="font-size:12px;color:var(--green);padding:0 10px 10px;">⚖️ ${p.weight}kg</div>`:''}`;
+      slot.onclick=()=>openComparePicker(side);
+    } else {
+      slot.innerHTML='<div class="compare-empty-icon">📷</div><div class="compare-slot-label">Click to select photo</div>';
+      slot.onclick=()=>openComparePicker(side);
+    }
+  });
+}
+</script>
+</body>
+</html>
