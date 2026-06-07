@@ -480,3 +480,32 @@ ring.style.background = `conic-gradient(#10b981 0% ${p2}%, #a78bfa ${p2}% ${c2}%
   }catch(e){}
 })();
 </script>
+<div style="background:#1a2250;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px;margin-bottom:20px;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+    <h3 style="font-size:14px;font-weight:700;">🔄 Recovery Score</h3>
+    <a href="recovery-tracker.html" style="font-size:12px;color:#6c63ff;text-decoration:none;">Log Today →</a>
+  </div>
+  <div id="dash-recovery"></div>
+</div>
+<script>
+(function(){
+  try{
+    const all=JSON.parse(localStorage.getItem('mt_recovery_v1')||'{}');
+    const today=new Date().toISOString().slice(0,10);
+    const entry=all[today];
+    const el=document.getElementById('dash-recovery');
+    if(!entry){el.innerHTML='<div style="color:#7b8ab8;font-size:13px;text-align:center;padding:16px;">No recovery logged today — <a href="recovery-tracker.html" style="color:#6c63ff;">log now</a></div>';return;}
+    const s=entry.score||0;
+    const color=s>=8?'#10b981':s>=6?'#f59e0b':'#ef4444';
+    el.innerHTML=`<div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+      <div style="width:60px;height:60px;border-radius:50%;background:${color}22;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:${color};">${s}</div>
+      <div style="flex:1;display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;">
+        <div style="background:#1e2860;border-radius:8px;padding:8px;text-align:center;"><div style="font-size:14px;font-weight:700;color:#3b82f6;">${entry.sleep}h</div><div style="font-size:10px;color:#7b8ab8;">Sleep</div></div>
+        <div style="background:#1e2860;border-radius:8px;padding:8px;text-align:center;"><div style="font-size:14px;font-weight:700;color:#10b981;">${entry.energy}/10</div><div style="font-size:10px;color:#7b8ab8;">Energy</div></div>
+        <div style="background:#1e2860;border-radius:8px;padding:8px;text-align:center;"><div style="font-size:14px;font-weight:700;color:#f59e0b;">${entry.stress}/10</div><div style="font-size:10px;color:#7b8ab8;">Stress</div></div>
+        <div style="background:#1e2860;border-radius:8px;padding:8px;text-align:center;"><div style="font-size:14px;font-weight:700;color:#3b82f6;">${entry.water}L</div><div style="font-size:10px;color:#7b8ab8;">Water</div></div>
+      </div>
+    </div>`;
+  }catch(e){}
+})();
+</script>
