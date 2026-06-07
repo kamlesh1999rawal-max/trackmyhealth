@@ -362,3 +362,40 @@ ring.style.background = `conic-gradient(#10b981 0% ${p2}%, #a78bfa ${p2}% ${c2}%
 </script>
 </body>
 </html>
+<!-- PROGRESS PHOTO WIDGET — paste into muscle-dashboard.html -->
+<div style="background:#1a2250;border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:20px;margin-bottom:20px;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+    <h3 style="font-size:14px;font-weight:700;">📸 Progress Photos</h3>
+    <a href="progress-photos.html" style="font-size:12px;color:#6c63ff;text-decoration:none;font-weight:500;">View All →</a>
+  </div>
+  <div id="dash-photos" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;"></div>
+  <div id="dash-photos-empty" style="display:none;text-align:center;padding:24px;color:#7b8ab8;font-size:13px;">No photos yet — <a href="progress-photos.html" style="color:#6c63ff;">add your first one</a></div>
+</div>
+
+<script>
+(function(){
+  try{
+    const photos=JSON.parse(localStorage.getItem('mt_photos_v1')||'[]');
+    const el=document.getElementById('dash-photos');
+    const empty=document.getElementById('dash-photos-empty');
+    if(!photos.length){el.style.display='none';empty.style.display='block';return;}
+    const first=photos[0];
+    const last=photos[photos.length-1];
+    const fmtD=d=>new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+    const render=p=>`<div style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,.08);">
+      <img src="${p.img}" style="width:100%;height:160px;object-fit:cover;display:block;"/>
+      <div style="padding:10px;">
+        <div style="font-size:12px;font-weight:700;">${fmtD(p.date)}</div>
+        <div style="font-size:11px;color:#7b8ab8;">${cap(p.pose)}${p.weight?' · ⚖️ '+p.weight+'kg':''}</div>
+      </div>
+    </div>`;
+    if(first.id===last.id){
+      el.style.gridTemplateColumns='1fr';
+      el.innerHTML=render(first)+'<div style="display:flex;align-items:center;justify-content:center;border:2px dashed rgba(108,99,255,.3);border-radius:10px;color:#7b8ab8;font-size:13px;min-height:160px;"><a href="progress-photos.html" style="color:#6c63ff;text-decoration:none;">+ Add more photos</a></div>';
+    } else {
+      el.innerHTML=`<div><div style="font-size:10px;font-weight:700;color:#7b8ab8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">First</div>${render(first)}</div><div><div style="font-size:10px;font-weight:700;color:#10b981;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">Latest</div>${render(last)}</div>`;
+    }
+  }catch(e){}
+})();
+</script>
