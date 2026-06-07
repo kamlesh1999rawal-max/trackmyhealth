@@ -399,3 +399,84 @@ ring.style.background = `conic-gradient(#10b981 0% ${p2}%, #a78bfa ${p2}% ${c2}%
   }catch(e){}
 })();
 </script>
+<!-- STRENGTH PROGRESS WIDGET -->
+<div style="background:#1a2250;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px;margin-bottom:20px;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+    <h3 style="font-size:14px;font-weight:700;">📈 Strength Progress</h3>
+    <a href="strength-progress.html" style="font-size:12px;color:#6c63ff;text-decoration:none;">View All →</a>
+  </div>
+  <div id="dash-strength"></div>
+</div>
+
+<!-- PROGRESS PHOTOS WIDGET -->
+<div style="background:#1a2250;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px;margin-bottom:20px;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+    <h3 style="font-size:14px;font-weight:700;">📸 Progress Photos</h3>
+    <a href="progress-photos.html" style="font-size:12px;color:#6c63ff;text-decoration:none;">View All →</a>
+  </div>
+  <div id="dash-photos"></div>
+  <div id="dash-photos-empty" style="display:none;text-align:center;padding:16px;color:#7b8ab8;font-size:13px;">No photos yet — <a href="progress-photos.html" style="color:#6c63ff;">add your first one</a></div>
+</div>
+
+<script>
+// Strength Widget
+(function(){
+  try{
+    const s=JSON.parse(localStorage.getItem('mt_wt_v5')||'null');
+    const el=document.getElementById('dash-strength');
+    if(!s||!s.days){el.innerHTML='<div style="color:#7b8ab8;font-size:13px;text-align:center;padding:16px;">No workout data yet — <a href="workout-tracker.html" style="color:#6c63ff;">log workouts</a></div>';return;}
+    const prs={};
+    s.days.forEach(day=>{
+      day.exercises.forEach(ex=>{
+        if(!ex.sets||!ex.sets.length)return;
+        const maxW=Math.max(...ex.sets.map(s=>parseFloat(s.weight)||0));
+        const key=ex.name.toLowerCase();
+        if(!prs[key]||maxW>prs[key].w) prs[key]={name:ex.name,w:maxW,muscle:ex.muscle||''};
+      });
+    });
+    const top=Object.values(prs).sort((a,b)=>b.w-a.w).slice(0,4);
+    if(!top.length){el.innerHTML='<div style="color:#7b8ab8;font-size:13px;text-align:center;padding:16px;">Log exercises with weight to see PRs</div>';return;}
+    el.innerHTML=top.map(p=>`
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:#1e2860;border-radius:8px;margin-bottom:8px;">
+        <div>
+          <div style="font-size:13px;font-weight:600;">${p.name}</div>
+          <div style="font-size:11px;color:#7b8ab8;">${p.muscle}</div>
+        </div>
+        <div style="font-size:16px;font-weight:700;color:#f59e0b;">${p.w} kg</div>
+      </div>`).join('');
+  }catch(e){}
+})();
+
+// Progress Photos Widget
+(function(){
+  try{
+    const photos=JSON.parse(localStorage.getItem('mt_photos_v1')||'[]');
+    const el=document.getElementById('dash-photos');
+    const empty=document.getElementById('dash-photos-empty');
+    if(!photos.length){el.style.display='none';empty.style.display='block';return;}
+    const first=photos[0];
+    const last=photos[photos.length-1];
+    const fmtD=d=>new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+    const card=p=>`
+      <div style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,.08);">
+        <img src="${p.img}" style="width:100%;height:160px;object-fit:cover;display:block;"/>
+        <div style="padding:10px;">
+          <div style="font-size:12px;font-weight:700;">${fmtD(p.date)}</div>
+          <div style="font-size:11px;color:#7b8ab8;">${cap(p.pose)}${p.weight?' · ⚖️ '+p.weight+'kg':''}</div>
+        </div>
+      </div>`;
+    if(first.id===last.id){
+      el.style.gridTemplateColumns='1fr';
+      el.innerHTML=card(first);
+    } else {
+      el.style.display='grid';
+      el.style.gridTemplateColumns='1fr 1fr';
+      el.style.gap='12px';
+      el.innerHTML=`
+        <div><div style="font-size:10px;font-weight:700;color:#7b8ab8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">First</div>${card(first)}</div>
+        <div><div style="font-size:10px;font-weight:700;color:#10b981;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">Latest</div>${card(last)}</div>`;
+    }
+  }catch(e){}
+})();
+</script>
