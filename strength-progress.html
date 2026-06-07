@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Strength Progress – MuscleTrack</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#0f1535;--sidebar:#0d1230;--card:#1a2250;--card2:#1e2860;
+  --accent:#6c63ff;--green:#10b981;--orange:#f59e0b;--red:#ef4444;--blue:#3b82f6;
+  --t1:#e8eeff;--t2:#7b8ab8;--border:rgba(255,255,255,0.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;min-height:100vh;display:flex;}
+.sidebar{width:220px;min-height:100vh;background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;}
+.sb-brand{display:flex;align-items:center;gap:10px;padding:20px 16px 16px;border-bottom:1px solid var(--border);}
+.sb-brand-icon{width:36px;height:36px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;font-weight:700;}
+.sb-brand-name{font-size:16px;font-weight:700;}
+.sb-user{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--border);}
+.sb-avatar{width:34px;height:34px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
+.sb-uname{font-size:13px;font-weight:600;}
+.sb-badge{font-size:11px;color:var(--orange);}
+.sb-nav{flex:1;padding:10px 0;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 16px;color:var(--t2);text-decoration:none;font-size:13px;font-weight:500;transition:all .2s;border-left:3px solid transparent;}
+.nav-item:hover,.nav-item.active{color:var(--t1);background:rgba(108,99,255,.12);border-left-color:var(--accent);}
+.nav-icon{font-size:15px;width:18px;text-align:center;}
+.main{flex:1;padding:28px;overflow-x:hidden;}
+.topbar{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
+.topbar-title{font-size:28px;font-weight:700;letter-spacing:-.5px;}
+.topbar-sub{color:var(--t2);font-size:13px;margin-top:4px;}
+.summary-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin-bottom:24px;}
+.sum-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;}
+.sum-icon{font-size:22px;margin-bottom:6px;}
+.sum-label{font-size:11px;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
+.sum-val{font-size:22px;font-weight:700;}
+.sum-sub{font-size:11px;color:var(--t2);margin-top:3px;}
+.pr-section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:22px;}
+.pr-section h3{font-size:15px;font-weight:700;margin-bottom:16px;}
+.pr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;}
+.pr-card{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;position:relative;overflow:hidden;}
+.pr-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--orange);}
+.pr-name{font-size:13px;font-weight:700;margin-bottom:4px;}
+.pr-muscle{font-size:11px;color:var(--t2);margin-bottom:10px;}
+.pr-val{font-size:20px;font-weight:700;color:var(--orange);}
+.pr-unit{font-size:12px;color:var(--t2);margin-left:2px;}
+.pr-sub{font-size:11px;color:var(--t2);margin-top:4px;}
+.pr-badge{display:inline-block;background:rgba(245,158,11,.15);color:var(--orange);font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-top:6px;}
+.ex-section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:22px;}
+.ex-section h3{font-size:15px;font-weight:700;margin-bottom:16px;}
+.ex-search{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:8px;color:var(--t1);font-size:13px;padding:9px 12px;outline:none;margin-bottom:16px;font-family:'Inter',sans-serif;}
+.ex-search:focus{border-color:var(--accent);}
+.ex-search::placeholder{color:var(--t2);}
+.ex-list{display:flex;flex-direction:column;gap:10px;}
+.ex-item{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;cursor:pointer;transition:all .2s;}
+.ex-item:hover{border-color:var(--accent);}
+.ex-item.active{border-color:var(--accent);background:rgba(108,99,255,.1);}
+.ex-item-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.ex-item-name{font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px;}
+.ex-muscle-tag{font-size:11px;color:var(--t2);}
+.ex-item-stats{display:flex;gap:16px;}
+.ex-stat{display:flex;flex-direction:column;gap:2px;}
+.ex-stat-val{font-size:16px;font-weight:700;}
+.ex-stat-label{font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;}
+.ex-progress-bar{background:rgba(255,255,255,.06);border-radius:99px;height:4px;overflow:hidden;margin-top:8px;}
+.ex-progress-fill{height:100%;border-radius:99px;transition:width .5s;}
+.trend-up{color:var(--green);}
+.trend-down{color:var(--red);}
+.trend-same{color:var(--t2);}
+.chart-section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:22px;}
+.chart-section h3{font-size:15px;font-weight:700;margin-bottom:6px;}
+.chart-subtitle{font-size:12px;color:var(--t2);margin-bottom:16px;}
+.chart-toggle{display:flex;gap:8px;margin-bottom:16px;}
+.chart-tog-btn{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);color:var(--t2);background:transparent;font-family:'Inter',sans-serif;transition:all .2s;}
+.chart-tog-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+.chart-area{height:180px;position:relative;}
+.chart-empty{display:flex;align-items:center;justify-content:center;height:180px;color:var(--t2);font-size:13px;border:1px dashed var(--border);border-radius:10px;}
+.heat-section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:22px;}
+.heat-section h3{font-size:15px;font-weight:700;margin-bottom:16px;}
+.heat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;}
+.heat-card{background:var(--card2);border-radius:8px;padding:12px;}
+.heat-name{font-size:12px;font-weight:600;margin-bottom:6px;}
+.heat-vol{font-size:18px;font-weight:700;color:var(--blue);}
+.heat-sub{font-size:11px;color:var(--t2);margin-top:2px;}
+.heat-bar{background:rgba(59,130,246,.1);border-radius:99px;height:5px;margin-top:8px;overflow:hidden;}
+.heat-fill{height:100%;background:var(--blue);border-radius:99px;}
+.empty-state{text-align:center;padding:48px 20px;color:var(--t2);}
+.empty-state .ei{font-size:48px;margin-bottom:12px;}
+@media(max-width:700px){.sidebar{display:none;}.main{padding:16px;}.summary-row{grid-template-columns:repeat(2,1fr);}.pr-grid{grid-template-columns:1fr 1fr;}}
+</style>
+</head>
+<body>
+<aside class="sidebar">
+  <div class="sb-brand"><div class="sb-brand-icon">M</div><div class="sb-brand-name">MuscleTrack</div></div>
+  <div class="sb-user">
+    <div class="sb-avatar" id="sb-av">KR</div>
+    <div><div class="sb-uname" id="sb-name">Kamlesh Rawal</div><div class="sb-badge">⭐ Muscle Builder</div></div>
+  </div>
+  <nav class="sb-nav">
+    <a class="nav-item" href="muscle-dashboard.html"><span class="nav-icon">📊</span> Dashboard</a>
+    <a class="nav-item" href="workout-tracker.html"><span class="nav-icon">🏋️</span> Workout Tracker</a>
+    <a class="nav-item" href="nutrition-tracker.html"><span class="nav-icon">🥗</span> Nutrition Tracker</a>
+    <a class="nav-item" href="body-measurements.html"><span class="nav-icon">📏</span> Body Measurements</a>
+    <a class="nav-item" href="progress-photos.html"><span class="nav-icon">📸</span> Progress Photos</a>
+    <a class="nav-item active" href="strength-progress.html"><span class="nav-icon">📈</span> Strength Progress</a>
+    <a class="nav-item" href="#"><span class="nav-icon">🔄</span> Recovery Tracker</a>
+    <a class="nav-item" href="#"><span class="nav-icon">🎯</span> Goals</a>
+    <a class="nav-item" href="#"><span class="nav-icon">🤖</span> AI Coach</a>
+    <a class="nav-item" href="#"><span class="nav-icon">📅</span> Calendar</a>
+    <a class="nav-item" href="#"><span class="nav-icon">🤝</span> Community</a>
+    <a class="nav-item" href="#"><span class="nav-icon">⚙️</span> Settings</a>
+  </nav>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div>
+      <div class="topbar-title">Strength Progress</div>
+      <div class="topbar-sub">Auto-calculated from your Workout Tracker — no manual entry needed.</div>
+    </div>
+    <a href="workout-tracker.html" style="display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:var(--accent);color:#fff;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;">🏋️ Go to Workout Tracker</a>
+  </div>
+
+  <div class="summary-row" id="summary-row"></div>
+  <div class="pr-section" id="pr-section"></div>
+  <div class="chart-section" id="chart-section"></div>
+  <div class="ex-section" id="ex-section"></div>
+  <div class="heat-section" id="heat-section"></div>
+</main>
+
+<script>
+const WT_KEY='mt_wt_v5';
+
+function loadWorkout(){
+  try{return JSON.parse(localStorage.getItem(WT_KEY)||'null');}catch(e){return null;}
+}
+
+function buildExerciseHistory(){
+  const s=loadWorkout();
+  if(!s||!s.days) return {};
+  const history={};
+  s.days.forEach((day,di)=>{
+    day.exercises.forEach(ex=>{
+      if(!ex.sets||!ex.sets.length) return;
+      const maxW=Math.max(...ex.sets.map(s=>parseFloat(s.weight)||0));
+      const maxR=Math.max(...ex.sets.map(s=>parseInt(s.reps)||0));
+      const vol=ex.sets.reduce((a,s)=>a+(parseFloat(s.weight)||0)*(parseInt(s.reps)||0),0);
+      const key=ex.name.toLowerCase().trim();
+      if(!history[key]) history[key]={name:ex.name,muscle:ex.muscle||'',entries:[]};
+      history[key].entries.push({dayIdx:di,dayName:day.name,maxWeight:maxW,maxReps:maxR,totalVol:Math.round(vol),sets:ex.sets.length});
+    });
+  });
+  return history;
+}
+
+function r1(n){return Math.round((n||0)*10)/10;}
+function cap(s){return String(s).replace(/\b\w/g,c=>c.toUpperCase());}
+
+let selectedEx=null;
+let chartMode='weight';
+
+window.addEventListener('DOMContentLoaded',()=>{
+  try{const u=JSON.parse(localStorage.getItem('muscletrack_user')||'{}');if(u.name){document.getElementById('sb-name').textContent=u.name;document.getElementById('sb-av').textContent=u.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();}}catch(e){}
+  render();
+});
+
+function render(){
+  const history=buildExerciseHistory();
+  const exList=Object.values(history);
+  if(!exList.length){renderEmpty();return;}
+  renderSummary(exList);
+  renderPRs(exList);
+  renderExList(exList,history);
+  renderHeatmap(exList);
+  if(!selectedEx&&exList.length) selectedEx=exList[0].name;
+  renderChart(history);
+}
+
+function renderEmpty(){
+  document.getElementById('summary-row').innerHTML='';
+  document.getElementById('pr-section').innerHTML=`<div class="empty-state"><div class="ei">🏋️</div><p>No workout data yet.<br>Go to <a href="workout-tracker.html" style="color:var(--accent);">Workout Tracker</a> and log some exercises with reps & weight!</p></div>`;
+  document.getElementById('chart-section').innerHTML='';
+  document.getElementById('ex-section').innerHTML='';
+  document.getElementById('heat-section').innerHTML='';
+}
+
+function renderSummary(exList){
+  const totalSets=exList.reduce((a,ex)=>a+ex.entries.reduce((b,e)=>b+e.sets,0),0);
+  const totalVol=exList.reduce((a,ex)=>a+ex.entries.reduce((b,e)=>b+e.totalVol,0),0);
+  const improved=exList.filter(ex=>{
+    if(ex.entries.length<2) return false;
+    return ex.entries[ex.entries.length-1].maxWeight>ex.entries[0].maxWeight;
+  }).length;
+  document.getElementById('summary-row').innerHTML=`
+    <div class="sum-card"><div class="sum-icon">🏋️</div><div class="sum-label">Exercises</div><div class="sum-val" style="color:var(--accent)">${exList.length}</div><div class="sum-sub">tracked total</div></div>
+    <div class="sum-card"><div class="sum-icon">🔢</div><div class="sum-label">Total Sets</div><div class="sum-val" style="color:var(--blue)">${totalSets}</div><div class="sum-sub">logged</div></div>
+    <div class="sum-card"><div class="sum-icon">📦</div><div class="sum-label">Total Volume</div><div class="sum-val" style="color:var(--orange)">${(totalVol/1000).toFixed(1)}t</div><div class="sum-sub">kg lifted</div></div>
+    <div class="sum-card"><div class="sum-icon">📈</div><div class="sum-label">Improved</div><div class="sum-val" style="color:var(--green)">${improved}</div><div class="sum-sub">exercises stronger</div></div>`;
+}
+
+function renderPRs(exList){
+  const prs=exList.map(ex=>({
+    name:ex.name,muscle:ex.muscle,
+    maxWeight:Math.max(...ex.entries.map(e=>e.maxWeight)),
+    maxReps:Math.max(...ex.entries.map(e=>e.maxReps)),
+    sessions:ex.entries.length,
+  })).sort((a,b)=>b.maxWeight-a.maxWeight).slice(0,8);
+  document.getElementById('pr-section').innerHTML=`<h3>🏆 Personal Records</h3><div class="pr-grid">${
+    prs.map(p=>`<div class="pr-card">
+      <div class="pr-name">${cap(p.name)}</div>
+      <div class="pr-muscle">${p.muscle||'Exercise'}</div>
+      <div><span class="pr-val">${p.maxWeight}</span><span class="pr-unit">kg</span></div>
+      <div class="pr-sub">Best: ${p.maxReps} reps · ${p.sessions} session${p.sessions!==1?'s':''}</div>
+      <div class="pr-badge">🏆 PR</div>
+    </div>`).join('')
+  }</div>`;
+}
+
+function renderExList(exList,history){
+  const el=document.getElementById('ex-section');
+  const maxVol=Math.max(...exList.map(ex=>ex.entries.reduce((a,e)=>a+e.totalVol,0)));
+  el.innerHTML=`<h3>📋 All Exercises</h3>
+    <input class="ex-search" id="ex-search" placeholder="Search exercise…"/>
+    <div class="ex-list" id="ex-list"></div>`;
+
+  function renderList(filter=''){
+    const filtered=exList.filter(ex=>ex.name.toLowerCase().includes(filter.toLowerCase()));
+    document.getElementById('ex-list').innerHTML=filtered.map(ex=>{
+      const entries=ex.entries;
+      const first=entries[0];
+      const last=entries[entries.length-1];
+      const wChange=entries.length>1?r1(last.maxWeight-first.maxWeight):0;
+      const trend=wChange>0?'up':wChange<0?'down':'same';
+      const trendIcon=wChange>0?'↑':wChange<0?'↓':'→';
+      const vol=entries.reduce((a,e)=>a+e.totalVol,0);
+      const volPct=maxVol?Math.round((vol/maxVol)*100):0;
+      const isActive=ex.name===selectedEx;
+      return `<div class="ex-item${isActive?' active':''}" data-name="${ex.name}">
+        <div class="ex-item-top">
+          <div class="ex-item-name">${cap(ex.name)}<span class="ex-muscle-tag">${ex.muscle||''}</span></div>
+          <span class="trend-${trend}" style="font-size:13px;font-weight:700;">${trendIcon} ${Math.abs(wChange)}kg</span>
+        </div>
+        <div class="ex-item-stats">
+          <div class="ex-stat"><div class="ex-stat-val" style="color:var(--orange)">${last.maxWeight}kg</div><div class="ex-stat-label">Max Weight</div></div>
+          <div class="ex-stat"><div class="ex-stat-val" style="color:var(--blue)">${last.maxReps}</div><div class="ex-stat-label">Best Reps</div></div>
+          <div class="ex-stat"><div class="ex-stat-val" style="color:var(--green)">${last.totalVol}kg</div><div class="ex-stat-label">Last Vol</div></div>
+          <div class="ex-stat"><div class="ex-stat-val" style="color:var(--t2)">${entries.length}</div><div class="ex-stat-label">Sessions</div></div>
+        </div>
+        <div class="ex-progress-bar"><div class="ex-progress-fill" style="width:${volPct}%;background:${trend==='up'?'var(--green)':trend==='down'?'var(--red)':'var(--t2)'};"></div></div>
+      </div>`;
+    }).join('');
+    document.getElementById('ex-list').querySelectorAll('.ex-item').forEach(item=>{
+      item.addEventListener('click',()=>{
+        selectedEx=item.dataset.name;
+        renderChart(history);
+        renderList(document.getElementById('ex-search').value);
+      });
+    });
+  }
+  document.getElementById('ex-search').addEventListener('input',e=>renderList(e.target.value));
+  renderList();
+}
+
+function renderChart(history){
+  const el=document.getElementById('chart-section');
+  if(!selectedEx){el.innerHTML='';return;}
+  const ex=Object.values(history).find(e=>e.name===selectedEx);
+  if(!ex){el.innerHTML='';return;}
+  const entries=ex.entries;
+  el.innerHTML=`<h3>📈 ${cap(selectedEx)}</h3>
+    <div class="chart-subtitle">${ex.muscle||''} · ${entries.length} session${entries.length!==1?'s':''} · click any exercise below to switch</div>
+    <div class="chart-toggle">
+      <button class="chart-tog-btn ${chartMode==='weight'?'active':''}" id="tog-weight">Max Weight</button>
+      <button class="chart-tog-btn ${chartMode==='volume'?'active':''}" id="tog-vol">Volume</button>
+      <button class="chart-tog-btn ${chartMode==='reps'?'active':''}" id="tog-reps">Best Reps</button>
+    </div>
+    <div class="chart-area" id="chart-canvas"></div>`;
+  document.getElementById('tog-weight').addEventListener('click',()=>{chartMode='weight';renderChart(history);});
+  document.getElementById('tog-vol').addEventListener('click',()=>{chartMode='volume';renderChart(history);});
+  document.getElementById('tog-reps').addEventListener('click',()=>{chartMode='reps';renderChart(history);});
+  if(entries.length<2){
+    document.getElementById('chart-canvas').innerHTML=`<div class="chart-empty">Log ${selectedEx} in at least 2 workout days to see chart</div>`;
+    return;
+  }
+  const vals=entries.map(e=>chartMode==='weight'?e.maxWeight:chartMode==='volume'?e.totalVol:e.maxReps);
+  const color=chartMode==='weight'?'#f59e0b':chartMode==='volume'?'#3b82f6':'#10b981';
+  const W=800,H=170,pad=44;
+  const minV=Math.min(...vals),maxV=Math.max(...vals);
+  const range=maxV-minV||1;
+  const pts=vals.map((v,i)=>({x:pad+((W-pad*2)/(vals.length-1))*i,y:H-pad-((v-minV)/range)*(H-pad*2),v,label:'Day '+(entries[i].dayIdx+1)}));
+  const path=pts.map((p,i)=>i===0?`M${p.x},${p.y}`:`L${p.x},${p.y}`).join(' ');
+  const fill=pts.map((p,i)=>i===0?`M${p.x},${H-8}L${p.x},${p.y}`:`L${p.x},${p.y}`).join(' ')+`L${pts[pts.length-1].x},${H-8}Z`;
+  document.getElementById('chart-canvas').innerHTML=`
+    <svg width="100%" height="100%" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+      <defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="${color}" stop-opacity="0.35"/>
+        <stop offset="100%" stop-color="${color}" stop-opacity="0"/>
+      </linearGradient></defs>
+      <path d="${fill}" fill="url(#sg)"/>
+      <path d="${path}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      ${pts.map(p=>`
+        <circle cx="${p.x}" cy="${p.y}" r="5" fill="${color}" stroke="#1a2250" stroke-width="2"/>
+        <text x="${p.x}" y="${p.y-12}" text-anchor="middle" fill="${color}" font-size="11" font-family="Inter" font-weight="600">${p.v}</text>
+        <text x="${p.x}" y="${H-1}" text-anchor="middle" fill="rgba(148,163,184,.6)" font-size="9" font-family="Inter">${p.label}</text>`).join('')}
+    </svg>`;
+}
+
+function renderHeatmap(exList){
+  const byMuscle={};
+  exList.forEach(ex=>{
+    const m=ex.muscle||'Other';
+    if(!byMuscle[m]) byMuscle[m]={muscle:m,vol:0,exercises:0,sets:0};
+    byMuscle[m].vol+=ex.entries.reduce((a,e)=>a+e.totalVol,0);
+    byMuscle[m].exercises+=1;
+    byMuscle[m].sets+=ex.entries.reduce((a,e)=>a+e.sets,0);
+  });
+  const muscles=Object.values(byMuscle).sort((a,b)=>b.vol-a.vol);
+  const maxVol=muscles[0]?.vol||1;
+  document.getElementById('heat-section').innerHTML=`<h3>💪 Volume by Muscle Group</h3>
+    <div class="heat-grid">${muscles.map(m=>`
+      <div class="heat-card">
+        <div class="heat-name">${m.muscle}</div>
+        <div class="heat-vol">${m.vol.toLocaleString()}<span style="font-size:11px;color:var(--t2);"> kg</span></div>
+        <div class="heat-sub">${m.exercises} exercise${m.exercises!==1?'s':''} · ${m.sets} sets</div>
+        <div class="heat-bar"><div class="heat-fill" style="width:${Math.round((m.vol/maxVol)*100)}%"></div></div>
+      </div>`).join('')}
+    </div>`;
+}
+</script>
+</body>
+</html>
