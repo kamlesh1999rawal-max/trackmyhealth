@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Recovery Tracker – MuscleTrack</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#0f1535;--sidebar:#0d1230;--card:#1a2250;--card2:#1e2860;
+  --accent:#6c63ff;--green:#10b981;--orange:#f59e0b;--red:#ef4444;--blue:#3b82f6;
+  --purple:#8b5cf6;--t1:#e8eeff;--t2:#7b8ab8;--border:rgba(255,255,255,0.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;min-height:100vh;display:flex;}
+.sidebar{width:220px;min-height:100vh;background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;}
+.sb-brand{display:flex;align-items:center;gap:10px;padding:20px 16px 16px;border-bottom:1px solid var(--border);}
+.sb-brand-icon{width:36px;height:36px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;font-weight:700;}
+.sb-brand-name{font-size:16px;font-weight:700;}
+.sb-user{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--border);}
+.sb-avatar{width:34px;height:34px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
+.sb-uname{font-size:13px;font-weight:600;}
+.sb-badge{font-size:11px;color:var(--orange);}
+.sb-nav{flex:1;padding:10px 0;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 16px;color:var(--t2);text-decoration:none;font-size:13px;font-weight:500;transition:all .2s;border-left:3px solid transparent;}
+.nav-item:hover,.nav-item.active{color:var(--t1);background:rgba(108,99,255,.12);border-left-color:var(--accent);}
+.nav-icon{font-size:15px;width:18px;text-align:center;}
+.main{flex:1;padding:28px;overflow-x:hidden;}
+.topbar{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
+.topbar-title{font-size:28px;font-weight:700;letter-spacing:-.5px;}
+.topbar-sub{color:var(--t2);font-size:13px;margin-top:4px;}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif;}
+.btn-accent{background:var(--accent);color:#fff;}
+.btn-accent:hover{filter:brightness(1.1);}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--t1);}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);}
+.date-nav{display:flex;align-items:center;gap:10px;}
+.date-nav button{background:rgba(255,255,255,.07);border:1px solid var(--border);border-radius:8px;color:var(--t1);font-size:14px;padding:6px 12px;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif;}
+.date-nav button:hover{border-color:var(--accent);color:var(--accent);}
+.date-label{font-size:14px;font-weight:600;min-width:120px;text-align:center;}
+.score-section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:22px;display:grid;grid-template-columns:200px 1fr;gap:24px;align-items:center;}
+.score-circle{display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.score-ring{position:relative;width:140px;height:140px;}
+.score-ring svg{transform:rotate(-90deg);}
+.score-ring-bg{fill:none;stroke:rgba(255,255,255,.07);stroke-width:10;}
+.score-ring-fill{fill:none;stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset .8s ease;}
+.score-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.score-num{font-size:36px;font-weight:700;}
+.score-text{font-size:12px;color:var(--t2);margin-top:2px;}
+.score-status{font-size:14px;font-weight:600;margin-top:10px;}
+.score-breakdown{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;}
+.score-item{background:var(--card2);border-radius:8px;padding:10px 12px;}
+.score-item-label{font-size:11px;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
+.score-item-val{font-size:16px;font-weight:700;}
+.log-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:22px;}
+.log-card h3{font-size:15px;font-weight:700;margin-bottom:18px;}
+.log-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:18px;}
+.field-block{display:flex;flex-direction:column;gap:8px;}
+.field-label{display:flex;align-items:center;justify-content:space-between;}
+.field-label span{font-size:13px;font-weight:600;}
+.field-label .field-val{font-size:16px;font-weight:700;}
+.field-desc{font-size:11px;color:var(--t2);}
+.slider{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:99px;outline:none;cursor:pointer;}
+.slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;border-radius:50%;cursor:pointer;border:3px solid #1a2250;}
+.slider.sleep{background:linear-gradient(to right,var(--red),var(--orange),var(--green));}
+.slider.sleep::-webkit-slider-thumb{background:var(--blue);}
+.slider.quality{background:linear-gradient(to right,var(--red),var(--orange),var(--green));}
+.slider.quality::-webkit-slider-thumb{background:var(--purple);}
+.slider.energy{background:linear-gradient(to right,var(--red),var(--orange),var(--green));}
+.slider.energy::-webkit-slider-thumb{background:var(--green);}
+.slider.stress{background:linear-gradient(to right,var(--green),var(--orange),var(--red));}
+.slider.stress::-webkit-slider-thumb{background:var(--orange);}
+.slider.water{background:linear-gradient(to right,var(--card2),var(--blue));}
+.slider.water::-webkit-slider-thumb{background:var(--blue);}
+.day-type-row{display:flex;gap:8px;flex-wrap:wrap;}
+.day-type-btn{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border);color:var(--t2);background:transparent;font-family:'Inter',sans-serif;transition:all .2s;}
+.day-type-btn.active{color:#fff;}
+.day-type-btn.training.active{background:var(--accent);border-color:var(--accent);}
+.day-type-btn.rest.active{background:var(--green);border-color:var(--green);}
+.day-type-btn.active-recovery.active{background:var(--blue);border-color:var(--blue);}
+.day-type-btn.deload.active{background:var(--orange);border-color:var(--orange);}
+.muscle-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px;}
+.muscle-item{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px;}
+.muscle-name{font-size:12px;font-weight:600;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;}
+.muscle-score{font-size:14px;font-weight:700;}
+.muscle-slider{-webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:99px;outline:none;cursor:pointer;background:linear-gradient(to right,var(--green),var(--orange),var(--red));}
+.muscle-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;cursor:pointer;border:2px solid #1a2250;background:#fff;}
+.notes-input{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:8px;color:var(--t1);font-size:13px;padding:10px 12px;outline:none;resize:none;height:80px;font-family:'Inter',sans-serif;}
+.notes-input:focus{border-color:var(--accent);}
+.notes-input::placeholder{color:var(--t2);}
+.history-section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:22px;}
+.history-section h3{font-size:15px;font-weight:700;margin-bottom:16px;}
+.history-list{display:flex;flex-direction:column;gap:10px;}
+.history-item{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.hist-date{font-size:13px;font-weight:700;min-width:90px;}
+.hist-score-badge{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;}
+.hist-stats{display:flex;gap:14px;flex-wrap:wrap;flex:1;}
+.hist-stat{display:flex;flex-direction:column;gap:1px;}
+.hist-stat-val{font-size:13px;font-weight:600;}
+.hist-stat-label{font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;}
+.hist-day-badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;}
+.del-btn{background:none;border:none;color:var(--t2);cursor:pointer;font-size:15px;margin-left:auto;padding:4px 6px;border-radius:4px;}
+.del-btn:hover{color:var(--red);}
+.weekly-section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:22px;}
+.weekly-section h3{font-size:15px;font-weight:700;margin-bottom:16px;}
+.week-bars{display:flex;align-items:flex-end;gap:8px;height:100px;margin-bottom:8px;}
+.week-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.week-bar{width:100%;border-radius:6px 6px 0 0;min-height:4px;transition:height .4s;}
+.week-bar-label{font-size:10px;color:var(--t2);}
+.week-bar-val{font-size:10px;color:var(--t2);}
+.save-toast{position:fixed;bottom:24px;right:24px;background:var(--green);color:#fff;font-size:13px;font-weight:600;padding:10px 20px;border-radius:10px;display:none;z-index:999;}
+@media(max-width:700px){.sidebar{display:none;}.main{padding:16px;}.score-section{grid-template-columns:1fr;}.log-grid{grid-template-columns:1fr;}.muscle-grid{grid-template-columns:repeat(2,1fr);}}
+</style>
+</head>
+<body>
+<aside class="sidebar">
+  <div class="sb-brand"><div class="sb-brand-icon">M</div><div class="sb-brand-name">MuscleTrack</div></div>
+  <div class="sb-user">
+    <div class="sb-avatar" id="sb-av">KR</div>
+    <div><div class="sb-uname" id="sb-name">Kamlesh Rawal</div><div class="sb-badge">⭐ Muscle Builder</div></div>
+  </div>
+  <nav class="sb-nav">
+    <a class="nav-item" href="muscle-dashboard.html"><span class="nav-icon">📊</span> Dashboard</a>
+    <a class="nav-item" href="workout-tracker.html"><span class="nav-icon">🏋️</span> Workout Tracker</a>
+    <a class="nav-item" href="nutrition-tracker.html"><span class="nav-icon">🥗</span> Nutrition Tracker</a>
+    <a class="nav-item" href="body-measurements.html"><span class="nav-icon">📏</span> Body Measurements</a>
+    <a class="nav-item" href="progress-photos.html"><span class="nav-icon">📸</span> Progress Photos</a>
+    <a class="nav-item" href="strength-progress.html"><span class="nav-icon">📈</span> Strength Progress</a>
+    <a class="nav-item active" href="recovery-tracker.html"><span class="nav-icon">🔄</span> Recovery Tracker</a>
+    <a class="nav-item" href="#"><span class="nav-icon">🎯</span> Goals</a>
+    <a class="nav-item" href="#"><span class="nav-icon">🤖</span> AI Coach</a>
+    <a class="nav-item" href="#"><span class="nav-icon">📅</span> Calendar</a>
+    <a class="nav-item" href="#"><span class="nav-icon">🤝</span> Community</a>
+    <a class="nav-item" href="#"><span class="nav-icon">⚙️</span> Settings</a>
+  </nav>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div>
+      <div class="topbar-title">Recovery Tracker</div>
+      <div class="topbar-sub">Track sleep, soreness, energy, stress & hydration daily.</div>
+    </div>
+    <div class="date-nav">
+      <button id="btn-prev-day">&#8592;</button>
+      <div class="date-label" id="date-label"></div>
+      <button id="btn-next-day">&#8594;</button>
+    </div>
+  </div>
+
+  <div class="score-section" id="score-section"></div>
+
+  <div class="log-card">
+    <h3>📝 Log Today's Recovery</h3>
+    <div style="margin-bottom:18px;">
+      <div style="font-size:13px;font-weight:600;margin-bottom:8px;">Day Type</div>
+      <div class="day-type-row" id="day-type-row">
+        <button class="day-type-btn training active" data-type="training">🏋️ Training</button>
+        <button class="day-type-btn rest" data-type="rest">😴 Rest Day</button>
+        <button class="day-type-btn active-recovery" data-type="active-recovery">🚶 Active Recovery</button>
+        <button class="day-type-btn deload" data-type="deload">🔅 Deload</button>
+      </div>
+    </div>
+    <div class="log-grid">
+      <div class="field-block">
+        <div class="field-label"><span>😴 Sleep Hours</span><div class="field-val" id="sleep-val" style="color:var(--blue);">7h</div></div>
+        <input class="slider sleep" type="range" id="sl-sleep" min="3" max="12" step="0.5" value="7"/>
+        <div class="field-desc">Recommended: 7–9 hours for optimal recovery</div>
+      </div>
+      <div class="field-block">
+        <div class="field-label"><span>⭐ Sleep Quality</span><div class="field-val" id="quality-val" style="color:var(--purple);">7/10</div></div>
+        <input class="slider quality" type="range" id="sl-quality" min="1" max="10" step="1" value="7"/>
+        <div class="field-desc">How rested did you feel waking up?</div>
+      </div>
+      <div class="field-block">
+        <div class="field-label"><span>⚡ Energy Level</span><div class="field-val" id="energy-val" style="color:var(--green);">7/10</div></div>
+        <input class="slider energy" type="range" id="sl-energy" min="1" max="10" step="1" value="7"/>
+        <div class="field-desc">Overall energy and motivation today</div>
+      </div>
+      <div class="field-block">
+        <div class="field-label"><span>🧠 Stress Level</span><div class="field-val" id="stress-val" style="color:var(--orange);">3/10</div></div>
+        <input class="slider stress" type="range" id="sl-stress" min="1" max="10" step="1" value="3"/>
+        <div class="field-desc">Mental stress impacts physical recovery</div>
+      </div>
+      <div class="field-block">
+        <div class="field-label"><span>💧 Water Intake</span><div class="field-val" id="water-val" style="color:var(--blue);">2.0L</div></div>
+        <input class="slider water" type="range" id="sl-water" min="0" max="6" step="0.5" value="2"/>
+        <div class="field-desc">Recommended: 3–4L on training days</div>
+      </div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <div style="font-size:13px;font-weight:600;margin-bottom:10px;">💪 Muscle Soreness <span style="font-size:11px;color:var(--t2);font-weight:400;">(0 = none, 10 = very sore)</span></div>
+      <div class="muscle-grid" id="muscle-grid"></div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <div style="font-size:13px;font-weight:600;margin-bottom:8px;">📝 Notes</div>
+      <textarea class="notes-input" id="rec-notes" placeholder="How do you feel? Any injuries, mood, motivation…"></textarea>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <button class="btn btn-accent" id="btn-save" style="flex:1;justify-content:center;">💾 Save Entry</button>
+      <button class="btn btn-outline" id="btn-clear">Clear</button>
+    </div>
+  </div>
+
+  <div class="weekly-section">
+    <h3>📊 Last 7 Days — Recovery Score</h3>
+    <div class="week-bars" id="week-bars"></div>
+  </div>
+
+  <div class="history-section">
+    <h3>📅 History</h3>
+    <div class="history-list" id="history-list"></div>
+  </div>
+</main>
+
+<div class="save-toast" id="save-toast">✅ Recovery logged!</div>
+
+<script>
+const RKEY='mt_recovery_v1';
+const MUSCLES=['Chest','Back','Shoulders','Biceps','Triceps','Quads','Hamstrings','Glutes','Calves','Core'];
+let currentDate=todayISO();
+let dayType='training';
+let soreness={};
+
+function todayISO(){return new Date().toISOString().slice(0,10);}
+function offsetDate(base,n){const d=new Date(base+'T12:00:00');d.setDate(d.getDate()+n);return d.toISOString().slice(0,10);}
+function fmtDate(d){
+  const today=todayISO();
+  if(d===today) return 'Today';
+  if(d===offsetDate(today,-1)) return 'Yesterday';
+  return new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+}
+function getAll(){try{return JSON.parse(localStorage.getItem(RKEY)||'{}');}catch(e){return{};}}
+function setAll(d){localStorage.setItem(RKEY,JSON.stringify(d));}
+function getEntry(date){return getAll()[date]||null;}
+
+function calcScore(entry){
+  if(!entry) return 0;
+  const sleepScore=Math.min(10,Math.max(0,((entry.sleep-3)/9)*10));
+  const qualityScore=entry.quality;
+  const energyScore=entry.energy;
+  const stressScore=10-entry.stress;
+  const waterScore=Math.min(10,(entry.water/4)*10);
+  const avgSoreness=Object.values(entry.soreness||{}).length?Object.values(entry.soreness).reduce((a,b)=>a+b,0)/Object.values(entry.soreness).length:5;
+  const sorenessScore=10-avgSoreness;
+  return Math.min(10,Math.max(0,Math.round(sleepScore*0.25+qualityScore*0.2+energyScore*0.2+stressScore*0.15+waterScore*0.1+sorenessScore*0.1)));
+}
+function scoreColor(s){return s>=8?'var(--green)':s>=6?'var(--orange)':'var(--red)';}
+function scoreLabel(s){return s>=8?'🟢 Fully Recovered':s>=6?'🟡 Moderate':s>=4?'🟠 Needs Rest':'🔴 Poor Recovery';}
+function dayTypeColor(t){return t==='rest'?'var(--green)':t==='active-recovery'?'var(--blue)':t==='deload'?'var(--orange)':'var(--accent)';}
+
+window.addEventListener('DOMContentLoaded',()=>{
+  try{const u=JSON.parse(localStorage.getItem('muscletrack_user')||'{}');if(u.name){document.getElementById('sb-name').textContent=u.name;document.getElementById('sb-av').textContent=u.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();}}catch(e){}
+  buildMuscleGrid();
+  wireSliders();
+  wireDayType();
+  document.getElementById('btn-prev-day').addEventListener('click',()=>{currentDate=offsetDate(currentDate,-1);loadEntry();renderScore();renderWeekChart();renderHistory();updateDateLabel();});
+  document.getElementById('btn-next-day').addEventListener('click',()=>{currentDate=offsetDate(currentDate,1);loadEntry();renderScore();renderWeekChart();renderHistory();updateDateLabel();});
+  document.getElementById('btn-save').addEventListener('click',saveEntry);
+  document.getElementById('btn-clear').addEventListener('click',clearForm);
+  updateDateLabel();loadEntry();renderScore();renderWeekChart();renderHistory();
+});
+
+function updateDateLabel(){document.getElementById('date-label').textContent=fmtDate(currentDate);}
+
+function buildMuscleGrid(){
+  document.getElementById('muscle-grid').innerHTML=MUSCLES.map(m=>`
+    <div class="muscle-item">
+      <div class="muscle-name"><span>${m}</span><span class="muscle-score" id="ms-val-${m}" style="color:var(--green);">0</span></div>
+      <input class="muscle-slider" type="range" id="ms-${m}" min="0" max="10" step="1" value="0"/>
+    </div>`).join('');
+  MUSCLES.forEach(m=>{
+    document.getElementById('ms-'+m).addEventListener('input',function(){
+      const v=parseInt(this.value);soreness[m]=v;
+      const el=document.getElementById('ms-val-'+m);
+      el.textContent=v;el.style.color=v===0?'var(--green)':v<=3?'var(--green)':v<=6?'var(--orange)':'var(--red)';
+    });
+  });
+}
+
+function wireSliders(){
+  [
+    {id:'sl-sleep',valId:'sleep-val',fmt:v=>v+'h'},
+    {id:'sl-quality',valId:'quality-val',fmt:v=>v+'/10'},
+    {id:'sl-energy',valId:'energy-val',fmt:v=>v+'/10'},
+    {id:'sl-stress',valId:'stress-val',fmt:v=>v+'/10'},
+    {id:'sl-water',valId:'water-val',fmt:v=>v+'L'},
+  ].forEach(s=>{
+    document.getElementById(s.id).addEventListener('input',function(){document.getElementById(s.valId).textContent=s.fmt(this.value);});
+  });
+}
+
+function wireDayType(){
+  document.getElementById('day-type-row').addEventListener('click',e=>{
+    const btn=e.target.closest('.day-type-btn');if(!btn)return;
+    dayType=btn.dataset.type;
+    document.querySelectorAll('.day-type-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+}
+
+function saveEntry(){
+  const entry={date:currentDate,dayType,
+    sleep:parseFloat(document.getElementById('sl-sleep').value),
+    quality:parseInt(document.getElementById('sl-quality').value),
+    energy:parseInt(document.getElementById('sl-energy').value),
+    stress:parseInt(document.getElementById('sl-stress').value),
+    water:parseFloat(document.getElementById('sl-water').value),
+    soreness:{...soreness},
+    notes:document.getElementById('rec-notes').value.trim(),
+  };
+  entry.score=calcScore(entry);
+  const all=getAll();all[currentDate]=entry;setAll(all);
+  renderScore();renderWeekChart();renderHistory();
+  const t=document.getElementById('save-toast');
+  t.style.display='block';setTimeout(()=>t.style.display='none',2000);
+}
+
+function loadEntry(){
+  const entry=getEntry(currentDate);
+  if(!entry){clearForm();return;}
+  dayType=entry.dayType||'training';
+  document.querySelectorAll('.day-type-btn').forEach(b=>{b.classList.remove('active');if(b.dataset.type===dayType)b.classList.add('active');});
+  document.getElementById('sl-sleep').value=entry.sleep||7;document.getElementById('sleep-val').textContent=(entry.sleep||7)+'h';
+  document.getElementById('sl-quality').value=entry.quality||7;document.getElementById('quality-val').textContent=(entry.quality||7)+'/10';
+  document.getElementById('sl-energy').value=entry.energy||7;document.getElementById('energy-val').textContent=(entry.energy||7)+'/10';
+  document.getElementById('sl-stress').value=entry.stress||3;document.getElementById('stress-val').textContent=(entry.stress||3)+'/10';
+  document.getElementById('sl-water').value=entry.water||2;document.getElementById('water-val').textContent=(entry.water||2)+'L';
+  soreness=entry.soreness||{};
+  MUSCLES.forEach(m=>{
+    const v=soreness[m]||0;
+    const sl=document.getElementById('ms-'+m);if(sl)sl.value=v;
+    const el=document.getElementById('ms-val-'+m);if(el){el.textContent=v;el.style.color=v===0?'var(--green)':v<=3?'var(--green)':v<=6?'var(--orange)':'var(--red)';}
+  });
+  document.getElementById('rec-notes').value=entry.notes||'';
+}
+
+function clearForm(){
+  dayType='training';
+  document.querySelectorAll('.day-type-btn').forEach(b=>{b.classList.remove('active');if(b.dataset.type==='training')b.classList.add('active');});
+  document.getElementById('sl-sleep').value=7;document.getElementById('sleep-val').textContent='7h';
+  document.getElementById('sl-quality').value=7;document.getElementById('quality-val').textContent='7/10';
+  document.getElementById('sl-energy').value=7;document.getElementById('energy-val').textContent='7/10';
+  document.getElementById('sl-stress').value=3;document.getElementById('stress-val').textContent='3/10';
+  document.getElementById('sl-water').value=2;document.getElementById('water-val').textContent='2.0L';
+  soreness={};
+  MUSCLES.forEach(m=>{
+    const sl=document.getElementById('ms-'+m);if(sl)sl.value=0;
+    const el=document.getElementById('ms-val-'+m);if(el){el.textContent='0';el.style.color='var(--green)';}
+  });
+  document.getElementById('rec-notes').value='';
+}
+
+function renderScore(){
+  const entry=getEntry(currentDate);
+  const score=calcScore(entry);
+  const color=scoreColor(score);
+  const r=56,circ=2*Math.PI*r;
+  const offset=circ*(1-score/10);
+  document.getElementById('score-section').innerHTML=`
+    <div class="score-circle">
+      <div class="score-ring">
+        <svg width="140" height="140" viewBox="0 0 140 140">
+          <circle class="score-ring-bg" cx="70" cy="70" r="${r}"/>
+          <circle class="score-ring-fill" cx="70" cy="70" r="${r}" stroke="${color}" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"/>
+        </svg>
+        <div class="score-label">
+          <div class="score-num" style="color:${color}">${score}</div>
+          <div class="score-text">/ 10</div>
+        </div>
+      </div>
+      <div class="score-status" style="color:${color}">${scoreLabel(score)}</div>
+    </div>
+    <div class="score-breakdown">
+      ${entry?`
+        <div class="score-item"><div class="score-item-label">😴 Sleep</div><div class="score-item-val" style="color:var(--blue)">${entry.sleep}h</div></div>
+        <div class="score-item"><div class="score-item-label">⭐ Quality</div><div class="score-item-val" style="color:var(--purple)">${entry.quality}/10</div></div>
+        <div class="score-item"><div class="score-item-label">⚡ Energy</div><div class="score-item-val" style="color:var(--green)">${entry.energy}/10</div></div>
+        <div class="score-item"><div class="score-item-label">🧠 Stress</div><div class="score-item-val" style="color:var(--orange)">${entry.stress}/10</div></div>
+        <div class="score-item"><div class="score-item-label">💧 Water</div><div class="score-item-val" style="color:var(--blue)">${entry.water}L</div></div>
+        <div class="score-item"><div class="score-item-label">🏷️ Day Type</div><div class="score-item-val" style="color:${dayTypeColor(entry.dayType)};font-size:12px;">${entry.dayType||'Training'}</div></div>
+      `:'<div style="color:var(--t2);font-size:13px;grid-column:1/-1;padding:16px;">No entry yet — fill in the form below and save!</div>'}
+    </div>`;
+}
+
+function renderWeekChart(){
+  const today=todayISO();
+  const days=[];for(let i=6;i>=0;i--) days.push(offsetDate(today,-i));
+  const scores=days.map(d=>calcScore(getEntry(d)));
+  const dayNames=['S','M','T','W','T','F','S'];
+  document.getElementById('week-bars').innerHTML=days.map((d,i)=>{
+    const s=scores[i];
+    const h=s?Math.max(6,Math.round((s/10)*90)):4;
+    const isToday=d===currentDate;
+    const color=s>=8?'var(--green)':s>=6?'var(--orange)':s>0?'var(--red)':'rgba(255,255,255,.08)';
+    const dn=dayNames[new Date(d+'T12:00:00').getDay()];
+    return `<div class="week-bar-wrap">
+      <div class="week-bar-val">${s||''}</div>
+      <div class="week-bar" style="height:${h}px;background:${color};${isToday?'border:2px solid #fff;':''}"></div>
+      <div class="week-bar-label" style="${isToday?'color:var(--accent);font-weight:700;':''}">${dn}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderHistory(){
+  const entries=Object.values(getAll()).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,14);
+  const list=document.getElementById('history-list');
+  if(!entries.length){list.innerHTML='<div style="text-align:center;padding:28px;color:var(--t2);font-size:13px;">No entries yet — log your first recovery above!</div>';return;}
+  list.innerHTML=entries.map(e=>{
+    const s=e.score||calcScore(e);
+    const color=scoreColor(s);
+    const dtColor=dayTypeColor(e.dayType);
+    const topSore=Object.entries(e.soreness||{}).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k,v])=>`${k}(${v})`).join(', ');
+    return `<div class="history-item">
+      <div class="hist-score-badge" style="background:${color}22;color:${color};">${s}</div>
+      <div><div class="hist-date">${fmtDate(e.date)}</div><span class="hist-day-badge" style="background:${dtColor}22;color:${dtColor};">${e.dayType||'training'}</span></div>
+      <div class="hist-stats">
+        <div class="hist-stat"><div class="hist-stat-val" style="color:var(--blue)">${e.sleep}h</div><div class="hist-stat-label">Sleep</div></div>
+        <div class="hist-stat"><div class="hist-stat-val" style="color:var(--green)">${e.energy}/10</div><div class="hist-stat-label">Energy</div></div>
+        <div class="hist-stat"><div class="hist-stat-val" style="color:var(--orange)">${e.stress}/10</div><div class="hist-stat-label">Stress</div></div>
+        <div class="hist-stat"><div class="hist-stat-val" style="color:var(--blue)">${e.water}L</div><div class="hist-stat-label">Water</div></div>
+        ${topSore?`<div class="hist-stat"><div class="hist-stat-val" style="color:var(--red);font-size:11px;">${topSore}</div><div class="hist-stat-label">Sore</div></div>`:''}
+      </div>
+      <button class="del-btn" data-date="${e.date}">🗑</button>
+    </div>`;
+  }).join('');
+  list.querySelectorAll('.del-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      if(!confirm('Delete this entry?'))return;
+      const all=getAll();delete all[btn.dataset.date];setAll(all);
+      renderScore();renderWeekChart();renderHistory();
+    });
+  });
+}
+</script>
+</body>
+</html>
