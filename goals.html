@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Goals – MuscleTrack</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#0f1535;--sidebar:#0d1230;--card:#1a2250;--card2:#1e2860;
+  --accent:#6c63ff;--green:#10b981;--orange:#f59e0b;--red:#ef4444;--blue:#3b82f6;
+  --t1:#e8eeff;--t2:#7b8ab8;--border:rgba(255,255,255,0.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;min-height:100vh;display:flex;}
+.sidebar{width:220px;min-height:100vh;background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;}
+.sb-brand{display:flex;align-items:center;gap:10px;padding:20px 16px 16px;border-bottom:1px solid var(--border);}
+.sb-brand-icon{width:36px;height:36px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;font-weight:700;}
+.sb-brand-name{font-size:16px;font-weight:700;}
+.sb-user{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--border);}
+.sb-avatar{width:34px;height:34px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
+.sb-uname{font-size:13px;font-weight:600;}
+.sb-badge{font-size:11px;color:var(--orange);}
+.sb-nav{flex:1;padding:10px 0;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 16px;color:var(--t2);text-decoration:none;font-size:13px;font-weight:500;transition:all .2s;border-left:3px solid transparent;}
+.nav-item:hover,.nav-item.active{color:var(--t1);background:rgba(108,99,255,.12);border-left-color:var(--accent);}
+.nav-icon{font-size:15px;width:18px;text-align:center;}
+.main{flex:1;padding:28px;overflow-x:hidden;}
+.topbar{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
+.topbar-title{font-size:28px;font-weight:700;letter-spacing:-.5px;}
+.topbar-sub{color:var(--t2);font-size:13px;margin-top:4px;}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif;}
+.btn-accent{background:var(--accent);color:#fff;}
+.btn-accent:hover{filter:brightness(1.1);}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--t1);}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;margin-bottom:24px;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;}
+.stat-val{font-size:28px;font-weight:700;}
+.stat-label{font-size:11px;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-top:4px;}
+.cat-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.cat-tab{padding:7px 16px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border);color:var(--t2);background:transparent;font-family:'Inter',sans-serif;transition:all .2s;}
+.cat-tab.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+.goals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:24px;}
+.goal-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;transition:all .2s;position:relative;cursor:pointer;}
+.goal-card:hover{border-color:rgba(108,99,255,.3);}
+.goal-card.completed{opacity:.7;border-color:var(--green);}
+.goal-card.completed::after{content:'✅ Completed';position:absolute;top:12px;right:12px;background:rgba(16,185,129,.15);color:var(--green);font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;}
+.goal-card.overdue{border-color:rgba(239,68,68,.4);}
+.goal-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;}
+.goal-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.goal-info{flex:1;}
+.goal-name{font-size:14px;font-weight:700;margin-bottom:2px;}
+.goal-category{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;}
+.goal-actions{display:flex;gap:6px;}
+.goal-action-btn{background:none;border:none;cursor:pointer;font-size:14px;padding:4px;border-radius:4px;color:var(--t2);transition:color .2s;}
+.goal-action-btn:hover{color:var(--t1);}
+.goal-vals{display:flex;gap:16px;margin-bottom:10px;}
+.goal-val-item{display:flex;flex-direction:column;gap:2px;}
+.goal-val{font-size:18px;font-weight:700;}
+.goal-val-label{font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;}
+.goal-bar-track{background:rgba(255,255,255,.07);border-radius:99px;height:8px;overflow:hidden;margin-bottom:8px;}
+.goal-bar-fill{height:100%;border-radius:99px;transition:width .5s ease;}
+.goal-footer{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--t2);}
+.goal-pct{font-weight:700;font-size:13px;}
+.days-left{font-size:11px;}
+.days-left.overdue{color:var(--red);}
+.days-left.soon{color:var(--orange);}
+.days-left.ok{color:var(--green);}
+.completed-section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:22px;}
+.completed-section h3{font-size:15px;font-weight:700;margin-bottom:16px;}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:400;align-items:center;justify-content:center;}
+.modal-bg.open{display:flex;}
+.modal{background:#1a2250;border:1px solid rgba(108,99,255,.4);border-radius:16px;padding:28px;width:440px;max-width:95vw;max-height:90vh;overflow-y:auto;}
+.modal h3{font-size:18px;font-weight:700;margin-bottom:16px;}
+.modal label{font-size:12px;color:var(--t2);display:block;margin-bottom:5px;margin-top:10px;}
+.modal input,.modal select{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:8px;color:var(--t1);font-size:14px;padding:10px 12px;outline:none;font-family:'Inter',sans-serif;margin-bottom:4px;}
+.modal input:focus,.modal select:focus{border-color:var(--accent);}
+.modal input::placeholder{color:var(--t2);}
+.modal select option{background:#1a2250;}
+.modal-btns{display:flex;gap:10px;justify-content:flex-end;margin-top:16px;}
+.mbtn-cancel{background:transparent;border:1px solid var(--border);border-radius:7px;color:var(--t2);font-size:13px;font-weight:600;padding:8px 16px;cursor:pointer;font-family:'Inter',sans-serif;}
+.mbtn-ok{background:var(--accent);border:none;border-radius:7px;color:#fff;font-size:13px;font-weight:600;padding:8px 16px;cursor:pointer;font-family:'Inter',sans-serif;}
+.mbtn-ok:hover{filter:brightness(1.1);}
+.empty-goals{text-align:center;padding:40px 20px;color:var(--t2);font-size:13px;border:1px dashed var(--border);border-radius:10px;grid-column:1/-1;}
+.empty-goals .ei{font-size:40px;margin-bottom:10px;}
+.save-toast{position:fixed;bottom:24px;right:24px;background:var(--green);color:#fff;font-size:13px;font-weight:600;padding:10px 20px;border-radius:10px;display:none;z-index:999;}
+@media(max-width:700px){.sidebar{display:none;}.main{padding:16px;}.goals-grid{grid-template-columns:1fr;}.stats-row{grid-template-columns:repeat(2,1fr);}}
+</style>
+</head>
+<body>
+<aside class="sidebar">
+  <div class="sb-brand"><div class="sb-brand-icon">M</div><div class="sb-brand-name">MuscleTrack</div></div>
+  <div class="sb-user">
+    <div class="sb-avatar" id="sb-av">KR</div>
+    <div><div class="sb-uname" id="sb-name">Kamlesh Rawal</div><div class="sb-badge">⭐ Muscle Builder</div></div>
+  </div>
+  <nav class="sb-nav">
+    <a class="nav-item" href="muscle-dashboard.html"><span class="nav-icon">📊</span> Dashboard</a>
+    <a class="nav-item" href="workout-tracker.html"><span class="nav-icon">🏋️</span> Workout Tracker</a>
+    <a class="nav-item" href="nutrition-tracker.html"><span class="nav-icon">🥗</span> Nutrition Tracker</a>
+    <a class="nav-item" href="body-measurements.html"><span class="nav-icon">📏</span> Body Measurements</a>
+    <a class="nav-item" href="progress-photos.html"><span class="nav-icon">📸</span> Progress Photos</a>
+    <a class="nav-item" href="strength-progress.html"><span class="nav-icon">📈</span> Strength Progress</a>
+    <a class="nav-item" href="recovery-tracker.html"><span class="nav-icon">🔄</span> Recovery Tracker</a>
+    <a class="nav-item active" href="goals.html"><span class="nav-icon">🎯</span> Goals</a>
+    <a class="nav-item" href="#"><span class="nav-icon">🤖</span> AI Coach</a>
+    <a class="nav-item" href="#"><span class="nav-icon">📅</span> Calendar</a>
+    <a class="nav-item" href="#"><span class="nav-icon">🤝</span> Community</a>
+    <a class="nav-item" href="#"><span class="nav-icon">⚙️</span> Settings</a>
+  </nav>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div>
+      <div class="topbar-title">Goals</div>
+      <div class="topbar-sub">Set fitness, nutrition & workout goals — track your progress.</div>
+    </div>
+    <button class="btn btn-accent" id="btn-add-goal">+ Add Goal</button>
+  </div>
+
+  <div class="stats-row" id="stats-row"></div>
+
+  <div class="cat-tabs" id="cat-tabs">
+    <button class="cat-tab active" data-cat="all">All</button>
+    <button class="cat-tab" data-cat="fitness">💪 Fitness</button>
+    <button class="cat-tab" data-cat="nutrition">🥗 Nutrition</button>
+    <button class="cat-tab" data-cat="workout">🏋️ Workout</button>
+    <button class="cat-tab" data-cat="lifestyle">🌟 Lifestyle</button>
+  </div>
+
+  <div class="goals-grid" id="goals-grid"></div>
+
+  <div class="completed-section" id="completed-section" style="display:none;">
+    <h3>✅ Completed Goals</h3>
+    <div class="goals-grid" id="completed-grid"></div>
+  </div>
+</main>
+
+<div class="modal-bg" id="goal-modal">
+  <div class="modal">
+    <h3 id="modal-title">🎯 Add New Goal</h3>
+    <label>Goal Name</label>
+    <input id="g-name" placeholder="e.g. Bench Press 100kg, Lose 5kg, Drink 3L water daily"/>
+    <label>Category</label>
+    <select id="g-cat">
+      <option value="fitness">💪 Fitness (Weight, Body Fat, Measurements)</option>
+      <option value="nutrition">🥗 Nutrition (Calories, Protein, Water)</option>
+      <option value="workout">🏋️ Workout (Sets, Workouts per week, Strength)</option>
+      <option value="lifestyle">🌟 Lifestyle (Sleep, Steps, Habit)</option>
+    </select>
+    <label>Goal Type</label>
+    <select id="g-type">
+      <option value="target">Reach a target value</option>
+      <option value="reduce">Reduce to a target value</option>
+      <option value="habit">Daily/weekly habit</option>
+    </select>
+    <label>Current Value</label>
+    <input id="g-current" type="number" placeholder="e.g. 75 (your current value)"/>
+    <label>Target Value</label>
+    <input id="g-target" type="number" placeholder="e.g. 100 (your goal)"/>
+    <label>Unit</label>
+    <input id="g-unit" placeholder="e.g. kg, %, L, reps, hours"/>
+    <label>Target Date</label>
+    <input id="g-date" type="date"/>
+    <label>Notes (optional)</label>
+    <input id="g-notes" placeholder="Why this goal matters to you…"/>
+    <div class="modal-btns">
+      <button class="mbtn-cancel" id="modal-cancel">Cancel</button>
+      <button class="mbtn-ok" id="modal-save">Save Goal</button>
+    </div>
+  </div>
+</div>
+
+<div class="save-toast" id="save-toast">✅ Goal saved!</div>
+
+<script>
+const GKEY='mt_goals_v1';
+let currentCat='all';
+let editingId=null;
+
+const CAT_COLORS={
+  fitness:{color:'#6c63ff',bg:'rgba(108,99,255,.15)',icon:'💪'},
+  nutrition:{color:'#10b981',bg:'rgba(16,185,129,.15)',icon:'🥗'},
+  workout:{color:'#f59e0b',bg:'rgba(245,158,11,.15)',icon:'🏋️'},
+  lifestyle:{color:'#3b82f6',bg:'rgba(59,130,246,.15)',icon:'🌟'},
+};
+
+function getGoals(){try{return JSON.parse(localStorage.getItem(GKEY)||'[]');}catch(e){return[];}}
+function setGoals(g){localStorage.setItem(GKEY,JSON.stringify(g));}
+function uid(){return Math.random().toString(36).slice(2,8);}
+
+function calcProgress(goal){
+  const cur=parseFloat(goal.current)||0;
+  const tgt=parseFloat(goal.target)||1;
+  const start=parseFloat(goal.startValue)||cur;
+  if(goal.type==='reduce'){if(start<=tgt)return 100;return Math.min(100,Math.max(0,Math.round(((start-cur)/(start-tgt))*100)));}
+  if(goal.type==='habit')return goal.completed?100:0;
+  return Math.min(100,Math.max(0,Math.round((cur/tgt)*100)));
+}
+
+function daysLeft(dateStr){if(!dateStr)return null;return Math.ceil((new Date(dateStr)-new Date())/(1000*60*60*24));}
+function daysLeftClass(d){if(d===null)return '';if(d<0)return 'overdue';if(d<=7)return 'soon';return 'ok';}
+function daysLeftText(d){if(d===null)return '';if(d<0)return `${Math.abs(d)} days overdue`;if(d===0)return 'Due today!';if(d===1)return '1 day left';return `${d} days left`;}
+
+window.addEventListener('DOMContentLoaded',()=>{
+  try{const u=JSON.parse(localStorage.getItem('muscletrack_user')||'{}');if(u.name){document.getElementById('sb-name').textContent=u.name;document.getElementById('sb-av').textContent=u.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();}}catch(e){}
+  document.getElementById('btn-add-goal').addEventListener('click',()=>openModal());
+  document.getElementById('modal-cancel').addEventListener('click',closeModal);
+  document.getElementById('modal-save').addEventListener('click',saveGoal);
+  document.getElementById('goal-modal').addEventListener('click',e=>{if(e.target===document.getElementById('goal-modal'))closeModal();});
+  document.getElementById('cat-tabs').addEventListener('click',e=>{
+    const btn=e.target.closest('.cat-tab');if(!btn)return;
+    currentCat=btn.dataset.cat;
+    document.querySelectorAll('.cat-tab').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');renderGoals();
+  });
+  if(!getGoals().length)addSampleGoals();
+  render();
+});
+
+function addSampleGoals(){
+  setGoals([
+    {id:uid(),name:'Reach 80kg Bench Press',cat:'workout',type:'target',current:70,target:80,startValue:70,unit:'kg',date:'',notes:'Progressive overload every week',completed:false},
+    {id:uid(),name:'Lose Body Fat to 15%',cat:'fitness',type:'reduce',current:20,target:15,startValue:20,unit:'%',date:'',notes:'Clean eating + cardio',completed:false},
+    {id:uid(),name:'Drink 3L Water Daily',cat:'nutrition',type:'habit',current:2,target:3,startValue:0,unit:'L',date:'',notes:'',completed:false},
+    {id:uid(),name:'Sleep 8 Hours',cat:'lifestyle',type:'target',current:6.5,target:8,startValue:6,unit:'hrs',date:'',notes:'Better recovery',completed:false},
+  ]);
+}
+
+function render(){renderStats();renderGoals();}
+
+function renderStats(){
+  const goals=getGoals();
+  const active=goals.filter(g=>!g.completed).length;
+  const completed=goals.filter(g=>g.completed).length;
+  const avgPct=goals.length?Math.round(goals.reduce((a,g)=>a+calcProgress(g),0)/goals.length):0;
+  const overdue=goals.filter(g=>!g.completed&&g.date&&daysLeft(g.date)<0).length;
+  document.getElementById('stats-row').innerHTML=`
+    <div class="stat-card"><div class="stat-val" style="color:var(--accent)">${active}</div><div class="stat-label">Active Goals</div></div>
+    <div class="stat-card"><div class="stat-val" style="color:var(--green)">${completed}</div><div class="stat-label">Completed</div></div>
+    <div class="stat-card"><div class="stat-val" style="color:var(--blue)">${avgPct}%</div><div class="stat-label">Avg Progress</div></div>
+    <div class="stat-card"><div class="stat-val" style="color:var(--red)">${overdue}</div><div class="stat-label">Overdue</div></div>`;
+}
+
+function renderGoals(){
+  const goals=getGoals();
+  const active=goals.filter(g=>!g.completed&&(currentCat==='all'||g.cat===currentCat));
+  const completed=goals.filter(g=>g.completed&&(currentCat==='all'||g.cat===currentCat));
+  const grid=document.getElementById('goals-grid');
+  if(!active.length){
+    grid.innerHTML=`<div class="empty-goals"><div class="ei">🎯</div><p>No active goals${currentCat!=='all'?' in this category':''} yet.<br>Click <strong>+ Add Goal</strong> to get started!</p></div>`;
+  } else {
+    grid.innerHTML=active.map(g=>goalCardHTML(g)).join('');
+    bindGoalEvents(grid);
+  }
+  const compSection=document.getElementById('completed-section');
+  const compGrid=document.getElementById('completed-grid');
+  if(completed.length){
+    compSection.style.display='block';
+    compGrid.innerHTML=completed.map(g=>goalCardHTML(g)).join('');
+    bindGoalEvents(compGrid);
+  } else {
+    compSection.style.display='none';
+  }
+}
+
+function goalCardHTML(goal){
+  const pct=calcProgress(goal);
+  const c=CAT_COLORS[goal.cat]||CAT_COLORS.fitness;
+  const dl=daysLeft(goal.date);
+  const dlClass=daysLeftClass(dl);
+  const dlText=daysLeftText(dl);
+  const barColor=pct>=100?'var(--green)':pct>=60?'var(--accent)':pct>=30?'var(--orange)':'var(--red)';
+  const isOverdue=dl!==null&&dl<0&&!goal.completed;
+  return `<div class="goal-card${goal.completed?' completed':''}${isOverdue?' overdue':''}" data-id="${goal.id}">
+    <div class="goal-header">
+      <div class="goal-icon" style="background:${c.bg}">${c.icon}</div>
+      <div class="goal-info">
+        <div class="goal-name">${goal.name}</div>
+        <div class="goal-category" style="color:${c.color}">${goal.cat}</div>
+      </div>
+      <div class="goal-actions">
+        ${!goal.completed?`<button class="goal-action-btn" data-action="complete" data-id="${goal.id}" title="Mark complete">✅</button>`:''}
+        <button class="goal-action-btn" data-action="edit" data-id="${goal.id}" title="Edit">✏️</button>
+        <button class="goal-action-btn" data-action="delete" data-id="${goal.id}" title="Delete" style="color:var(--red);">🗑</button>
+      </div>
+    </div>
+    <div class="goal-vals">
+      <div class="goal-val-item">
+        <div class="goal-val" style="color:${c.color}">${goal.current}<span style="font-size:12px;color:var(--t2);margin-left:2px;">${goal.unit}</span></div>
+        <div class="goal-val-label">Current</div>
+      </div>
+      <div style="font-size:20px;color:var(--t2);align-self:center;">→</div>
+      <div class="goal-val-item">
+        <div class="goal-val" style="color:var(--green)">${goal.target}<span style="font-size:12px;color:var(--t2);margin-left:2px;">${goal.unit}</span></div>
+        <div class="goal-val-label">Target</div>
+      </div>
+      <div class="goal-val-item" style="margin-left:auto;">
+        <div class="goal-val goal-pct" style="color:${barColor}">${pct}%</div>
+        <div class="goal-val-label">Progress</div>
+      </div>
+    </div>
+    <div class="goal-bar-track">
+      <div class="goal-bar-fill" style="width:${pct}%;background:${barColor};"></div>
+    </div>
+    <div class="goal-footer">
+      ${goal.notes?`<span style="font-size:11px;color:var(--t2);">${goal.notes}</span>`:'<span></span>'}
+      ${dlText?`<span class="days-left ${dlClass}">${dlText}</span>`:''}
+    </div>
+  </div>`;
+}
+
+function bindGoalEvents(grid){
+  grid.querySelectorAll('[data-action]').forEach(btn=>{
+    btn.addEventListener('click',e=>{
+      e.stopPropagation();
+      const{action,id}=btn.dataset;
+      if(action==='delete'){
+        if(!confirm('Delete this goal?'))return;
+        setGoals(getGoals().filter(g=>g.id!==id));render();
+      } else if(action==='complete'){
+        const goals=getGoals();
+        const g=goals.find(g=>g.id===id);
+        if(g){g.completed=true;g.current=g.target;}
+        setGoals(goals);render();toast();
+      } else if(action==='edit'){
+        const g=getGoals().find(g=>g.id===id);
+        if(g)openModal(g);
+      }
+    });
+  });
+  grid.querySelectorAll('.goal-card').forEach(card=>{
+    card.addEventListener('click',e=>{
+      if(e.target.closest('[data-action]'))return;
+      const g=getGoals().find(g=>g.id===card.dataset.id);
+      if(g&&!g.completed){
+        const val=prompt(`Update current value for "${g.name}" (${g.unit}):`,g.current);
+        if(val===null)return;
+        const n=parseFloat(val);if(isNaN(n))return;
+        const goals=getGoals();
+        const idx=goals.findIndex(g=>g.id===card.dataset.id);
+        goals[idx].current=n;
+        if(calcProgress(goals[idx])>=100)goals[idx].completed=true;
+        setGoals(goals);render();toast();
+      }
+    });
+  });
+}
+
+function openModal(goal=null){
+  editingId=goal?goal.id:null;
+  document.getElementById('modal-title').textContent=goal?'✏️ Edit Goal':'🎯 Add New Goal';
+  document.getElementById('g-name').value=goal?.name||'';
+  document.getElementById('g-cat').value=goal?.cat||'fitness';
+  document.getElementById('g-type').value=goal?.type||'target';
+  document.getElementById('g-current').value=goal?.current||'';
+  document.getElementById('g-target').value=goal?.target||'';
+  document.getElementById('g-unit').value=goal?.unit||'';
+  document.getElementById('g-date').value=goal?.date||'';
+  document.getElementById('g-notes').value=goal?.notes||'';
+  document.getElementById('goal-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('g-name').focus(),80);
+}
+
+function closeModal(){document.getElementById('goal-modal').classList.remove('open');editingId=null;}
+
+function saveGoal(){
+  const name=document.getElementById('g-name').value.trim();
+  if(!name){alert('Please enter a goal name.');return;}
+  const current=parseFloat(document.getElementById('g-current').value)||0;
+  const target=parseFloat(document.getElementById('g-target').value)||0;
+  if(!target){alert('Please enter a target value.');return;}
+  const goal={
+    id:editingId||uid(),name,
+    cat:document.getElementById('g-cat').value,
+    type:document.getElementById('g-type').value,
+    current,target,
+    startValue:editingId?getGoals().find(g=>g.id===editingId)?.startValue||current:current,
+    unit:document.getElementById('g-unit').value.trim()||'',
+    date:document.getElementById('g-date').value||'',
+    notes:document.getElementById('g-notes').value.trim(),
+    completed:false,
+  };
+  if(calcProgress(goal)>=100)goal.completed=true;
+  const goals=getGoals();
+  if(editingId){const idx=goals.findIndex(g=>g.id===editingId);if(idx>=0)goals[idx]={...goals[idx],...goal};}
+  else goals.push(goal);
+  setGoals(goals);closeModal();render();toast();
+}
+
+function toast(){const t=document.getElementById('save-toast');t.style.display='block';setTimeout(()=>t.style.display='none',2000);}
+</script>
+</body>
+</html>
