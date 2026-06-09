@@ -1,377 +1,440 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Track My Health</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TrackMyHealth – Build Your Best Physique</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#0f1535;--card:#1a2250;--card2:#1e2860;
+  --accent:#6c63ff;--green:#10b981;--orange:#f59e0b;--red:#ef4444;--blue:#3b82f6;
+  --t1:#e8eeff;--t2:#7b8ab8;--border:rgba(255,255,255,0.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;overflow-x:hidden;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(15,21,53,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 5%;}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px;}
+.nav-logo{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:800;color:var(--t1);text-decoration:none;}
+.nav-logo-icon{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,var(--accent),#a855f7);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.nav-links{display:flex;align-items:center;gap:28px;}
+.nav-links a{font-size:14px;font-weight:500;color:var(--t2);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--t1);}
+.nav-cta{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:9px 22px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;}
+.nav-cta:hover{filter:brightness(1.1);transform:translateY(-1px);}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px 5% 60px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:800px;background:radial-gradient(circle,rgba(108,99,255,.15) 0%,transparent 70%);pointer-events:none;}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(108,99,255,.12);border:1px solid rgba(108,99,255,.3);border-radius:99px;padding:6px 16px;font-size:13px;font-weight:600;color:var(--accent);margin-bottom:24px;}
+.hero-title{font-size:clamp(42px,7vw,80px);font-weight:900;line-height:1.08;letter-spacing:-2px;margin-bottom:20px;}
+.hero-title span{background:linear-gradient(135deg,var(--accent),#a855f7,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{font-size:clamp(16px,2vw,20px);color:var(--t2);max-width:560px;margin:0 auto 36px;line-height:1.6;}
+.hero-btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--accent),#a855f7);color:#fff;border:none;border-radius:12px;padding:16px 36px;font-size:16px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .3s;box-shadow:0 8px 32px rgba(108,99,255,.4);}
+.hero-btn:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(108,99,255,.5);}
+.hero-sub-text{font-size:13px;color:var(--t2);margin-top:12px;}
+.hero-sub-text span{color:var(--green);}
+.preview-wrap{margin-top:60px;position:relative;max-width:900px;width:100%;}
+.preview-glow{position:absolute;inset:-20px;background:radial-gradient(ellipse at center,rgba(108,99,255,.2) 0%,transparent 70%);pointer-events:none;}
+.preview-mockup{padding:20px;background:var(--card);border-radius:16px;border:1px solid var(--border);box-shadow:0 32px 80px rgba(0,0,0,.5);}
+.mock-topbar{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
+.mock-dot{width:12px;height:12px;border-radius:50%;}
+.mock-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px;}
+.mock-card{background:var(--card2);border-radius:8px;padding:12px;border:1px solid var(--border);}
+.mock-card-val{font-size:18px;font-weight:700;margin-bottom:2px;}
+.mock-card-label{font-size:10px;color:var(--t2);}
+.mock-chart{background:var(--card2);border-radius:8px;padding:14px;border:1px solid var(--border);height:80px;display:flex;align-items:flex-end;gap:6px;}
+.mock-bar{flex:1;border-radius:4px 4px 0 0;}
+.stats-section{padding:60px 5%;border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.stats-inner{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:24px;max-width:800px;margin:0 auto;text-align:center;}
+.stat-val{font-size:36px;font-weight:800;background:linear-gradient(135deg,var(--accent),#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.stat-label{font-size:13px;color:var(--t2);margin-top:4px;}
+.features-section{padding:80px 5%;}
+.section-badge{text-align:center;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin-bottom:12px;}
+.section-title{text-align:center;font-size:clamp(28px,4vw,42px);font-weight:800;letter-spacing:-1px;margin-bottom:12px;}
+.section-sub{text-align:center;font-size:15px;color:var(--t2);max-width:500px;margin:0 auto 48px;line-height:1.6;}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;max-width:1100px;margin:0 auto;}
+.feature-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;transition:all .3s;}
+.feature-card:hover{border-color:rgba(108,99,255,.4);transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.3);}
+.feature-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:14px;}
+.feature-title{font-size:16px;font-weight:700;margin-bottom:6px;}
+.feature-desc{font-size:13px;color:var(--t2);line-height:1.6;}
+.feature-tag{display:inline-block;margin-top:10px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;}
+.how-section{padding:80px 5%;background:rgba(108,99,255,.04);}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px;max-width:900px;margin:0 auto;}
+.step{text-align:center;padding:24px;}
+.step-num{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#a855f7);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#fff;margin:0 auto 16px;}
+.step-title{font-size:16px;font-weight:700;margin-bottom:8px;}
+.step-desc{font-size:13px;color:var(--t2);line-height:1.6;}
+.privacy-section{padding:60px 5%;}
+.privacy-card{max-width:700px;margin:0 auto;background:var(--card);border:1px solid rgba(16,185,129,.2);border-radius:20px;padding:36px;text-align:center;}
+.privacy-icon{font-size:48px;margin-bottom:16px;}
+.privacy-title{font-size:24px;font-weight:800;margin-bottom:10px;}
+.privacy-desc{font-size:14px;color:var(--t2);line-height:1.7;margin-bottom:20px;}
+.privacy-points{display:flex;justify-content:center;gap:24px;flex-wrap:wrap;}
+.privacy-point{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--green);font-weight:600;}
+.cta-section{padding:80px 5%;text-align:center;}
+.cta-title{font-size:clamp(28px,5vw,52px);font-weight:900;letter-spacing:-1.5px;margin-bottom:16px;}
+.cta-sub{font-size:16px;color:var(--t2);margin-bottom:32px;}
+footer{padding:32px 5%;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.footer-logo{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700;}
+.footer-logo-icon{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,var(--accent),#a855f7);display:flex;align-items:center;justify-content:center;font-size:14px;}
+.footer-text{font-size:12px;color:var(--t2);}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;align-items:center;justify-content:center;}
+.modal-bg.open{display:flex;}
+.modal{background:#1a2250;border:1px solid rgba(108,99,255,.4);border-radius:20px;padding:32px;width:480px;max-width:95vw;max-height:90vh;overflow-y:auto;}
+.modal-step{display:none;}
+.modal-step.active{display:block;}
+.modal-prog{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:24px;}
+.prog-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;transition:all .3s;}
+.prog-dot.done{background:var(--green);color:#fff;}
+.prog-dot.active{background:var(--accent);color:#fff;}
+.prog-dot.pending{background:rgba(255,255,255,.1);color:var(--t2);}
+.prog-line{height:2px;width:40px;background:var(--border);}
+.prog-line.done{background:var(--green);}
+.modal h2{font-size:22px;font-weight:800;margin-bottom:6px;text-align:center;}
+.modal-sub{font-size:13px;color:var(--t2);text-align:center;margin-bottom:24px;}
+.goal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.goal-btn{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;cursor:pointer;transition:all .2s;text-align:center;font-family:'Inter',sans-serif;color:var(--t1);}
+.goal-btn:hover{border-color:var(--accent);}
+.goal-btn.selected{background:rgba(108,99,255,.15);border-color:var(--accent);}
+.goal-btn .gb-icon{font-size:24px;margin-bottom:6px;}
+.goal-btn .gb-label{font-size:13px;font-weight:600;}
+.modal label{font-size:12px;color:var(--t2);display:block;margin-bottom:5px;margin-top:12px;font-weight:500;}
+.modal input,.modal select{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:8px;color:var(--t1);font-size:14px;padding:10px 12px;outline:none;font-family:'Inter',sans-serif;transition:border-color .2s;margin-bottom:4px;}
+.modal input:focus,.modal select:focus{border-color:var(--accent);}
+.modal input::placeholder{color:var(--t2);}
+.modal select option{background:#1a2250;}
+.modal-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.modal-btn{width:100%;background:linear-gradient(135deg,var(--accent),#a855f7);border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:700;padding:14px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;margin-top:16px;}
+.modal-btn:hover{filter:brightness(1.1);}
+.modal-btn-outline{width:100%;background:transparent;border:1px solid var(--border);border-radius:10px;color:var(--t2);font-size:13px;font-weight:600;padding:10px;cursor:pointer;font-family:'Inter',sans-serif;margin-top:8px;}
+.modal-btn-outline:hover{border-color:var(--accent);color:var(--t1);}
+@media(max-width:700px){.nav-links{display:none;}.mock-grid{grid-template-columns:repeat(2,1fr);}.features-grid{grid-template-columns:1fr;}.steps{grid-template-columns:1fr;}.modal-form-grid{grid-template-columns:1fr;}}
+</style>
 </head>
 <body>
 
-<!-- ── MAIN LANDING PAGE ── -->
-<div id="main-page">
-
-<!-- NAV -->
 <nav>
-  <a href="#" class="nav-logo">
-    <div class="nav-logo-dot">T</div>
-    Track My Health
-  </a>
-  <ul class="nav-links">
-    <li><a href="#features">Features</a></li>
-    <li><a href="#checkin">Daily Log</a></li>
-    <li><a href="#community">Community</a></li>
-    <li><a href="reviews.html">Reviews</a></li>
-    <li><a href="#">Pricing</a></li>
-  </ul>
-  <button class="nav-cta">Start free →</button>
+  <div class="nav-inner">
+    <a class="nav-logo" href="#">
+      <div class="nav-logo-icon">💪</div>
+      TrackMyHealth
+    </a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#privacy">Privacy</a>
+    </div>
+    <button class="nav-cta" id="nav-start-btn">Start Free →</button>
+  </div>
 </nav>
 
-<!-- HERO -->
 <section class="hero">
-  <div class="hero-left">
-    <div class="hero-eyebrow"><span></span> Your wellness companion</div>
-    <h1 class="hero-h1">Track health,<br>feel <em>alive.</em></h1>
-    <p class="hero-sub">Combine mindful check-ins with real data. Steps, sleep, stress, hydration — all in one calm, beautiful space.</p>
-    <div class="hero-actions">
-      <button class="btn-primary">Get started free <span>→</span></button>
-      <button class="btn-ghost">See how it works</button>
-    </div>
-    <div class="hero-stats">
-      <div>
-        <div class="hero-stat-num">48k+</div>
-        <div class="hero-stat-label">Active users</div>
+  <div class="hero-badge">🏆 Your Personal Fitness Tracker</div>
+  <h1 class="hero-title">Build Your<br/><span>Best Physique</span></h1>
+  <p class="hero-sub">Track workouts, nutrition, recovery and progress all in one place. 100% free, 100% private — your data never leaves your device.</p>
+  <button class="hero-btn" id="hero-start-btn">🚀 Get Started Free</button>
+  <div class="hero-sub-text">No account needed · <span>100% free</span> · Works offline</div>
+  <div class="preview-wrap">
+    <div class="preview-glow"></div>
+    <div class="preview-mockup">
+      <div class="mock-topbar">
+        <div class="mock-dot" style="background:#ef4444;"></div>
+        <div class="mock-dot" style="background:#f59e0b;"></div>
+        <div class="mock-dot" style="background:#10b981;"></div>
+        <div style="margin-left:8px;font-size:11px;color:var(--t2);">TrackMyHealth Dashboard</div>
       </div>
-      <div style="width:1px; background:rgba(127,119,221,0.2);"></div>
-      <div>
-        <div class="hero-stat-num">4.9★</div>
-        <div class="hero-stat-label">App Store rating</div>
+      <div class="mock-grid">
+        <div class="mock-card"><div class="mock-card-val" style="color:#6c63ff;">82kg</div><div class="mock-card-label">⚖️ Weight</div></div>
+        <div class="mock-card"><div class="mock-card-val" style="color:#f59e0b;">2,180</div><div class="mock-card-label">🔥 Calories</div></div>
+        <div class="mock-card"><div class="mock-card-val" style="color:#10b981;">148g</div><div class="mock-card-label">🥩 Protein</div></div>
+        <div class="mock-card"><div class="mock-card-val" style="color:#3b82f6;">8/10</div><div class="mock-card-label">🔄 Recovery</div></div>
       </div>
-      <div style="width:1px; background:rgba(127,119,221,0.2);"></div>
-      <div>
-        <div class="hero-stat-num">2.1M</div>
-        <div class="hero-stat-label">Habits logged</div>
+      <div class="mock-chart">
+        <div class="mock-bar" style="height:30%;background:rgba(108,99,255,.4);"></div>
+        <div class="mock-bar" style="height:45%;background:rgba(108,99,255,.5);"></div>
+        <div class="mock-bar" style="height:55%;background:rgba(108,99,255,.5);"></div>
+        <div class="mock-bar" style="height:65%;background:rgba(108,99,255,.6);"></div>
+        <div class="mock-bar" style="height:60%;background:rgba(108,99,255,.6);"></div>
+        <div class="mock-bar" style="height:75%;background:rgba(108,99,255,.7);"></div>
+        <div class="mock-bar" style="height:90%;background:var(--accent);"></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- FEATURES -->
-<section class="features" id="features">
-  <div class="section-eyebrow">Everything you need</div>
-  <h2 class="section-title">Built for your whole self</h2>
-  <p class="section-sub">Not just steps. Track the metrics that actually matter for your wellbeing.</p>
+<section class="stats-section">
+  <div class="stats-inner">
+    <div><div class="stat-val">10+</div><div class="stat-label">Tracking Features</div></div>
+    <div><div class="stat-val">100%</div><div class="stat-label">Free Forever</div></div>
+    <div><div class="stat-val">0</div><div class="stat-label">Data Uploaded to Servers</div></div>
+    <div><div class="stat-val">∞</div><div class="stat-label">Progress You Can Make</div></div>
+  </div>
+</section>
+
+<section class="features-section" id="features">
+  <div class="section-badge">Everything You Need</div>
+  <h2 class="section-title">Built for serious fitness</h2>
+  <p class="section-sub">Every feature you need to track, analyze and improve your fitness journey.</p>
   <div class="features-grid">
-    <div class="feat-card"><div class="feat-icon-wrap">🌿</div><div class="feat-title">Progress rings</div><div class="feat-desc">Beautiful circular progress visualizations for your daily goals — steps, sleep, calories, water.</div></div>
-    <div class="feat-card"><div class="feat-icon-wrap">🧘</div><div class="feat-title">Daily check-in</div><div class="feat-desc">A mindful moment each day to rate your sleep quality, stress, energy and mood.</div></div>
-    <div class="feat-card"><div class="feat-icon-wrap">📊</div><div class="feat-title">Smart insights</div><div class="feat-desc">Patterns and trends that help you understand what actually impacts your health.</div></div>
-    <div class="feat-card"><div class="feat-icon-wrap">🔥</div><div class="feat-title">Habit streaks</div><div class="feat-desc">Stay motivated with gentle streak tracking. Celebrate consistency, not perfection.</div></div>
-    <div class="feat-card"><div class="feat-icon-wrap">💤</div><div class="feat-title">Sleep tracking</div><div class="feat-desc">Log your sleep schedule and quality. Correlate rest with energy levels the next day.</div></div>
-    <div class="feat-card"><div class="feat-icon-wrap">🤝</div><div class="feat-title">Community goals</div><div class="feat-desc">Join weekly challenges with friends. Friendly accountability, zero pressure.</div></div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(108,99,255,.15);">🏋️</div>
+      <div class="feature-title">Workout Tracker</div>
+      <div class="feature-desc">Log exercises with sets, reps and weight. Multiple workout splits. Track your progress day by day.</div>
+      <span class="feature-tag" style="background:rgba(108,99,255,.15);color:#a78bfa;">Core Feature</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(16,185,129,.15);">🥗</div>
+      <div class="feature-title">Nutrition Tracker</div>
+      <div class="feature-desc">Search 500,000+ foods. Auto-fill calories, protein, carbs, fat and fiber. Weekly averages and daily logs.</div>
+      <span class="feature-tag" style="background:rgba(16,185,129,.15);color:#34d399;">Core Feature</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(59,130,246,.15);">🔄</div>
+      <div class="feature-title">Recovery Tracker</div>
+      <div class="feature-desc">Log sleep, energy, stress, water and muscle soreness. Get a daily recovery score 0–10.</div>
+      <span class="feature-tag" style="background:rgba(59,130,246,.15);color:#60a5fa;">Health</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(245,158,11,.15);">📏</div>
+      <div class="feature-title">Body Measurements</div>
+      <div class="feature-desc">Track weight, body fat, chest, waist, arms, legs and more. BMI calculator and goal tracking.</div>
+      <span class="feature-tag" style="background:rgba(245,158,11,.15);color:#fbbf24;">Progress</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(239,68,68,.15);">📸</div>
+      <div class="feature-title">Progress Photos</div>
+      <div class="feature-desc">Upload weekly photos. Before/after comparison. Filter by pose. See your transformation visually.</div>
+      <span class="feature-tag" style="background:rgba(239,68,68,.15);color:#f87171;">Visual</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(108,99,255,.15);">📈</div>
+      <div class="feature-title">Strength Progress</div>
+      <div class="feature-desc">Auto-reads your workout data. Shows PRs, progress charts and volume by muscle group.</div>
+      <span class="feature-tag" style="background:rgba(108,99,255,.15);color:#a78bfa;">Analytics</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(16,185,129,.15);">🎯</div>
+      <div class="feature-title">Goals</div>
+      <div class="feature-desc">Set fitness, nutrition and lifestyle goals. Track progress with visual bars. Set deadlines and celebrate wins.</div>
+      <span class="feature-tag" style="background:rgba(16,185,129,.15);color:#34d399;">Motivation</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(245,158,11,.15);">📅</div>
+      <div class="feature-title">Calendar</div>
+      <div class="feature-desc">See all workouts, nutrition, recovery and custom events in a monthly calendar view with activity heatmap.</div>
+      <span class="feature-tag" style="background:rgba(245,158,11,.15);color:#fbbf24;">Overview</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(139,92,246,.15);">🤖</div>
+      <div class="feature-title">AI Coach</div>
+      <div class="feature-desc">Get personalized advice based on YOUR actual data. Weekly plans, nutrition tips, recovery recommendations.</div>
+      <span class="feature-tag" style="background:rgba(139,92,246,.15);color:#c4b5fd;">AI Powered</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(59,130,246,.15);">📊</div>
+      <div class="feature-title">Smart Dashboard</div>
+      <div class="feature-desc">All your data in one place. Strength chart, nutrition donut, recovery ring, photos, goals — live and real.</div>
+      <span class="feature-tag" style="background:rgba(59,130,246,.15);color:#60a5fa;">Overview</span>
+    </div>
   </div>
 </section>
 
-<!-- TESTIMONIALS -->
-<section class="testimonials" id="community">
-  <div class="section-eyebrow">Loved by users</div>
-  <h2 class="section-title">Real people, real results</h2>
-  <p class="section-sub">From busy professionals to wellness beginners — Track My Health adapts to you.</p>
-  <div class="testi-grid">
-    <div class="testi-card">
-      <div class="testi-stars">★★★★★</div>
-      <p class="testi-quote">"The daily check-in makes me feel like the app actually cares about how I feel, not just my steps."</p>
-      <div class="testi-author"><div class="testi-avatar" style="background:#E1F5EE;color:#0F6E56;">SM</div><div><div class="testi-name">Soo-min Park</div><div class="testi-role">Designer · Seoul</div></div></div>
+<section class="how-section" id="how">
+  <div class="section-badge">Simple Process</div>
+  <h2 class="section-title">How it works</h2>
+  <p class="section-sub">Get started in under 2 minutes. No account, no credit card, no nonsense.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-title">Set Up Your Profile</div>
+      <div class="step-desc">Enter your name, goals, height, weight and activity level. Takes 60 seconds.</div>
     </div>
-    <div class="testi-card">
-      <div class="testi-stars">★★★★★</div>
-      <p class="testi-quote">"The progress rings are so motivating. My sleep improved a lot once I started seeing the data."</p>
-      <div class="testi-author"><div class="testi-avatar" style="background:#EEEDFE;color:#534AB7;">JW</div><div><div class="testi-name">James Wu</div><div class="testi-role">Engineer · San Francisco</div></div></div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-title">Start Tracking</div>
+      <div class="step-desc">Log your workouts, meals, recovery and body measurements. Everything in one app.</div>
     </div>
-    <div class="testi-card">
-      <div class="testi-stars">★★★★★</div>
-      <p class="testi-quote">"It doesn't shame you for bad days. The kindest health app I've ever used."</p>
-      <div class="testi-author"><div class="testi-avatar" style="background:#FAECE7;color:#993C1D;">AK</div><div><div class="testi-name">Aisha Kimura</div><div class="testi-role">Therapist · Tokyo</div></div></div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-title">See Your Progress</div>
+      <div class="step-desc">Watch your dashboard come alive with real data. Charts, streaks, PRs and insights update automatically.</div>
     </div>
   </div>
 </section>
 
-<!-- CTA -->
-<section class="cta-footer">
-  <h2 class="section-title">Ready to feel your best?</h2>
-  <p class="section-sub">Join 48,000+ people tracking their health the mindful way.</p>
-  <div class="cta-footer-actions">
-    <button class="btn-primary" style="font-size:1rem;padding:1rem 2.25rem;">Start for free →</button>
-    <button class="btn-ghost" style="font-size:1rem;padding:1rem 1.75rem;">View demo</button>
+<section class="privacy-section" id="privacy">
+  <div class="privacy-card">
+    <div class="privacy-icon">🔒</div>
+    <div class="privacy-title">Your data stays on your device</div>
+    <div class="privacy-desc">TrackMyHealth stores everything locally in your browser. No accounts, no servers, no tracking. Your fitness journey is completely private. Export your data anytime as a JSON file.</div>
+    <div class="privacy-points">
+      <div class="privacy-point">✅ No account required</div>
+      <div class="privacy-point">✅ No data uploaded</div>
+      <div class="privacy-point">✅ Works offline</div>
+      <div class="privacy-point">✅ Export anytime</div>
+      <div class="privacy-point">✅ 100% free</div>
+    </div>
   </div>
 </section>
 
-<!-- FOOTER -->
+<section class="cta-section">
+  <h2 class="cta-title">Ready to build your<br/><span style="background:linear-gradient(135deg,var(--accent),#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">best physique?</span></h2>
+  <p class="cta-sub">Free forever. No sign up. Start tracking in 60 seconds.</p>
+  <button class="hero-btn" id="cta-start-btn">🚀 Start Tracking Now</button>
+</section>
+
 <footer>
-  <div style="display:flex;align-items:center;gap:8px;">
-    <div class="nav-logo-dot" style="width:24px;height:24px;font-size:11px;">T</div>
-    <span>Track My Health · 2025</span>
-  </div>
-  <div style="display:flex;gap:1.5rem;">
-    <a href="#" style="color:var(--text-soft);text-decoration:none;">Privacy</a>
-    <a href="#" style="color:var(--text-soft);text-decoration:none;">Terms</a>
-    <a href="#" style="color:var(--text-soft);text-decoration:none;">Contact</a>
-  </div>
+  <div class="footer-logo"><div class="footer-logo-icon">💪</div> TrackMyHealth</div>
+  <div class="footer-text">Built with ❤️ · 100% Free · Your data stays private</div>
 </footer>
 
-</div><!-- /#main-page -->
-
-
-<!-- ── PERSONALIZED DASHBOARD ── -->
-<div id="dashboard-page" style="display:none;">
-
-  <nav>
-    <a href="#" class="nav-logo">
-      <div class="nav-logo-dot">T</div>
-      Track My Health
-    </a>
-    <div class="db-nav-right">
-      <span class="db-date-pill" id="db-date"></span>
-      <div class="db-user-pill">
-        <div class="dash-avatar" id="db-avatar"></div>
-        <span class="db-nav-name" id="db-nav-name"></span>
-      </div>
-      <button class="btn-ghost" onclick="goBack()" style="font-size:0.82rem;padding:0.45rem 1rem;">← Home</button>
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <div class="modal-prog">
+      <div class="prog-dot active" id="prog-1">1</div>
+      <div class="prog-line" id="prog-line-1"></div>
+      <div class="prog-dot pending" id="prog-2">2</div>
+      <div class="prog-line" id="prog-line-2"></div>
+      <div class="prog-dot pending" id="prog-3">3</div>
     </div>
-  </nav>
-
-  <!-- Welcome Hero -->
-  <section class="db-hero">
-    <div class="hero-eyebrow"><span></span> Your health dashboard</div>
-    <h1 class="hero-h1">Welcome, <em id="db-name"></em>!</h1>
-    <p class="hero-sub">Here's your personal health profile. Let's start building healthy habits today.</p>
-    <div class="db-stats-grid" style="grid-template-columns:repeat(5,1fr);">
-      <div class="db-stat-card">
-        <div class="db-stat-icon">🧬</div>
-        <div class="db-stat-val" id="db-gender"></div>
-        <div class="db-stat-label">Gender</div>
+    <div class="modal-step active" id="step-1">
+      <h2>What's your main goal?</h2>
+      <p class="modal-sub">Pick the goal that matters most to you right now.</p>
+      <div class="goal-grid">
+        <button class="goal-btn selected" data-goal="build_muscle"><div class="gb-icon">💪</div><div class="gb-label">Build Muscle</div></button>
+        <button class="goal-btn" data-goal="lose_weight"><div class="gb-icon">🔥</div><div class="gb-label">Lose Weight</div></button>
+        <button class="goal-btn" data-goal="increase_strength"><div class="gb-icon">🏋️</div><div class="gb-label">Get Stronger</div></button>
+        <button class="goal-btn" data-goal="improve_fitness"><div class="gb-icon">⚡</div><div class="gb-label">Improve Fitness</div></button>
+        <button class="goal-btn" data-goal="maintain"><div class="gb-icon">⚖️</div><div class="gb-label">Maintain Weight</div></button>
+        <button class="goal-btn" data-goal="track_nutrition"><div class="gb-icon">🥗</div><div class="gb-label">Track Nutrition</div></button>
       </div>
-      <div class="db-stat-card">
-        <div class="db-stat-icon">🎂</div>
-        <div class="db-stat-val" id="db-age"></div>
-        <div class="db-stat-label">Age</div>
-      </div>
-      <div class="db-stat-card">
-        <div class="db-stat-icon">📏</div>
-        <div class="db-stat-val" id="db-height"></div>
-        <div class="db-stat-label">Height</div>
-      </div>
-      <div class="db-stat-card">
-        <div class="db-stat-icon">⚖️</div>
-        <div class="db-stat-val" id="db-weight"></div>
-        <div class="db-stat-label">Weight</div>
-      </div>
-      <div class="db-stat-card">
-        <div class="db-stat-icon">❤️</div>
-        <div class="db-stat-val" id="db-bmi"></div>
-        <div class="db-stat-label">BMI · <span id="db-bmi-cat"></span></div>
-      </div>
+      <button class="modal-btn" id="step1-next">Next Step →</button>
     </div>
-    <div class="db-calorie-card">
-      <div class="db-cal-item">
-        <div class="db-cal-label">Base Metabolic Rate</div>
-        <div class="db-cal-num" id="db-bmr"></div>
-        <div class="db-cal-sub">kcal burned at rest</div>
-      </div>
-      <div class="db-cal-divider"></div>
-      <div class="db-cal-item">
-        <div class="db-cal-label">Maintenance</div>
-        <div class="db-cal-num" style="color:var(--purple-600);" id="db-maintain"></div>
-        <div class="db-cal-sub">kcal/day to stay same weight</div>
-      </div>
-      <div class="db-cal-divider"></div>
-      <div class="db-cal-item">
-        <div class="db-cal-label">To Lose Weight</div>
-        <div class="db-cal-num" style="color:var(--green-600);" id="db-lose-cal"></div>
-        <div class="db-cal-sub">kcal/day · ~0.5 kg/week</div>
-      </div>
-    </div>
-    <!-- Calorie Intake Card -->
-    <div class="db-macro-card">
-      <div class="db-macro-header">
-        <div>
-          <div class="db-macro-title">🍽️ Your Daily Calorie Intake</div>
-          <div class="db-macro-goal-label" id="db-macro-goal-label"></div>
-        </div>
-        <div class="db-macro-target" id="db-target-cal"></div>
-      </div>
-      <div class="db-macros">
-        <div class="db-macro-row">
-          <div class="db-macro-icon">🥩</div>
-          <div class="db-macro-name">Protein</div>
-          <div class="db-macro-bar-wrap"><div class="db-macro-bar" id="db-protein-bar" style="background:#1D9E75;"></div></div>
-          <div class="db-macro-val" id="db-protein"></div>
-          <div class="db-macro-pct" id="db-protein-pct"></div>
-        </div>
-        <div class="db-macro-row">
-          <div class="db-macro-icon">🌾</div>
-          <div class="db-macro-name">Carbs</div>
-          <div class="db-macro-bar-wrap"><div class="db-macro-bar" id="db-carbs-bar" style="background:#7F77DD;"></div></div>
-          <div class="db-macro-val" id="db-carbs"></div>
-          <div class="db-macro-pct" id="db-carbs-pct"></div>
-        </div>
-        <div class="db-macro-row">
-          <div class="db-macro-icon">🥑</div>
-          <div class="db-macro-name">Fat</div>
-          <div class="db-macro-bar-wrap"><div class="db-macro-bar" id="db-fat-bar" style="background:#F5A623;"></div></div>
-          <div class="db-macro-val" id="db-fat"></div>
-          <div class="db-macro-pct" id="db-fat-pct"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="db-health-note" id="db-health-wrap" style="display:none;">
-      <div class="db-health-label">⚠️ Health conditions noted</div>
-      <div class="db-health-text" id="db-health"></div>
-    </div>
-  </section>
-
-  <!-- Goals -->
-  <section class="db-goals-section">
-    <div class="section-eyebrow">Your goals</div>
-    <h2 class="section-title">What you're working towards</h2>
-    <div class="db-goals-wrap" id="db-goals"></div>
-  </section>
-
-  <!-- Personalised Tips -->
-  <section class="features" style="padding-top:0;">
-    <div class="section-eyebrow">Recommendations</div>
-    <h2 class="section-title">Tips just for you</h2>
-    <p class="section-sub">Tailored advice based on your goals to help you get started.</p>
-    <div class="features-grid" id="db-tips"></div>
-  </section>
-
-  <!-- CTA -->
-  <section class="cta-footer">
-    <h2 class="section-title">Start your first check-in</h2>
-    <p class="section-sub">Log how you feel today — sleep, energy, hydration, and mood.</p>
-    <div class="cta-footer-actions">
-      <button class="btn-primary" style="font-size:1rem;padding:1rem 2.25rem;">Log today →</button>
-      <button class="btn-ghost" onclick="goBack()" style="font-size:1rem;padding:1rem 1.75rem;">← Back to home</button>
-    </div>
-  </section>
-
-  <footer>
-    <div style="display:flex;align-items:center;gap:8px;">
-      <div class="nav-logo-dot" style="width:24px;height:24px;font-size:11px;">T</div>
-      <span>Track My Health · 2025</span>
-    </div>
-  </footer>
-
-</div><!-- /#dashboard-page -->
-
-
-<!-- ONBOARDING MODAL -->
-<div class="modal-overlay" id="modal-overlay">
-  <div class="modal-card">
-    <button class="modal-close" id="modal-close">✕</button>
-
-    <!-- Step indicator -->
-    <div class="modal-steps">
-      <div class="step-dot active" id="dot-1">1</div>
-      <div class="step-line" id="step-line"></div>
-      <div class="step-dot" id="dot-2">2</div>
-    </div>
-    <div class="step-labels">
-      <span>Goals</span>
-      <span>Details</span>
-    </div>
-
-    <!-- STEP 1: Goals -->
-    <div id="step-1">
-      <div class="modal-header">
-        <h2 class="modal-title">What are your goals?</h2>
-        <p class="modal-sub">Pick everything you want to work on — select at least one.</p>
-      </div>
-      <div class="goals-grid goals-grid-lg">
-        <label class="goal-chip"><input type="checkbox" name="goals" value="lose-weight"/> 🏃 Lose weight</label>
-        <label class="goal-chip"><input type="checkbox" name="goals" value="build-muscle"/> 💪 Build muscle</label>
-        <label class="goal-chip"><input type="checkbox" name="goals" value="sleep-better"/> 💤 Sleep better</label>
-        <label class="goal-chip"><input type="checkbox" name="goals" value="reduce-stress"/> 🧘 Reduce stress</label>
-        <label class="goal-chip"><input type="checkbox" name="goals" value="improve-fitness"/> ⚡ Improve fitness</label>
-        <label class="goal-chip"><input type="checkbox" name="goals" value="track-nutrition"/> 🥗 Track nutrition</label>
-      </div>
-      <p class="step-error" id="goal-error">Please select at least one goal to continue.</p>
-      <button type="button" class="btn-primary" onclick="goToStep2()" style="width:100%;justify-content:center;font-size:1rem;padding:1rem;margin-top:1.5rem;">
-        Next step →
-      </button>
-    </div>
-
-    <!-- STEP 2: Personal details -->
-    <div id="step-2" style="display:none;">
-      <div class="modal-header">
-        <h2 class="modal-title">About you</h2>
-        <p class="modal-sub">Your details help us personalise your dashboard.</p>
-      </div>
-      <form class="modal-form" id="onboarding-form">
-        <div class="form-row">
-          <div class="form-group">
-            <label>Your name</label>
-            <input type="text" name="name" placeholder="e.g. Alex" required/>
-          </div>
-          <div class="form-group">
-            <label>Gender</label>
-            <select name="gender" required>
-              <option value="" disabled selected>Select gender</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Non-binary">Non-binary</option>
-              <option value="Prefer not to say">Prefer not to say</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Age</label>
-            <input type="number" name="age" placeholder="e.g. 28" min="10" max="120" required/>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Activity Level</label>
-          <select name="activity" required>
-            <option value="" disabled selected>Select your activity level</option>
-            <option value="1.2">🛋️ Sedentary — little or no exercise</option>
-            <option value="1.375">🚶 Lightly active — 1–3 days/week</option>
-            <option value="1.55">🏃 Moderately active — 3–5 days/week</option>
-            <option value="1.725">⚡ Very active — 6–7 days/week</option>
-            <option value="1.9">🔥 Super active — physical job + exercise</option>
+    <div class="modal-step" id="step-2">
+      <h2>About you</h2>
+      <p class="modal-sub">Helps us personalize your dashboard and calculate your goals.</p>
+      <label>Your Name *</label>
+      <input id="inp-name" placeholder="e.g. Kamlesh Rawal"/>
+      <div class="modal-form-grid">
+        <div><label>Age</label><input id="inp-age" type="number" placeholder="25" min="10" max="100"/></div>
+        <div><label>Gender</label>
+          <select id="inp-gender">
+            <option value="">Select</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
           </select>
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Height</label>
-            <div class="input-unit-wrap">
-              <input type="number" name="height" placeholder="e.g. 175" min="50" max="300" required/>
-              <span class="input-unit">cm</span>
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Weight</label>
-            <div class="input-unit-wrap">
-              <input type="number" name="weight" placeholder="e.g. 70" min="20" max="500" required/>
-              <span class="input-unit">kg</span>
-            </div>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Health conditions <span style="color:var(--text-soft);font-weight:300;">(optional)</span></label>
-          <textarea name="health" placeholder="e.g. Diabetes, high blood pressure, knee pain, back issues, asthma..."></textarea>
-        </div>
-        <div class="step-nav">
-          <button type="button" class="btn-ghost" onclick="goToStep1()">← Back</button>
-          <button type="submit" class="btn-primary" style="flex:1;justify-content:center;">Start my journey →</button>
-        </div>
-      </form>
+        <div><label>Height (cm)</label><input id="inp-height" type="number" placeholder="175" min="100" max="250"/></div>
+        <div><label>Weight (kg)</label><input id="inp-weight" type="number" placeholder="70" min="30" max="300" step="0.1"/></div>
+      </div>
+      <label>Activity Level</label>
+      <select id="inp-activity">
+        <option value="sedentary">Sedentary (little/no exercise)</option>
+        <option value="light">Lightly active (1–3 days/week)</option>
+        <option value="moderate" selected>Moderately active (3–5 days/week)</option>
+        <option value="active">Very active (6–7 days/week)</option>
+        <option value="extreme">Extremely active (2x/day)</option>
+      </select>
+      <button class="modal-btn" id="step2-next">Next Step →</button>
+      <button class="modal-btn-outline" id="step2-back">← Back</button>
     </div>
-
+    <div class="modal-step" id="step-3">
+      <h2>Your daily targets</h2>
+      <p class="modal-sub">Auto-calculated based on your profile. Change anytime in Settings.</p>
+      <div class="modal-form-grid">
+        <div><label>Daily Calories (kcal)</label><input id="inp-calories" type="number" placeholder="2200"/></div>
+        <div><label>Daily Protein (g)</label><input id="inp-protein" type="number" placeholder="150"/></div>
+        <div><label>Daily Carbs (g)</label><input id="inp-carbs" type="number" placeholder="250"/></div>
+        <div><label>Daily Fat (g)</label><input id="inp-fat" type="number" placeholder="70"/></div>
+      </div>
+      <div style="background:rgba(108,99,255,.08);border:1px solid rgba(108,99,255,.2);border-radius:8px;padding:10px;margin-top:8px;font-size:12px;color:var(--t2);" id="calc-info">Fill in your profile and we'll auto-calculate your targets!</div>
+      <button class="modal-btn" id="step3-finish">🚀 Launch My Dashboard</button>
+      <button class="modal-btn-outline" id="step3-back">← Back</button>
+    </div>
   </div>
 </div>
 
-<script src="script.js"></script>
+<script>
+let selectedGoal='build_muscle';
+['nav-start-btn','hero-start-btn','cta-start-btn'].forEach(id=>{
+  document.getElementById(id)?.addEventListener('click',()=>{
+    const u=JSON.parse(localStorage.getItem('tmh_user')||'{}');
+    if(u.name) window.location.href='muscle-dashboard.html';
+    else document.getElementById('modal').classList.add('open');
+  });
+});
+document.querySelectorAll('.goal-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.goal-btn').forEach(b=>b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedGoal=btn.dataset.goal;
+  });
+});
+function setStep(n){
+  document.querySelectorAll('.modal-step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('step-'+n).classList.add('active');
+  for(let i=1;i<=3;i++){
+    const dot=document.getElementById('prog-'+i);
+    if(i<n){dot.className='prog-dot done';dot.textContent='✓';}
+    else if(i===n){dot.className='prog-dot active';dot.textContent=i;}
+    else{dot.className='prog-dot pending';dot.textContent=i;}
+  }
+  for(let i=1;i<=2;i++) document.getElementById('prog-line-'+i).className='prog-line'+(i<n?' done':'');
+  if(n===3) autoCalc();
+}
+document.getElementById('step1-next').addEventListener('click',()=>setStep(2));
+document.getElementById('step2-back').addEventListener('click',()=>setStep(1));
+document.getElementById('step2-next').addEventListener('click',()=>{
+  if(!document.getElementById('inp-name').value.trim()){alert('Please enter your name!');return;}
+  setStep(3);
+});
+document.getElementById('step3-back').addEventListener('click',()=>setStep(2));
+function autoCalc(){
+  const w=parseFloat(document.getElementById('inp-weight').value)||70;
+  const h=parseFloat(document.getElementById('inp-height').value)||175;
+  const a=parseInt(document.getElementById('inp-age').value)||25;
+  const g=document.getElementById('inp-gender').value||'male';
+  const act=document.getElementById('inp-activity').value||'moderate';
+  const m={sedentary:1.2,light:1.375,moderate:1.55,active:1.725,extreme:1.9};
+  let bmr=g==='female'?(10*w+6.25*h-5*a-161):(10*w+6.25*h-5*a+5);
+  let tdee=Math.round(bmr*(m[act]||1.55));
+  if(selectedGoal==='build_muscle'||selectedGoal==='increase_strength') tdee+=300;
+  else if(selectedGoal==='lose_weight') tdee-=500;
+  const prot=Math.round(w*2.2);
+  const fat=Math.round(tdee*0.25/9);
+  const carbs=Math.max(0,Math.round((tdee-prot*4-fat*9)/4));
+  document.getElementById('inp-calories').value=tdee;
+  document.getElementById('inp-protein').value=prot;
+  document.getElementById('inp-carbs').value=carbs;
+  document.getElementById('inp-fat').value=fat;
+  const ci=document.getElementById('calc-info');
+  ci.textContent=`✅ Calculated: ${tdee} kcal · ${prot}g protein · ${carbs}g carbs · ${fat}g fat`;
+  ci.style.color='var(--green)';
+}
+document.getElementById('step3-finish').addEventListener('click',()=>{
+  const name=document.getElementById('inp-name').value.trim()||'User';
+  const user={name,
+    age:parseInt(document.getElementById('inp-age').value)||null,
+    gender:document.getElementById('inp-gender').value||null,
+    height:parseFloat(document.getElementById('inp-height').value)||null,
+    weight:parseFloat(document.getElementById('inp-weight').value)||null,
+    activityLevel:document.getElementById('inp-activity').value,
+    goal:selectedGoal,
+    targetCal:parseInt(document.getElementById('inp-calories').value)||2200,
+    proteinG:parseInt(document.getElementById('inp-protein').value)||150,
+    carbsG:parseInt(document.getElementById('inp-carbs').value)||250,
+    fatG:parseInt(document.getElementById('inp-fat').value)||70,
+    joinDate:new Date().toISOString()
+  };
+  localStorage.setItem('tmh_user',JSON.stringify(user));
+  localStorage.setItem('muscletrack_user',JSON.stringify(user));
+  window.location.href='muscle-dashboard.html';
+});
+document.getElementById('modal').addEventListener('click',e=>{
+  if(e.target===document.getElementById('modal')) document.getElementById('modal').classList.remove('open');
+});
+</script>
 </body>
 </html>
