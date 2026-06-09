@@ -43,7 +43,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.25rem;}
 .card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;}
 .card-title{font-size:0.92rem;font-weight:600;}
-.card-link{font-size:0.75rem;color:var(--purple-l);cursor:pointer;}
+.card-link{font-size:0.75rem;color:var(--purple-l);cursor:pointer;text-decoration:none;}
 .stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:.9rem;margin-bottom:1rem;}
 .stat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.1rem;}
 .stat-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;}
@@ -57,7 +57,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 .stat-change{font-size:0.7rem;margin-top:4px;}
 .mid-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:.9rem;margin-bottom:.9rem;}
 .bot-grid{display:grid;grid-template-columns:1fr .7fr 1fr;gap:.9rem;margin-bottom:.9rem;}
-.data-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:.9rem;}
+.data-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:.9rem;margin-bottom:.9rem;}
+.widget-grid{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:.9rem;}
 .chart-stats{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--border);padding-top:.75rem;margin-top:.75rem;}
 .chart-stat{text-align:center;padding:0 .5rem;}
 .chart-stat+.chart-stat{border-left:1px solid var(--border);}
@@ -91,7 +92,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-h
 .rec-center{position:absolute;text-align:center;}
 .rec-score{font-size:1.9rem;font-weight:700;line-height:1;}
 .rec-total{font-size:0.72rem;color:var(--t3);}
-.rec-label{font-size:0.9rem;font-weight:600;color:var(--green-l);}
+.rec-label{font-size:0.9rem;font-weight:600;}
 .rec-sub{font-size:0.75rem;color:var(--t2);text-align:center;line-height:1.5;}
 .insight{display:flex;gap:10px;padding:.65rem 0;border-bottom:1px solid var(--border);}
 .insight:last-child{border-bottom:none;}
@@ -108,46 +109,39 @@ tr:last-child td{border-bottom:none;}
 .ritem:last-child{border-bottom:none;}
 .rname{color:var(--t2);}
 .rval{font-weight:600;}
+.empty-msg{color:var(--t3);font-size:0.82rem;text-align:center;padding:1rem 0;}
+@media(max-width:900px){.sidebar{display:none;}.main{margin-left:0;}.stats-row{grid-template-columns:repeat(2,1fr);}.mid-grid,.bot-grid,.data-grid,.widget-grid{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
 <div class="app">
-
-  <!-- SIDEBAR -->
   <aside class="sidebar">
-    <div class="sb-logo">
-      <div class="logo-icon">🏋️</div>
-      MuscleTrack
-    </div>
+    <div class="sb-logo"><div class="logo-icon">🏋️</div>MuscleTrack</div>
     <div class="sb-user">
       <div class="sb-avatar" id="sb-avatar">?</div>
-      <div>
-        <div class="sb-name" id="sb-name">Loading…</div>
-        <div class="sb-badge">⭐ Muscle Builder</div>
-      </div>
+      <div><div class="sb-name" id="sb-name">Loading…</div><div class="sb-badge">⭐ Muscle Builder</div></div>
     </div>
     <nav class="sb-nav">
       <a class="nav-item active" href="muscle-dashboard.html"><span class="nav-icon">📊</span> Dashboard</a>
       <a class="nav-item" href="workout-tracker.html"><span class="nav-icon">🏋️</span> Workout Tracker</a>
-      <a class="nav-item" href="#"><span class="nav-icon">🥗</span> Nutrition Tracker</a>
-      <a class="nav-item" href="#"><span class="nav-icon">📏</span> Body Measurements</a>
+      <a class="nav-item" href="nutrition-tracker.html"><span class="nav-icon">🥗</span> Nutrition Tracker</a>
+      <a class="nav-item" href="body-measurements.html"><span class="nav-icon">📏</span> Body Measurements</a>
       <a class="nav-item" href="progress-photos.html"><span class="nav-icon">📸</span> Progress Photos</a>
       <a class="nav-item" href="strength-progress.html"><span class="nav-icon">📈</span> Strength Progress</a>
       <a class="nav-item" href="recovery-tracker.html"><span class="nav-icon">🔄</span> Recovery Tracker</a>
       <a class="nav-item" href="goals.html"><span class="nav-icon">🎯</span> Goals</a>
-      <a class="nav-item" href="#"><span class="nav-icon">🤖</span> AI Coach</a>
-      <a class="nav-item" href="#"><span class="nav-icon">📅</span> Calendar</a>
+      <a class="nav-item" href="ai-coach.html"><span class="nav-icon">🤖</span> AI Coach</a>
+      <a class="nav-item" href="calendar.html"><span class="nav-icon">📅</span> Calendar</a>
       <a class="nav-item" href="#"><span class="nav-icon">🤝</span> Community</a>
       <a class="nav-item" href="#"><span class="nav-icon">⚙️</span> Settings</a>
     </nav>
     <div class="sb-streak">
       <div class="streak-lbl">Workout Streak</div>
-      <div class="streak-num">🔥 <span>12 days</span></div>
-      <div class="streak-sub">Keep it up! You're crushing it.</div>
+      <div class="streak-num">🔥 <span id="streak-num">0 days</span></div>
+      <div class="streak-sub" id="streak-sub">Start logging workouts!</div>
     </div>
   </aside>
 
-  <!-- MAIN -->
   <main class="main">
     <div class="topbar">
       <div>
@@ -156,7 +150,7 @@ tr:last-child td{border-bottom:none;}
       </div>
       <div class="topbar-right">
         <div class="date-pill">📅 <span id="top-date"></span></div>
-        <button class="back-btn" onclick="goHome()">← Home</button>
+        <button class="back-btn" onclick="window.location.href='index.html'">← Home</button>
         <div class="top-avatar" id="top-avatar">?</div>
       </div>
     </div>
@@ -165,29 +159,29 @@ tr:last-child td{border-bottom:none;}
       <div class="stat-card">
         <div class="stat-top"><div class="stat-lbl">Weight</div><div class="stat-icon" style="background:rgba(124,58,237,.15);">⚖️</div></div>
         <div class="stat-val" id="s-weight">— <span>kg</span></div>
-        <div class="stat-change" style="color:var(--green-l);">↑ Building mass</div>
+        <div class="stat-change" id="s-weight-change" style="color:var(--t3);">—</div>
       </div>
       <div class="stat-card">
-        <div class="stat-top"><div class="stat-lbl">Calories</div><div class="stat-icon" style="background:rgba(245,158,11,.15);">🔥</div></div>
+        <div class="stat-top"><div class="stat-lbl">Calories Today</div><div class="stat-icon" style="background:rgba(245,158,11,.15);">🔥</div></div>
         <div class="stat-val" id="s-cal">— <span>kcal</span></div>
-        <div class="stat-bar-wrap"><div class="stat-bar" style="background:var(--orange);width:72%;"></div></div>
-        <div class="stat-goal" id="s-cal-goal">Goal: — kcal</div>
+        <div class="stat-bar-wrap"><div class="stat-bar" id="s-cal-bar" style="background:var(--orange);width:0%;"></div></div>
+        <div class="stat-goal" id="s-cal-goal">Goal: 2200 kcal</div>
       </div>
       <div class="stat-card">
-        <div class="stat-top"><div class="stat-lbl">Protein</div><div class="stat-icon" style="background:rgba(16,185,129,.15);">🥩</div></div>
+        <div class="stat-top"><div class="stat-lbl">Protein Today</div><div class="stat-icon" style="background:rgba(16,185,129,.15);">🥩</div></div>
         <div class="stat-val" id="s-protein">— <span>g</span></div>
-        <div class="stat-bar-wrap"><div class="stat-bar" style="background:var(--green);width:65%;"></div></div>
-        <div class="stat-goal" id="s-protein-goal">Goal: — g</div>
+        <div class="stat-bar-wrap"><div class="stat-bar" id="s-protein-bar" style="background:var(--green);width:0%;"></div></div>
+        <div class="stat-goal" id="s-protein-goal">Goal: 150g</div>
       </div>
       <div class="stat-card">
-        <div class="stat-top"><div class="stat-lbl">Sleep</div><div class="stat-icon" style="background:rgba(59,130,246,.15);">🌙</div></div>
-        <div class="stat-val">7h <span>45m</span></div>
+        <div class="stat-top"><div class="stat-lbl">Sleep Last Night</div><div class="stat-icon" style="background:rgba(59,130,246,.15);">🌙</div></div>
+        <div class="stat-val" id="s-sleep">— <span>h</span></div>
         <div class="stat-goal">Goal: 7–9h</div>
       </div>
       <div class="stat-card">
-        <div class="stat-top"><div class="stat-lbl">Workout Streak</div><div class="stat-icon" style="background:rgba(245,158,11,.15);">🏆</div></div>
-        <div class="stat-val">12 <span>days</span></div>
-        <div class="stat-goal">Best: 18 days</div>
+        <div class="stat-top"><div class="stat-lbl">Recovery Score</div><div class="stat-icon" style="background:rgba(245,158,11,.15);">🏆</div></div>
+        <div class="stat-val" id="s-recovery">— <span>/10</span></div>
+        <div class="stat-goal" id="s-recovery-label">Not logged today</div>
       </div>
     </div>
 
@@ -195,54 +189,20 @@ tr:last-child td{border-bottom:none;}
       <div class="card">
         <div class="card-hdr">
           <div class="card-title">Strength Progress</div>
-          <div style="background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:8px;padding:.28rem .75rem;font-size:0.78rem;color:var(--t2);">Bench Press ▾</div>
+          <a href="strength-progress.html" class="card-link">View All ›</a>
         </div>
-        <svg viewBox="0 0 360 148" style="width:100%;overflow:visible;">
-          <defs>
-            <linearGradient id="cg" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.3"/>
-              <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
-            </linearGradient>
-          </defs>
-          <line x1="0" y1="118" x2="360" y2="118" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
-          <line x1="0" y1="88" x2="360" y2="88" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
-          <line x1="0" y1="58" x2="360" y2="58" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
-          <line x1="0" y1="28" x2="360" y2="28" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
-          <text x="2" y="122" fill="#64748b" font-size="9">40</text>
-          <text x="2" y="92" fill="#64748b" font-size="9">60</text>
-          <text x="2" y="62" fill="#64748b" font-size="9">80</text>
-          <text x="2" y="32" fill="#64748b" font-size="9">100</text>
-          <path d="M22,118 L82,106 L142,88 L202,70 L262,48 L322,30 L360,30 L360,132 L22,132 Z" fill="url(#cg)"/>
-          <polyline points="22,118 82,106 142,88 202,70 262,48 322,30" fill="none" stroke="#7c3aed" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <circle cx="22" cy="118" r="3.5" fill="#7c3aed"/>
-          <circle cx="82" cy="106" r="3.5" fill="#7c3aed"/>
-          <circle cx="142" cy="88" r="3.5" fill="#7c3aed"/>
-          <circle cx="202" cy="70" r="3.5" fill="#7c3aed"/>
-          <circle cx="262" cy="48" r="3.5" fill="#7c3aed"/>
-          <circle cx="322" cy="30" r="5" fill="#a78bfa" stroke="#7c3aed" stroke-width="2"/>
-          <rect x="296" y="10" width="56" height="18" rx="4" fill="rgba(124,58,237,0.3)" stroke="#7c3aed" stroke-width="1"/>
-          <text x="324" y="22" fill="#a78bfa" font-size="9.5" text-anchor="middle">80 kg</text>
-          <text x="22" y="142" fill="#64748b" font-size="8.5" text-anchor="middle">Apr 21</text>
-          <text x="82" y="142" fill="#64748b" font-size="8.5" text-anchor="middle">Apr 28</text>
-          <text x="142" y="142" fill="#64748b" font-size="8.5" text-anchor="middle">May 5</text>
-          <text x="202" y="142" fill="#64748b" font-size="8.5" text-anchor="middle">May 12</text>
-          <text x="262" y="142" fill="#64748b" font-size="8.5" text-anchor="middle">May 19</text>
-          <text x="322" y="142" fill="#64748b" font-size="8.5" text-anchor="middle">May 26</text>
-        </svg>
+        <div id="strength-chart-area"></div>
         <div class="chart-stats">
-          <div class="chart-stat"><div class="cstat-lbl">Total Progress</div><div class="cstat-val green">+20 kg</div></div>
-          <div class="chart-stat"><div class="cstat-lbl">Starting Point</div><div class="cstat-val">60 kg</div></div>
-          <div class="chart-stat"><div class="cstat-lbl">Current Best</div><div class="cstat-val">80 kg</div></div>
+          <div class="chart-stat"><div class="cstat-lbl">Total Progress</div><div class="cstat-val green" id="str-progress">—</div></div>
+          <div class="chart-stat"><div class="cstat-lbl">Starting Point</div><div class="cstat-val" id="str-start">—</div></div>
+          <div class="chart-stat"><div class="cstat-lbl">Current Best</div><div class="cstat-val" id="str-best">—</div></div>
         </div>
       </div>
       <div class="card">
-        <div class="card-hdr"><div class="card-title">Nutrition Overview</div></div>
+        <div class="card-hdr"><div class="card-title">Nutrition Today</div><a href="nutrition-tracker.html" class="card-link">View ›</a></div>
         <div class="donut-wrap">
           <div class="donut-ring" id="donut-ring">
-            <div class="donut-hole">
-              <div class="donut-cal" id="donut-cal">—</div>
-              <div class="donut-lbl">kcal</div>
-            </div>
+            <div class="donut-hole"><div class="donut-cal" id="donut-cal">—</div><div class="donut-lbl">kcal</div></div>
           </div>
           <div class="legend">
             <div class="leg-item"><div class="leg-dot" style="background:var(--green);"></div><span id="leg-p">Protein: —</span></div>
@@ -250,309 +210,44 @@ tr:last-child td{border-bottom:none;}
             <div class="leg-item"><div class="leg-dot" style="background:var(--orange);"></div><span id="leg-f">Fat: —</span></div>
           </div>
         </div>
-        <div style="margin-top:1rem;padding-top:.75rem;border-top:1px solid var(--border);font-size:0.78rem;color:var(--purple-l);text-align:center;cursor:pointer;">View Nutrition Tracker →</div>
+        <div style="margin-top:1rem;padding-top:.75rem;border-top:1px solid var(--border);font-size:0.78rem;color:var(--purple-l);text-align:center;cursor:pointer;" onclick="window.location.href='nutrition-tracker.html'">View Nutrition Tracker →</div>
       </div>
       <div class="card">
-        <div class="card-hdr"><div class="card-title">Body Measurements</div><div class="card-link">View All ›</div></div>
-        <div class="mrow"><span class="mname">👕 Chest</span><span class="mval">105 cm</span><span class="mchg up">↑ 2 cm</span></div>
-        <div class="mrow"><span class="mname">💪 Arms</span><span class="mval">38 cm</span><span class="mchg up">↑ 1.5 cm</span></div>
-        <div class="mrow"><span class="mname">⬛ Waist</span><span class="mval">78 cm</span><span class="mchg dn-good">↓ 1 cm</span></div>
-        <div class="mrow"><span class="mname">🦵 Thighs</span><span class="mval">58 cm</span><span class="mchg up">↑ 2 cm</span></div>
-        <div class="mrow"><span class="mname">🏔️ Shoulders</span><span class="mval">125 cm</span><span class="mchg up">↑ 1 cm</span></div>
-        <div class="mrow"><span class="mname">📊 Body Fat</span><span class="mval">14.2 %</span><span class="mchg dn-good">↓ 0.8 %</span></div>
+        <div class="card-hdr"><div class="card-title">Body Measurements</div><a href="body-measurements.html" class="card-link">View All ›</a></div>
+        <div id="measurements-list"><div class="empty-msg">No measurements yet</div></div>
       </div>
     </div>
 
     <div class="bot-grid">
       <div class="card">
-        <div class="card-hdr"><div class="card-title">Workout Schedule</div><div class="card-link">View Calendar ›</div></div>
-        <div class="witem"><div class="wicon">💪</div><div><div class="wname">Push Day</div><div class="wdate">Monday</div></div><div class="wstatus">✅</div></div>
-        <div class="witem"><div class="wicon">🔙</div><div><div class="wname">Pull Day</div><div class="wdate">Wednesday</div></div><div class="wstatus">✅</div></div>
-        <div class="witem"><div class="wicon">🦵</div><div><div class="wname">Leg Day</div><div class="wdate">Friday</div></div><div class="wstatus" style="opacity:.35;">⏳</div></div>
+        <div class="card-hdr"><div class="card-title">Recent Workouts</div><a href="workout-tracker.html" class="card-link">View All ›</a></div>
+        <div id="workout-list"><div class="empty-msg">No workouts logged yet</div></div>
       </div>
       <div class="card">
-        <div class="card-hdr"><div class="card-title">Recovery Score</div></div>
+        <div class="card-hdr"><div class="card-title">Recovery Score</div><a href="recovery-tracker.html" class="card-link">Log ›</a></div>
         <div class="rec-wrap">
           <div class="rec-ring">
             <svg viewBox="0 0 120 120" width="115" height="115" style="transform:rotate(-90deg)">
               <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="10"/>
-              <circle cx="60" cy="60" r="50" fill="none" stroke="var(--green)" stroke-width="10" stroke-dasharray="258 314" stroke-linecap="round"/>
+              <circle cx="60" cy="60" r="50" fill="none" id="rec-arc" stroke="#10b981" stroke-width="10" stroke-dasharray="0 314" stroke-linecap="round"/>
             </svg>
-            <div class="rec-center"><div class="rec-score">82</div><div class="rec-total">/100</div></div>
+            <div class="rec-center"><div class="rec-score" id="rec-score">—</div><div class="rec-total">/10</div></div>
           </div>
-          <div class="rec-label">Great Recovery! 🤌</div>
-          <div class="rec-sub">You're ready to crush your next workout.</div>
+          <div class="rec-label" id="rec-label" style="color:var(--t2);">Not logged today</div>
+          <div class="rec-sub" id="rec-sub">Log your recovery to see your score</div>
         </div>
       </div>
       <div class="card">
-        <div class="card-hdr"><div class="card-title">AI Coach Insights</div></div>
-        <div class="insight">
-          <div class="iicon" style="background:rgba(16,185,129,.15);">📈</div>
-          <div><div class="ititle" style="color:var(--green-l);">Great Progress!</div><div class="itext">Your bench press improved 20 kg in the last 4 weeks. Keep it up!</div></div>
-        </div>
-        <div class="insight">
-          <div class="iicon" style="background:rgba(16,185,129,.15);">🥩</div>
-          <div><div class="ititle" id="ai-p-title" style="color:var(--green-l);">Hit Your Protein Goal</div><div class="itext" id="ai-p-text">Try to hit your daily protein target for better muscle growth.</div></div>
-        </div>
-        <div class="insight">
-          <div class="iicon" style="background:rgba(245,158,11,.15);">😴</div>
-          <div><div class="ititle" style="color:var(--orange);">Sleep is Good</div><div class="itext">Keep 7–9 hours nightly for optimal recovery and muscle repair.</div></div>
-        </div>
-        <div style="margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border);font-size:0.78rem;color:var(--purple-l);text-align:center;cursor:pointer;">View All Insights →</div>
+        <div class="card-hdr"><div class="card-title">AI Coach Insights</div><a href="ai-coach.html" class="card-link">View ›</a></div>
+        <div id="insights-list"></div>
+        <div style="margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border);font-size:0.78rem;color:var(--purple-l);text-align:center;cursor:pointer;" onclick="window.location.href='ai-coach.html'">View AI Coach →</div>
       </div>
     </div>
 
     <div class="data-grid">
       <div class="card">
-        <div class="card-hdr"><div class="card-title">Recent Workouts</div></div>
-        <table>
-          <thead><tr><th>Exercise</th><th>Sets</th><th>Reps</th><th>Weight</th><th>1RM</th><th>Date</th></tr></thead>
-          <tbody>
-            <tr><td>Bench Press</td><td>4</td><td>8</td><td>80 kg</td><td class="td-hl">100 kg</td><td>Today</td></tr>
-            <tr><td>Squat</td><td>4</td><td>5</td><td>100 kg</td><td class="td-hl">130 kg</td><td>Yesterday</td></tr>
-            <tr><td>Deadlift</td><td>3</td><td>5</td><td>120 kg</td><td class="td-hl">155 kg</td><td>2 days ago</td></tr>
-            <tr><td>Overhead Press</td><td>3</td><td>8</td><td>55 kg</td><td class="td-hl">70 kg</td><td>3 days ago</td></tr>
-          </tbody>
-        </table>
+        <div class="card-hdr"><div class="card-title">Recent Exercises</div><a href="workout-tracker.html" class="card-link">View All ›</a></div>
+        <div id="exercises-table"><div class="empty-msg">No exercises logged yet — <a href="workout-tracker.html" style="color:var(--purple-l);">start tracking</a></div></div>
       </div>
       <div class="card">
-        <div class="card-hdr"><div class="card-title">Personal Records</div><div class="card-link">View All ›</div></div>
-        <div class="ritem"><span class="rname">🏋️ Bench Press</span><span class="rval">100 kg</span></div>
-        <div class="ritem"><span class="rname">🏋️ Squat</span><span class="rval">140 kg</span></div>
-        <div class="ritem"><span class="rname">🏋️ Deadlift</span><span class="rval">160 kg</span></div>
-        <div class="ritem"><span class="rname">🏋️ Overhead Press</span><span class="rval">75 kg</span></div>
-        <div class="ritem"><span class="rname">🏋️ Barbell Row</span><span class="rval">90 kg</span></div>
-      </div>
-    </div>
-
-  </main>
-</div>
-
-<script>
-function goHome() { window.location.href = 'index.html'; }
-const user = JSON.parse(localStorage.getItem('tmh_user') || '{}');
-const name = user.name || 'User';
-const initials = name.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase() || name[0].toUpperCase();
-document.getElementById('sb-avatar').textContent  = initials;
-document.getElementById('top-avatar').textContent = initials;
-document.getElementById('sb-name').textContent    = name;
-document.getElementById('top-date').textContent   = new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-const weight     = user.weight     || 70;
-const targetCal  = user.targetCal  || 2500;
-const proteinG   = user.proteinG   || 154;
-const carbsG     = user.carbsG     || 250;
-const fatG       = user.fatG       || 70;
-const proteinPct = user.proteinPct || 25;
-const carbsPct   = user.carbsPct   || 50;
-const fatPct     = user.fatPct     || 25;
-document.getElementById('s-weight').innerHTML         = `${weight} <span>kg</span>`;
-document.getElementById('s-cal').innerHTML            = `${targetCal.toLocaleString()} <span>kcal</span>`;
-document.getElementById('s-cal-goal').textContent     = `Goal: ${targetCal.toLocaleString()} kcal`;
-document.getElementById('s-protein').innerHTML        = `${proteinG} <span>g</span>`;
-document.getElementById('s-protein-goal').textContent = `Goal: ${proteinG} g`;
-document.getElementById('donut-cal').textContent      = targetCal.toLocaleString();
-document.getElementById('leg-p').textContent = `Protein: ${proteinG}g (${proteinPct}%)`;
-document.getElementById('leg-c').textContent = `Carbs: ${carbsG}g (${carbsPct}%)`;
-document.getElementById('leg-f').textContent = `Fat: ${fatG}g (${fatPct}%)`;
-document.getElementById('ai-p-title').textContent = `Hit ${proteinG}g Protein Daily`;
-document.getElementById('ai-p-text').textContent  = `Try to hit ${proteinG}g of protein daily for optimal muscle growth and recovery.`;
-const ring = document.getElementById('donut-ring');
-const p2 = proteinPct, c2 = proteinPct + carbsPct;
-ring.style.background = `conic-gradient(#10b981 0% ${p2}%, #a78bfa ${p2}% ${c2}%, #f59e0b ${c2}% 100%)`;
-</script>
-</body>
-</html>
-<!-- PROGRESS PHOTO WIDGET — paste into muscle-dashboard.html -->
-<div style="background:#1a2250;border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:20px;margin-bottom:20px;">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-    <h3 style="font-size:14px;font-weight:700;">📸 Progress Photos</h3>
-    <a href="progress-photos.html" style="font-size:12px;color:#6c63ff;text-decoration:none;font-weight:500;">View All →</a>
-  </div>
-  <div id="dash-photos" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;"></div>
-  <div id="dash-photos-empty" style="display:none;text-align:center;padding:24px;color:#7b8ab8;font-size:13px;">No photos yet — <a href="progress-photos.html" style="color:#6c63ff;">add your first one</a></div>
-</div>
-
-<script>
-(function(){
-  try{
-    const photos=JSON.parse(localStorage.getItem('mt_photos_v1')||'[]');
-    const el=document.getElementById('dash-photos');
-    const empty=document.getElementById('dash-photos-empty');
-    if(!photos.length){el.style.display='none';empty.style.display='block';return;}
-    const first=photos[0];
-    const last=photos[photos.length-1];
-    const fmtD=d=>new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-    const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
-    const render=p=>`<div style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,.08);">
-      <img src="${p.img}" style="width:100%;height:160px;object-fit:cover;display:block;"/>
-      <div style="padding:10px;">
-        <div style="font-size:12px;font-weight:700;">${fmtD(p.date)}</div>
-        <div style="font-size:11px;color:#7b8ab8;">${cap(p.pose)}${p.weight?' · ⚖️ '+p.weight+'kg':''}</div>
-      </div>
-    </div>`;
-    if(first.id===last.id){
-      el.style.gridTemplateColumns='1fr';
-      el.innerHTML=render(first)+'<div style="display:flex;align-items:center;justify-content:center;border:2px dashed rgba(108,99,255,.3);border-radius:10px;color:#7b8ab8;font-size:13px;min-height:160px;"><a href="progress-photos.html" style="color:#6c63ff;text-decoration:none;">+ Add more photos</a></div>';
-    } else {
-      el.innerHTML=`<div><div style="font-size:10px;font-weight:700;color:#7b8ab8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">First</div>${render(first)}</div><div><div style="font-size:10px;font-weight:700;color:#10b981;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">Latest</div>${render(last)}</div>`;
-    }
-  }catch(e){}
-})();
-</script>
-<!-- STRENGTH PROGRESS WIDGET -->
-<div style="background:#1a2250;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px;margin-bottom:20px;">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-    <h3 style="font-size:14px;font-weight:700;">📈 Strength Progress</h3>
-    <a href="strength-progress.html" style="font-size:12px;color:#6c63ff;text-decoration:none;">View All →</a>
-  </div>
-  <div id="dash-strength"></div>
-</div>
-
-<!-- PROGRESS PHOTOS WIDGET -->
-<div style="background:#1a2250;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px;margin-bottom:20px;">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-    <h3 style="font-size:14px;font-weight:700;">📸 Progress Photos</h3>
-    <a href="progress-photos.html" style="font-size:12px;color:#6c63ff;text-decoration:none;">View All →</a>
-  </div>
-  <div id="dash-photos"></div>
-  <div id="dash-photos-empty" style="display:none;text-align:center;padding:16px;color:#7b8ab8;font-size:13px;">No photos yet — <a href="progress-photos.html" style="color:#6c63ff;">add your first one</a></div>
-</div>
-
-<script>
-// Strength Widget
-(function(){
-  try{
-    const s=JSON.parse(localStorage.getItem('mt_wt_v5')||'null');
-    const el=document.getElementById('dash-strength');
-    if(!s||!s.days){el.innerHTML='<div style="color:#7b8ab8;font-size:13px;text-align:center;padding:16px;">No workout data yet — <a href="workout-tracker.html" style="color:#6c63ff;">log workouts</a></div>';return;}
-    const prs={};
-    s.days.forEach(day=>{
-      day.exercises.forEach(ex=>{
-        if(!ex.sets||!ex.sets.length)return;
-        const maxW=Math.max(...ex.sets.map(s=>parseFloat(s.weight)||0));
-        const key=ex.name.toLowerCase();
-        if(!prs[key]||maxW>prs[key].w) prs[key]={name:ex.name,w:maxW,muscle:ex.muscle||''};
-      });
-    });
-    const top=Object.values(prs).sort((a,b)=>b.w-a.w).slice(0,4);
-    if(!top.length){el.innerHTML='<div style="color:#7b8ab8;font-size:13px;text-align:center;padding:16px;">Log exercises with weight to see PRs</div>';return;}
-    el.innerHTML=top.map(p=>`
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:#1e2860;border-radius:8px;margin-bottom:8px;">
-        <div>
-          <div style="font-size:13px;font-weight:600;">${p.name}</div>
-          <div style="font-size:11px;color:#7b8ab8;">${p.muscle}</div>
-        </div>
-        <div style="font-size:16px;font-weight:700;color:#f59e0b;">${p.w} kg</div>
-      </div>`).join('');
-  }catch(e){}
-})();
-
-// Progress Photos Widget
-(function(){
-  try{
-    const photos=JSON.parse(localStorage.getItem('mt_photos_v1')||'[]');
-    const el=document.getElementById('dash-photos');
-    const empty=document.getElementById('dash-photos-empty');
-    if(!photos.length){el.style.display='none';empty.style.display='block';return;}
-    const first=photos[0];
-    const last=photos[photos.length-1];
-    const fmtD=d=>new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-    const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
-    const card=p=>`
-      <div style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,.08);">
-        <img src="${p.img}" style="width:100%;height:160px;object-fit:cover;display:block;"/>
-        <div style="padding:10px;">
-          <div style="font-size:12px;font-weight:700;">${fmtD(p.date)}</div>
-          <div style="font-size:11px;color:#7b8ab8;">${cap(p.pose)}${p.weight?' · ⚖️ '+p.weight+'kg':''}</div>
-        </div>
-      </div>`;
-    if(first.id===last.id){
-      el.style.gridTemplateColumns='1fr';
-      el.innerHTML=card(first);
-    } else {
-      el.style.display='grid';
-      el.style.gridTemplateColumns='1fr 1fr';
-      el.style.gap='12px';
-      el.innerHTML=`
-        <div><div style="font-size:10px;font-weight:700;color:#7b8ab8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">First</div>${card(first)}</div>
-        <div><div style="font-size:10px;font-weight:700;color:#10b981;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">Latest</div>${card(last)}</div>`;
-    }
-  }catch(e){}
-})();
-</script>
-<div style="background:#1a2250;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px;margin-bottom:20px;">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-    <h3 style="font-size:14px;font-weight:700;">🔄 Recovery Score</h3>
-    <a href="recovery-tracker.html" style="font-size:12px;color:#6c63ff;text-decoration:none;">Log Today →</a>
-  </div>
-  <div id="dash-recovery"></div>
-</div>
-<script>
-(function(){
-  try{
-    const all=JSON.parse(localStorage.getItem('mt_recovery_v1')||'{}');
-    const today=new Date().toISOString().slice(0,10);
-    const entry=all[today];
-    const el=document.getElementById('dash-recovery');
-    if(!entry){el.innerHTML='<div style="color:#7b8ab8;font-size:13px;text-align:center;padding:16px;">No recovery logged today — <a href="recovery-tracker.html" style="color:#6c63ff;">log now</a></div>';return;}
-    const s=entry.score||0;
-    const color=s>=8?'#10b981':s>=6?'#f59e0b':'#ef4444';
-    el.innerHTML=`<div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
-      <div style="width:60px;height:60px;border-radius:50%;background:${color}22;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:${color};">${s}</div>
-      <div style="flex:1;display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;">
-        <div style="background:#1e2860;border-radius:8px;padding:8px;text-align:center;"><div style="font-size:14px;font-weight:700;color:#3b82f6;">${entry.sleep}h</div><div style="font-size:10px;color:#7b8ab8;">Sleep</div></div>
-        <div style="background:#1e2860;border-radius:8px;padding:8px;text-align:center;"><div style="font-size:14px;font-weight:700;color:#10b981;">${entry.energy}/10</div><div style="font-size:10px;color:#7b8ab8;">Energy</div></div>
-        <div style="background:#1e2860;border-radius:8px;padding:8px;text-align:center;"><div style="font-size:14px;font-weight:700;color:#f59e0b;">${entry.stress}/10</div><div style="font-size:10px;color:#7b8ab8;">Stress</div></div>
-        <div style="background:#1e2860;border-radius:8px;padding:8px;text-align:center;"><div style="font-size:14px;font-weight:700;color:#3b82f6;">${entry.water}L</div><div style="font-size:10px;color:#7b8ab8;">Water</div></div>
-      </div>
-    </div>`;
-  }catch(e){}
-})();
-</script>
-... ${entry.water}L ...
-      </div>
-    </div>`;
-  }catch(e){}
-})();
-</script>
-
-<!-- GOALS WIDGET -->
-<div style="background:#1a2250;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px;margin-bottom:20px;">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-    <h3 style="font-size:14px;font-weight:700;">🎯 Goals</h3>
-    <a href="goals.html" style="font-size:12px;color:#6c63ff;text-decoration:none;">View All →</a>
-  </div>
-  <div id="dash-goals"></div>
-</div>
-<script>
-(function(){
-  try{
-    const goals=JSON.parse(localStorage.getItem('mt_goals_v1')||'[]');
-    const el=document.getElementById('dash-goals');
-    if(!goals.length){el.innerHTML='<div style="color:#7b8ab8;font-size:13px;text-align:center;padding:16px;">No goals yet — <a href="goals.html" style="color:#6c63ff;">add your first goal</a></div>';return;}
-    const active=goals.filter(g=>!g.completed).slice(0,4);
-    el.innerHTML=active.map(g=>{
-      const pct=Math.min(100,Math.max(0,g.type==='reduce'?(g.startValue<=g.target?100:Math.round(((g.startValue-g.current)/(g.startValue-g.target))*100)):Math.round((g.current/g.target)*100)));
-      const color=pct>=100?'#10b981':pct>=60?'#6c63ff':pct>=30?'#f59e0b':'#ef4444';
-      return `<div style="margin-bottom:10px;">
-        <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
-          <span style="font-size:13px;font-weight:600;">${g.name}</span>
-          <span style="font-size:12px;font-weight:700;color:${color};">${pct}%</span>
-        </div>
-        <div style="background:rgba(255,255,255,.07);border-radius:99px;height:6px;overflow:hidden;">
-          <div style="width:${pct}%;height:100%;background:${color};border-radius:99px;"></div>
-        </div>
-        <div style="font-size:11px;color:#7b8ab8;margin-top:3px;">${g.current}${g.unit} → ${g.target}${g.unit}</div>
-      </div>`;
-    }).join('');
-  }catch(e){}
-})();
-</script>
-
-</body>
-</html>
-
-
-
-
-
+        <div class="c
