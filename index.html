@@ -79,41 +79,44 @@ footer{padding:32px 5%;border-top:1px solid var(--border);display:flex;align-ite
 .footer-logo{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700;}
 .footer-logo-icon{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,var(--accent),#a855f7);display:flex;align-items:center;justify-content:center;font-size:14px;}
 .footer-text{font-size:12px;color:var(--t2);}
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;align-items:center;justify-content:center;}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
 .modal-bg.open{display:flex;}
-.modal{background:#1a2250;border:1px solid rgba(108,99,255,.4);border-radius:20px;padding:32px;width:480px;max-width:95vw;max-height:90vh;overflow-y:auto;}
+.modal{background:#1a2250;border:1px solid rgba(108,99,255,.4);border-radius:20px;padding:32px;width:500px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:0 32px 80px rgba(0,0,0,.6);}
 .modal-step{display:none;}
 .modal-step.active{display:block;}
-.modal-prog{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:24px;}
-.prog-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;transition:all .3s;}
+.modal-prog{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:28px;}
+.prog-dot{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;transition:all .3s;}
 .prog-dot.done{background:var(--green);color:#fff;}
-.prog-dot.active{background:var(--accent);color:#fff;}
-.prog-dot.pending{background:rgba(255,255,255,.1);color:var(--t2);}
-.prog-line{height:2px;width:40px;background:var(--border);}
+.prog-dot.active{background:var(--accent);color:#fff;box-shadow:0 0 0 4px rgba(108,99,255,.25);}
+.prog-dot.pending{background:rgba(255,255,255,.08);color:var(--t2);}
+.prog-line{height:2px;width:48px;background:var(--border);transition:all .3s;}
 .prog-line.done{background:var(--green);}
-.modal h2{font-size:22px;font-weight:800;margin-bottom:6px;text-align:center;}
-.modal-sub{font-size:13px;color:var(--t2);text-align:center;margin-bottom:24px;}
-.goal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
-.goal-btn{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;cursor:pointer;transition:all .2s;text-align:center;font-family:'Inter',sans-serif;color:var(--t1);}
-.goal-btn:hover{border-color:var(--accent);}
-.goal-btn.selected{background:rgba(108,99,255,.15);border-color:var(--accent);}
-.goal-btn .gb-icon{font-size:24px;margin-bottom:6px;}
+.modal h2{font-size:22px;font-weight:800;margin-bottom:6px;text-align:center;color:var(--t1);}
+.modal-sub{font-size:13px;color:var(--t2);text-align:center;margin-bottom:24px;line-height:1.5;}
+.goal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;}
+.goal-btn{background:var(--card2);border:2px solid var(--border);border-radius:12px;padding:16px 12px;cursor:pointer;transition:all .2s;text-align:center;font-family:'Inter',sans-serif;color:var(--t1);}
+.goal-btn:hover{border-color:rgba(108,99,255,.5);background:rgba(108,99,255,.08);}
+.goal-btn.selected{background:rgba(108,99,255,.15);border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);}
+.goal-btn .gb-icon{font-size:28px;margin-bottom:8px;}
 .goal-btn .gb-label{font-size:13px;font-weight:600;}
-.modal label{font-size:12px;color:var(--t2);display:block;margin-bottom:5px;margin-top:12px;font-weight:500;}
-.modal input,.modal select{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:8px;color:var(--t1);font-size:14px;padding:10px 12px;outline:none;font-family:'Inter',sans-serif;transition:border-color .2s;margin-bottom:4px;}
-.modal input:focus,.modal select:focus{border-color:var(--accent);}
+.modal label{font-size:12px;color:var(--t2);display:block;margin-bottom:5px;margin-top:14px;font-weight:600;letter-spacing:.02em;}
+.modal input,.modal select{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:10px;color:var(--t1);font-size:14px;padding:11px 14px;outline:none;font-family:'Inter',sans-serif;transition:border-color .2s;margin-bottom:2px;}
+.modal input:focus,.modal select:focus{border-color:var(--accent);background:rgba(108,99,255,.05);}
 .modal input::placeholder{color:var(--t2);}
 .modal select option{background:#1a2250;}
-.modal-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.modal-btn{width:100%;background:linear-gradient(135deg,var(--accent),#a855f7);border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:700;padding:14px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;margin-top:16px;}
-.modal-btn:hover{filter:brightness(1.1);}
-.modal-btn-outline{width:100%;background:transparent;border:1px solid var(--border);border-radius:10px;color:var(--t2);font-size:13px;font-weight:600;padding:10px;cursor:pointer;font-family:'Inter',sans-serif;margin-top:8px;}
+.modal-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.modal-btn{width:100%;background:linear-gradient(135deg,var(--accent),#a855f7);border:none;border-radius:12px;color:#fff;font-size:16px;font-weight:700;padding:15px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;margin-top:20px;box-shadow:0 4px 20px rgba(108,99,255,.4);}
+.modal-btn:hover{filter:brightness(1.1);transform:translateY(-1px);}
+.modal-btn-outline{width:100%;background:transparent;border:1px solid var(--border);border-radius:12px;color:var(--t2);font-size:13px;font-weight:600;padding:11px;cursor:pointer;font-family:'Inter',sans-serif;margin-top:10px;transition:all .2s;}
 .modal-btn-outline:hover{border-color:var(--accent);color:var(--t1);}
-@media(max-width:700px){.nav-links{display:none;}.mock-grid{grid-template-columns:repeat(2,1fr);}.features-grid{grid-template-columns:1fr;}.steps{grid-template-columns:1fr;}.modal-form-grid{grid-template-columns:1fr;}}
+.calc-box{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:10px;padding:12px;margin-top:12px;font-size:12px;color:var(--t2);}
+.calc-box.done{color:var(--green);}
+@media(max-width:700px){.nav-links{display:none;}.mock-grid{grid-template-columns:repeat(2,1fr);}.features-grid{grid-template-columns:1fr;}.steps{grid-template-columns:1fr;}.modal-form-grid{grid-template-columns:1fr;}.goal-grid{grid-template-columns:1fr 1fr;}}
 </style>
 </head>
 <body>
 
+<!-- NAV -->
 <nav>
   <div class="nav-inner">
     <a class="nav-logo" href="#">
@@ -129,6 +132,7 @@ footer{padding:32px 5%;border-top:1px solid var(--border);display:flex;align-ite
   </div>
 </nav>
 
+<!-- HERO -->
 <section class="hero">
   <div class="hero-badge">🏆 Your Personal Fitness Tracker</div>
   <h1 class="hero-title">Build Your<br/><span>Best Physique</span></h1>
@@ -163,6 +167,7 @@ footer{padding:32px 5%;border-top:1px solid var(--border);display:flex;align-ite
   </div>
 </section>
 
+<!-- STATS -->
 <section class="stats-section">
   <div class="stats-inner">
     <div><div class="stat-val">10+</div><div class="stat-label">Tracking Features</div></div>
@@ -172,6 +177,7 @@ footer{padding:32px 5%;border-top:1px solid var(--border);display:flex;align-ite
   </div>
 </section>
 
+<!-- FEATURES -->
 <section class="features-section" id="features">
   <div class="section-badge">Everything You Need</div>
   <h2 class="section-title">Built for serious fitness</h2>
@@ -222,7 +228,7 @@ footer{padding:32px 5%;border-top:1px solid var(--border);display:flex;align-ite
     <div class="feature-card">
       <div class="feature-icon" style="background:rgba(245,158,11,.15);">📅</div>
       <div class="feature-title">Calendar</div>
-      <div class="feature-desc">See all workouts, nutrition, recovery and custom events in a monthly calendar view with activity heatmap.</div>
+      <div class="feature-desc">See all workouts, nutrition, recovery and custom events in a monthly calendar view with heatmap.</div>
       <span class="feature-tag" style="background:rgba(245,158,11,.15);color:#fbbf24;">Overview</span>
     </div>
     <div class="feature-card">
@@ -234,12 +240,13 @@ footer{padding:32px 5%;border-top:1px solid var(--border);display:flex;align-ite
     <div class="feature-card">
       <div class="feature-icon" style="background:rgba(59,130,246,.15);">📊</div>
       <div class="feature-title">Smart Dashboard</div>
-      <div class="feature-desc">All your data in one place. Strength chart, nutrition donut, recovery ring, photos, goals — live and real.</div>
+      <div class="feature-desc">All your data in one place. Strength chart, nutrition donut, recovery ring, photos and goals — live.</div>
       <span class="feature-tag" style="background:rgba(59,130,246,.15);color:#60a5fa;">Overview</span>
     </div>
   </div>
 </section>
 
+<!-- HOW IT WORKS -->
 <section class="how-section" id="how">
   <div class="section-badge">Simple Process</div>
   <h2 class="section-title">How it works</h2>
@@ -263,6 +270,7 @@ footer{padding:32px 5%;border-top:1px solid var(--border);display:flex;align-ite
   </div>
 </section>
 
+<!-- PRIVACY -->
 <section class="privacy-section" id="privacy">
   <div class="privacy-card">
     <div class="privacy-icon">🔒</div>
@@ -278,19 +286,23 @@ footer{padding:32px 5%;border-top:1px solid var(--border);display:flex;align-ite
   </div>
 </section>
 
+<!-- CTA -->
 <section class="cta-section">
   <h2 class="cta-title">Ready to build your<br/><span style="background:linear-gradient(135deg,var(--accent),#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">best physique?</span></h2>
   <p class="cta-sub">Free forever. No sign up. Start tracking in 60 seconds.</p>
   <button class="hero-btn" id="cta-start-btn">🚀 Start Tracking Now</button>
 </section>
 
+<!-- FOOTER -->
 <footer>
   <div class="footer-logo"><div class="footer-logo-icon">💪</div> TrackMyHealth</div>
   <div class="footer-text">Built with ❤️ · 100% Free · Your data stays private</div>
 </footer>
 
+<!-- ONBOARDING MODAL -->
 <div class="modal-bg" id="modal">
   <div class="modal">
+    <!-- PROGRESS BAR -->
     <div class="modal-prog">
       <div class="prog-dot active" id="prog-1">1</div>
       <div class="prog-line" id="prog-line-1"></div>
@@ -298,8 +310,10 @@ footer{padding:32px 5%;border-top:1px solid var(--border);display:flex;align-ite
       <div class="prog-line" id="prog-line-2"></div>
       <div class="prog-dot pending" id="prog-3">3</div>
     </div>
+
+    <!-- STEP 1: GOAL -->
     <div class="modal-step active" id="step-1">
-      <h2>What's your main goal?</h2>
+      <h2>What's your main goal? 🎯</h2>
       <p class="modal-sub">Pick the goal that matters most to you right now.</p>
       <div class="goal-grid">
         <button class="goal-btn selected" data-goal="build_muscle"><div class="gb-icon">💪</div><div class="gb-label">Build Muscle</div></button>
@@ -311,14 +325,20 @@ footer{padding:32px 5%;border-top:1px solid var(--border);display:flex;align-ite
       </div>
       <button class="modal-btn" id="step1-next">Next Step →</button>
     </div>
+
+    <!-- STEP 2: PROFILE -->
     <div class="modal-step" id="step-2">
-      <h2>About you</h2>
-      <p class="modal-sub">Helps us personalize your dashboard and calculate your goals.</p>
+      <h2>About you 👤</h2>
+      <p class="modal-sub">Helps us personalize your dashboard and auto-calculate your daily targets.</p>
       <label>Your Name *</label>
       <input id="inp-name" placeholder="e.g. Kamlesh Rawal"/>
       <div class="modal-form-grid">
-        <div><label>Age</label><input id="inp-age" type="number" placeholder="25" min="10" max="100"/></div>
-        <div><label>Gender</label>
+        <div>
+          <label>Age</label>
+          <input id="inp-age" type="number" placeholder="25" min="10" max="100"/>
+        </div>
+        <div>
+          <label>Gender</label>
           <select id="inp-gender">
             <option value="">Select</option>
             <option value="male">Male</option>
@@ -326,8 +346,14 @@ footer{padding:32px 5%;border-top:1px solid var(--border);display:flex;align-ite
             <option value="other">Other</option>
           </select>
         </div>
-        <div><label>Height (cm)</label><input id="inp-height" type="number" placeholder="175" min="100" max="250"/></div>
-        <div><label>Weight (kg)</label><input id="inp-weight" type="number" placeholder="70" min="30" max="300" step="0.1"/></div>
+        <div>
+          <label>Height (cm)</label>
+          <input id="inp-height" type="number" placeholder="175" min="100" max="250"/>
+        </div>
+        <div>
+          <label>Weight (kg)</label>
+          <input id="inp-weight" type="number" placeholder="70" min="30" max="300" step="0.1"/>
+        </div>
       </div>
       <label>Activity Level</label>
       <select id="inp-activity">
@@ -340,16 +366,30 @@ footer{padding:32px 5%;border-top:1px solid var(--border);display:flex;align-ite
       <button class="modal-btn" id="step2-next">Next Step →</button>
       <button class="modal-btn-outline" id="step2-back">← Back</button>
     </div>
+
+    <!-- STEP 3: TARGETS -->
     <div class="modal-step" id="step-3">
-      <h2>Your daily targets</h2>
-      <p class="modal-sub">Auto-calculated based on your profile. Change anytime in Settings.</p>
+      <h2>Your daily targets 🎯</h2>
+      <p class="modal-sub">Auto-calculated from your profile. Edit if you want or change later in Settings.</p>
       <div class="modal-form-grid">
-        <div><label>Daily Calories (kcal)</label><input id="inp-calories" type="number" placeholder="2200"/></div>
-        <div><label>Daily Protein (g)</label><input id="inp-protein" type="number" placeholder="150"/></div>
-        <div><label>Daily Carbs (g)</label><input id="inp-carbs" type="number" placeholder="250"/></div>
-        <div><label>Daily Fat (g)</label><input id="inp-fat" type="number" placeholder="70"/></div>
+        <div>
+          <label>Daily Calories (kcal)</label>
+          <input id="inp-calories" type="number" placeholder="2200"/>
+        </div>
+        <div>
+          <label>Daily Protein (g)</label>
+          <input id="inp-protein" type="number" placeholder="150"/>
+        </div>
+        <div>
+          <label>Daily Carbs (g)</label>
+          <input id="inp-carbs" type="number" placeholder="250"/>
+        </div>
+        <div>
+          <label>Daily Fat (g)</label>
+          <input id="inp-fat" type="number" placeholder="70"/>
+        </div>
       </div>
-      <div style="background:rgba(108,99,255,.08);border:1px solid rgba(108,99,255,.2);border-radius:8px;padding:10px;margin-top:8px;font-size:12px;color:var(--t2);" id="calc-info">Fill in your profile and we'll auto-calculate your targets!</div>
+      <div class="calc-box" id="calc-info">Calculating your targets based on your profile…</div>
       <button class="modal-btn" id="step3-finish">🚀 Launch My Dashboard</button>
       <button class="modal-btn-outline" id="step3-back">← Back</button>
     </div>
@@ -358,6 +398,8 @@ footer{padding:32px 5%;border-top:1px solid var(--border);display:flex;align-ite
 
 <script>
 let selectedGoal='build_muscle';
+
+// Open modal on any start button
 ['nav-start-btn','hero-start-btn','cta-start-btn'].forEach(id=>{
   document.getElementById(id)?.addEventListener('click',()=>{
     const u=JSON.parse(localStorage.getItem('tmh_user')||'{}');
@@ -365,6 +407,8 @@ let selectedGoal='build_muscle';
     else document.getElementById('modal').classList.add('open');
   });
 });
+
+// Goal selection
 document.querySelectorAll('.goal-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     document.querySelectorAll('.goal-btn').forEach(b=>b.classList.remove('selected'));
@@ -372,6 +416,8 @@ document.querySelectorAll('.goal-btn').forEach(btn=>{
     selectedGoal=btn.dataset.goal;
   });
 });
+
+// Step navigation
 function setStep(n){
   document.querySelectorAll('.modal-step').forEach(s=>s.classList.remove('active'));
   document.getElementById('step-'+n).classList.add('active');
@@ -381,16 +427,24 @@ function setStep(n){
     else if(i===n){dot.className='prog-dot active';dot.textContent=i;}
     else{dot.className='prog-dot pending';dot.textContent=i;}
   }
-  for(let i=1;i<=2;i++) document.getElementById('prog-line-'+i).className='prog-line'+(i<n?' done':'');
+  for(let i=1;i<=2;i++){
+    document.getElementById('prog-line-'+i).className='prog-line'+(i<n?' done':'');
+  }
   if(n===3) autoCalc();
 }
+
 document.getElementById('step1-next').addEventListener('click',()=>setStep(2));
 document.getElementById('step2-back').addEventListener('click',()=>setStep(1));
+document.getElementById('step3-back').addEventListener('click',()=>setStep(2));
+
 document.getElementById('step2-next').addEventListener('click',()=>{
-  if(!document.getElementById('inp-name').value.trim()){alert('Please enter your name!');return;}
+  if(!document.getElementById('inp-name').value.trim()){
+    alert('Please enter your name!');return;
+  }
   setStep(3);
 });
-document.getElementById('step3-back').addEventListener('click',()=>setStep(2));
+
+// Auto calculate
 function autoCalc(){
   const w=parseFloat(document.getElementById('inp-weight').value)||70;
   const h=parseFloat(document.getElementById('inp-height').value)||175;
@@ -410,12 +464,15 @@ function autoCalc(){
   document.getElementById('inp-carbs').value=carbs;
   document.getElementById('inp-fat').value=fat;
   const ci=document.getElementById('calc-info');
-  ci.textContent=`✅ Calculated: ${tdee} kcal · ${prot}g protein · ${carbs}g carbs · ${fat}g fat`;
-  ci.style.color='var(--green)';
+  ci.textContent=`✅ ${tdee} kcal · ${prot}g protein · ${carbs}g carbs · ${fat}g fat — calculated for your goal!`;
+  ci.className='calc-box done';
 }
+
+// Finish
 document.getElementById('step3-finish').addEventListener('click',()=>{
   const name=document.getElementById('inp-name').value.trim()||'User';
-  const user={name,
+  const user={
+    name,
     age:parseInt(document.getElementById('inp-age').value)||null,
     gender:document.getElementById('inp-gender').value||null,
     height:parseFloat(document.getElementById('inp-height').value)||null,
@@ -432,8 +489,11 @@ document.getElementById('step3-finish').addEventListener('click',()=>{
   localStorage.setItem('muscletrack_user',JSON.stringify(user));
   window.location.href='muscle-dashboard.html';
 });
+
+// Close on background click
 document.getElementById('modal').addEventListener('click',e=>{
-  if(e.target===document.getElementById('modal')) document.getElementById('modal').classList.remove('open');
+  if(e.target===document.getElementById('modal'))
+    document.getElementById('modal').classList.remove('open');
 });
 </script>
 </body>
