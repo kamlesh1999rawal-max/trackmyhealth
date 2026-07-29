@@ -250,4 +250,105 @@ tr:last-child td{border-bottom:none;}
         <div id="exercises-table"><div class="empty-msg">No exercises logged yet — <a href="workout-tracker.html" style="color:var(--purple-l);">start tracking</a></div></div>
       </div>
       <div class="card">
-        <div class="c
+        <div class="card-hdr"><div class="card-title">Workout Summary</div><a href="workout-tracker.html" class="card-link">View All ›</a></div>
+        <div id="workout-summary">
+          <div class="ritem"><span class="rname">Total Workout Days</span><span class="rval" id="ws-days">—</span></div>
+          <div class="ritem"><span class="rname">Total Exercises Logged</span><span class="rval" id="ws-exercises">—</span></div>
+          <div class="ritem"><span class="rname">Total Sets Completed</span><span class="rval" id="ws-sets">—</span></div>
+          <div class="ritem"><span class="rname">Total Volume Lifted</span><span class="rval" id="ws-volume">—</span></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// ----- User info -----
+try{
+  const u=JSON.parse(localStorage.getItem('tmh_user')||localStorage.getItem('muscletrack_user')||'{}');
+  if(u.name){
+    document.getElementById('sb-name').textContent=u.name;
+    const initials=u.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    document.getElementById('sb-avatar').textContent=initials;
+    document.getElementById('top-avatar').textContent=initials;
+  }
+}catch(e){}
+
+document.getElementById('top-date').textContent=new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+
+// ----- Workout data (same key used by workout-tracker.html) -----
+const WT_KEY='mt_wt_v5';
+function loadWorkouts(){try{const r=localStorage.getItem(WT_KEY);if(r)return JSON.parse(r);}catch(e){}return null;}
+
+function renderWorkoutWidgets(){
+  const data=loadWorkouts();
+  const days=(data&&data.days)?data.days:[];
+  const loggedDays=days.filter(d=>d.exercises&&d.exercises.length>0);
+
+  let streak=0;
+  for(let i=days.length-1;i>=0;i--){
+    if(days[i].exercises&&days[i].exercises.length>0)streak++;
+    else break;
+  }
+  document.getElementById('streak-num').textContent=streak+' day'+(streak!==1?'s':'');
+  document.getElementById('streak-sub').textContent=streak>0?'Keep it up! 🔥':'Start logging workouts!';
+
+  const wlist=document.getElementById('workout-list');
+  if(loggedDays.length===0){
+    wlist.innerHTML='<div class="empty-msg">No workouts logged yet</div>';
+  }else{
+    const recent=loggedDays.slice(-5).reverse();
+    wlist.innerHTML=recent.map(d=>{
+      const totalSets=d.exercises.reduce((a,ex)=>a+ex.sets.length,0);
+      const doneSets=d.exercises.reduce((a,ex)=>a+ex.sets.filter(s=>s.done).length,0);
+      const complete=totalSets>0&&doneSets===totalSets;
+      return `<div class="witem">
+        <div class="wicon">🏋️</div>
+        <div>
+          <div class="wname">${esc(d.name)}</div>
+          <div class="wdate">${esc(d.date)} · ${d.exercises.length} exercise${d.exercises.length!==1?'s':''} · ${doneSets}/${totalSets} sets done</div>
+        </div>
+        <div class="wstatus">${complete?'✅':'🔲'}</div>
+      </div>`;
+    }).join('');
+  }
+
+  const etable=document.getElementById('exercises-table');
+  const allExercises=[];
+  loggedDays.slice(-5).reverse().forEach(d=>{
+    d.exercises.forEach(ex=>{
+      const bestSet=ex.sets.reduce((best,s)=>((s.weight||0)>(best?best.weight:-1)?s:best),null);
+      allExercises.push({day:d.name,name:ex.name,sets:ex.sets.length,best:bestSet});
+    });
+  });
+  if(allExercises.length===0){
+    etable.innerHTML='<div class="empty-msg">No exercises logged yet — <a href="workout-tracker.html" style="color:var(--purple-l);">start tracking</a></div>';
+  }else{
+    etable.innerHTML=`<table>
+      <thead><tr><th>Exercise</th><th>Day</th><th>Sets</th><th>Best Set</th></tr></thead>
+      <tbody>${allExercises.slice(0,8).map(e=>`
+        <tr>
+          <td>${esc(e.name)}</td>
+          <td>${esc(e.day)}</td>
+          <td>${e.sets}</td>
+          <td class="td-hl">${e.best?e.best.weight+'kg × '+e.best.reps:'—'}</td>
+        </tr>`).join('')}</tbody>
+    </table>`;
+  }
+
+  const totalExercises=loggedDays.reduce((a,d)=>a+d.exercises.length,0);
+  const totalSets=loggedDays.reduce((a,d)=>a+d.exercises.reduce((b,ex)=>b+ex.sets.length,0),0);
+  const doneSets=loggedDays.reduce((a,d)=>a+d.exercises.reduce((b,ex)=>b+ex.sets.filter(s=>s.done).length,0),0);
+  const totalVolume=loggedDays.reduce((a,d)=>a+d.exercises.reduce((b,ex)=>b+ex.sets.reduce((c,s)=>c+(parseFloat(s.weight)||0)*(parseInt(s.reps)||0),0),0),0);
+  document.getElementById('ws-days').textContent=loggedDays.length;
+  document.getElementById('ws-exercises').textContent=totalExercises;
+  document.getElementById('ws-sets').textContent=doneSets+' / '+totalSets;
+  document.getElementById('ws-volume').textContent=totalVolume.toLocaleString()+' kg';
+}
+
+renderWorkoutWidgets();
+</script>
+</body>
+</html>
